@@ -7,8 +7,7 @@
 
 
 #include <string>
-#include <GL/glew.h>
-#include "Utils.h"
+#include "libimport\glew.h"
 
 
 /* --------------------------------------------- */

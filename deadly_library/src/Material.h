@@ -8,7 +8,7 @@
 
 #include <memory>
 #include <glm/glm.hpp>
-#include "Shader.h"
+#include "graphics/shader.h"
 
 #include "Texture.h"
 
@@ -20,16 +20,16 @@
 class Material
 {
 protected:
-	std::shared_ptr<Shader> _shader;
+	std::shared_ptr<graphics::Shader> _shader;
 
 	glm::vec3 _materialCoefficients; // x = ambient, y = diffuse, z = specular
 	float _alpha;
 
 public:
-	Material(std::shared_ptr<Shader> shader, glm::vec3 materialCoefficients, float specularCoefficient);
+	Material(std::shared_ptr<graphics::Shader> shader, glm::vec3 materialCoefficients, float specularCoefficient);
 	virtual ~Material();
 
-	Shader* getShader();
+	graphics::Shader* getShader();
 	virtual void setUniforms();
 };
 
@@ -43,7 +43,7 @@ protected:
 	std::shared_ptr<Texture> _diffuseTexture;
 
 public:
-	TextureMaterial(std::shared_ptr<Shader> shader, glm::vec3 materialCoefficients, float specularCoefficient, std::shared_ptr<Texture> diffuseTexture);
+	TextureMaterial(std::shared_ptr<graphics::Shader> shader, glm::vec3 materialCoefficients, float specularCoefficient, std::shared_ptr<Texture> diffuseTexture);
 	virtual ~TextureMaterial();
 
 	virtual void setUniforms();
