@@ -4,21 +4,27 @@
 * This file is part of the ECG Lab Framework and must not be redistributed.
 */
 
-
-#include "Utils.h"
+#include "libimport\glew.h"
+#include "libimport\glfw.h"
 
 #include <sstream>
 
 #include "Geometry.h"
 
 #include "Camera.h"
-#include "Shader.h"
+#include "graphics/shader.h"
 
 #include "Material.h"
 #include "Light.h"
 
+#include "INIReader.h"
+
 #include "Texture.h"
 
+#define EXIT_WITH_ERROR(err) \
+	std::cout << "ERROR: " << err << std::endl; \
+	system("PAUSE"); \
+	return EXIT_FAILURE;
 
 /* --------------------------------------------- */
 // Prototypes
@@ -30,7 +36,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
-void setPerFrameUniforms(Shader* shader, Camera& camera, DirectionalLight& dirL, PointLight& pointL);
+void setPerFrameUniforms(graphics::Shader* shader, Camera& camera, DirectionalLight& dirL, PointLight& pointL);
 
 
 /* --------------------------------------------- */
@@ -71,16 +77,14 @@ int main(int argc, char** argv)
 	// Create context
 	/* --------------------------------------------- */
 
-	if (!glfwInit()) {
-		EXIT_WITH_ERROR("Failed to init GLFW")
-	}
+	Glfw glfw;
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); // Request OpenGL version 4.3
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // Request core profile													  
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);  // Create an OpenGL debug context 
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // Prevent window resizing because viewport would have to resize as well (-> not needed in this course)
-	
+
 	// Open window
 	GLFWwindow* window = glfwCreateWindow(window_width, window_height, window_title.c_str(), nullptr, nullptr);
 
@@ -93,14 +97,7 @@ int main(int argc, char** argv)
 	glfwMakeContextCurrent(window);
 
 	// Initialize GLEW
-	glewExperimental = true;
-	GLenum err = glewInit();
-
-	// If GLEW wasn't initialized
-	if (err != GLEW_OK) {
-		glfwTerminate();
-		EXIT_WITH_ERROR("Failed to init GLEW")
-	}
+	Glew glew;
 
 #if _DEBUG
 	// Register your callback function.
@@ -111,13 +108,6 @@ int main(int argc, char** argv)
 #endif
 
 
-	/* --------------------------------------------- */
-	// Init framework
-	/* --------------------------------------------- */
-	if (!initFramework()) {
-		glfwTerminate();
-		EXIT_WITH_ERROR("Failed to init framework")
-	}
 
 	// set callbacks
 	glfwSetKeyCallback(window, key_callback);
@@ -134,7 +124,7 @@ int main(int argc, char** argv)
 	// Initialize scene and render loop
 	/* --------------------------------------------- */
 	{
-		std::shared_ptr<Shader> textureShader = std::make_shared<Shader>("texture.vert", "texture.frag");
+		std::shared_ptr<graphics::Shader> textureShader = std::make_shared<graphics::Shader>("assets/shader/texture");
 		std::shared_ptr<Texture> sunTexture = std::make_shared<Texture>("sun.dds");
 		std::shared_ptr<Texture> moonTexture = std::make_shared<Texture>("moon.dds");
 		std::shared_ptr<Texture> earthTexture = std::make_shared<Texture>("earth.dds");
@@ -195,25 +185,11 @@ int main(int argc, char** argv)
 		}
 	}
 
-
-	/* --------------------------------------------- */
-	// Destroy framework
-	/* --------------------------------------------- */
-
-	destroyFramework();
-
-
-	/* --------------------------------------------- */
-	// Destroy context and exit
-	/* --------------------------------------------- */
-
-	glfwTerminate();
-
 	return EXIT_SUCCESS;
 }
 
 
-void setPerFrameUniforms(Shader* shader, Camera& camera, DirectionalLight& dirL, PointLight& pointL)
+void setPerFrameUniforms(graphics::Shader* shader, Camera& camera, DirectionalLight& dirL, PointLight& pointL)
 {
 	shader->use();
 	shader->setUniform("viewProjMatrix", camera.getViewProjectionMatrix());
@@ -231,11 +207,14 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 		_dragging = true;
-	} else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+	}
+	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 		_dragging = false;
-	} else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
 		_strafing = true;
-	} else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) {
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) {
 		_strafing = false;
 	}
 }
@@ -255,18 +234,18 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	switch (key)
 	{
-		case GLFW_KEY_ESCAPE:
-			glfwSetWindowShouldClose(window, true);
-			break;
-		case GLFW_KEY_F1:
-			_wireframe = !_wireframe;
-			glPolygonMode(GL_FRONT_AND_BACK, _wireframe ? GL_LINE : GL_FILL);
-			break;
-		case GLFW_KEY_F2:
-			_culling = !_culling;
-			if (_culling) glEnable(GL_CULL_FACE);
-			else glDisable(GL_CULL_FACE);
-			break;
+	case GLFW_KEY_ESCAPE:
+		glfwSetWindowShouldClose(window, true);
+		break;
+	case GLFW_KEY_F1:
+		_wireframe = !_wireframe;
+		glPolygonMode(GL_FRONT_AND_BACK, _wireframe ? GL_LINE : GL_FILL);
+		break;
+	case GLFW_KEY_F2:
+		_culling = !_culling;
+		if (_culling) glEnable(GL_CULL_FACE);
+		else glDisable(GL_CULL_FACE);
+		break;
 	}
 }
 
@@ -283,84 +262,84 @@ static std::string FormatDebugOutput(GLenum source, GLenum type, GLuint id, GLen
 	std::string severityString;
 
 	switch (source) {
-		case GL_DEBUG_SOURCE_API: {
-			sourceString = "API";
-			break;
-		}
-		case GL_DEBUG_SOURCE_APPLICATION: {
-			sourceString = "Application";
-			break;
-		}
-		case GL_DEBUG_SOURCE_WINDOW_SYSTEM: {
-			sourceString = "Window System";
-			break;
-		}
-		case GL_DEBUG_SOURCE_SHADER_COMPILER: {
-			sourceString = "Shader Compiler";
-			break;
-		}
-		case GL_DEBUG_SOURCE_THIRD_PARTY: {
-			sourceString = "Third Party";
-			break;
-		}
-		case GL_DEBUG_SOURCE_OTHER: {
-			sourceString = "Other";
-			break;
-		}
-		default: {
-			sourceString = "Unknown";
-			break;
-		}
+	case GL_DEBUG_SOURCE_API: {
+		sourceString = "API";
+		break;
+	}
+	case GL_DEBUG_SOURCE_APPLICATION: {
+		sourceString = "Application";
+		break;
+	}
+	case GL_DEBUG_SOURCE_WINDOW_SYSTEM: {
+		sourceString = "Window System";
+		break;
+	}
+	case GL_DEBUG_SOURCE_SHADER_COMPILER: {
+		sourceString = "Shader Compiler";
+		break;
+	}
+	case GL_DEBUG_SOURCE_THIRD_PARTY: {
+		sourceString = "Third Party";
+		break;
+	}
+	case GL_DEBUG_SOURCE_OTHER: {
+		sourceString = "Other";
+		break;
+	}
+	default: {
+		sourceString = "Unknown";
+		break;
+	}
 	}
 
 	switch (type) {
-		case GL_DEBUG_TYPE_ERROR: {
-			typeString = "Error";
-			break;
-		}
-		case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: {
-			typeString = "Deprecated Behavior";
-			break;
-		}
-		case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR: {
-			typeString = "Undefined Behavior";
-			break;
-		}
-		case GL_DEBUG_TYPE_PORTABILITY_ARB: {
-			typeString = "Portability";
-			break;
-		}
-		case GL_DEBUG_TYPE_PERFORMANCE: {
-			typeString = "Performance";
-			break;
-		}
-		case GL_DEBUG_TYPE_OTHER: {
-			typeString = "Other";
-			break;
-		}
-		default: {
-			typeString = "Unknown";
-			break;
-		}
+	case GL_DEBUG_TYPE_ERROR: {
+		typeString = "Error";
+		break;
+	}
+	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: {
+		typeString = "Deprecated Behavior";
+		break;
+	}
+	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR: {
+		typeString = "Undefined Behavior";
+		break;
+	}
+	case GL_DEBUG_TYPE_PORTABILITY_ARB: {
+		typeString = "Portability";
+		break;
+	}
+	case GL_DEBUG_TYPE_PERFORMANCE: {
+		typeString = "Performance";
+		break;
+	}
+	case GL_DEBUG_TYPE_OTHER: {
+		typeString = "Other";
+		break;
+	}
+	default: {
+		typeString = "Unknown";
+		break;
+	}
 	}
 
 	switch (severity) {
-		case GL_DEBUG_SEVERITY_HIGH: {
-			severityString = "High";
-			break;
-		}
-		case GL_DEBUG_SEVERITY_MEDIUM: {
-			severityString = "Medium";
-			break;
-		}
-		case GL_DEBUG_SEVERITY_LOW: {
-			severityString = "Low";
-			break;
-		}
-		default: {
-			severityString = "Unknown";
-			break;
-		}
+	case GL_DEBUG_SEVERITY_HIGH: {
+		severityString = "High";
+		break;
+	}
+	case GL_DEBUG_SEVERITY_MEDIUM: {
+		severityString = "Medium";
+		break;
+	}
+	case GL_DEBUG_SEVERITY_LOW: {
+		severityString = "Low";
+		break;
+	}
+	default: {
+		severityString = "Unknown";
+		break;
+	}
 	}
 
 	stringStream << "OpenGL Error: " << msg;

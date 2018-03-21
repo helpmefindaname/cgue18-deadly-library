@@ -4,12 +4,20 @@
     <ClInclude Include="src\Camera.h" />
     <ClCompile Include="src\Geometry.cpp" />
     <ClInclude Include="src\Geometry.h" />
+    <ClInclude Include="src\graphics\shader.h" />
+    <ClInclude Include="src\graphics\shaderStage.h" />
     <ClInclude Include="src\INIReader.h" />
+    <ClInclude Include="src\libimport\glew.h" />
+    <ClInclude Include="src\libimport\glfw.h" />
+    <ClInclude Include="src\libimport\glm.h" />
     <ClInclude Include="src\Light.h" />
+    <ClCompile Include="src\graphics\shader.cpp" />
+    <ClCompile Include="src\graphics\shaderStage.cpp" />
+    <ClCompile Include="src\libimport\glew.cpp" />
+    <ClCompile Include="src\libimport\glfw.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Material.cpp" />
     <ClInclude Include="src\Material.h" />
-    <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Utils.h" />
   </ItemGroup>

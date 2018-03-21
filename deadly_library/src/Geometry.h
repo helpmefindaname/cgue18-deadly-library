@@ -14,7 +14,7 @@
 #include <glm\gtc\constants.hpp>
 
 #include <glm\gtc\matrix_transform.hpp>
-#include "Shader.h"
+#include "graphics\shader.h"
 #include "Material.h"
 
 
