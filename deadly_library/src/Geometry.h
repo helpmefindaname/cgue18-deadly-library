@@ -8,12 +8,10 @@
 
 #include <vector>
 #include <memory>
-#include <GL\glew.h>
 
-#include <glm\glm.hpp>
-#include <glm\gtc\constants.hpp>
 
-#include <glm\gtc\matrix_transform.hpp>
+#include "libimport\glew.h"
+#include "libimport\glm.h"
 #include "graphics\shader.h"
 #include "Material.h"
 

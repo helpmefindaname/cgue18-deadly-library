@@ -1,25 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="src\Camera.h" />
+    <ClCompile Include="src\config.cpp" />
+    <ClCompile Include="src\graphics\camera.cpp" />
+    <ClCompile Include="src\input\debugCameraHandler.cpp" />
+    <ClCompile Include="src\graphics\texture.cpp" />
+    <ClCompile Include="src\libimport\glm.cpp" />
+    <ClCompile Include="src\window.cpp" />
     <ClCompile Include="src\Geometry.cpp" />
+    <ClInclude Include="src\config.h" />
     <ClInclude Include="src\Geometry.h" />
     <ClInclude Include="src\graphics\shader.h" />
     <ClInclude Include="src\graphics\shaderStage.h" />
-    <ClInclude Include="src\INIReader.h" />
+    <ClInclude Include="src\graphics\camera.h" />
+    <ClInclude Include="src\input\debugCameraHandler.h" />
+    <ClInclude Include="src\input\inputHandler.h" />
+    <ClInclude Include="src\graphics\texture.h" />
     <ClInclude Include="src\libimport\glew.h" />
     <ClInclude Include="src\libimport\glfw.h" />
     <ClInclude Include="src\libimport\glm.h" />
     <ClInclude Include="src\Light.h" />
     <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\graphics\shaderStage.cpp" />
+    <ClCompile Include="src\input\inputHandler.cpp" />
     <ClCompile Include="src\libimport\glew.cpp" />
     <ClCompile Include="src\libimport\glfw.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Material.cpp" />
     <ClInclude Include="src\Material.h" />
-    <ClInclude Include="src\Texture.h" />
-    <ClInclude Include="src\Utils.h" />
+    <ClInclude Include="src\window.h" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -50,7 +59,13 @@
     <Image Include="assets\textures\bricks_diffuse.dds">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="assets\textures\bricks_diffuse.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="assets\textures\bricks_specular.dds">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\textures\bricks_specular.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="assets\textures\cubemap\negx.dds">
@@ -74,16 +89,31 @@
     <Image Include="assets\textures\earth.dds">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="assets\textures\earth.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="assets\textures\metal_texture.dds">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\textures\metal_texture.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="assets\textures\moon.dds">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="assets\textures\moon.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="assets\textures\sun.dds">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="assets\textures\sun.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="assets\textures\wood_texture.dds">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\textures\wood_texture.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
   </ItemGroup>
