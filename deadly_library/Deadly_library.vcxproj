@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClInclude Include="src\physics\PhysicsPipeline.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClCompile Include="src\physics\PhysicsPipeline.cpp" />
     <ClCompile Include="src\Geometry.cpp" />
     <ClInclude Include="src\Geometry.h" />
     <ClInclude Include="src\graphics\shader.h" />
@@ -10,6 +12,7 @@
     <ClInclude Include="src\libimport\glew.h" />
     <ClInclude Include="src\libimport\glfw.h" />
     <ClInclude Include="src\libimport\glm.h" />
+    <ClInclude Include="src\libimport\physX.h" />
     <ClInclude Include="src\Light.h" />
     <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\graphics\shaderStage.cpp" />
@@ -164,8 +167,8 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)external\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;ECG_Library_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;MSVCRT</IgnoreSpecificDefaultLibraries>
+      <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;ECG_Library_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
