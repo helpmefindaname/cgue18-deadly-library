@@ -64,7 +64,7 @@ void Gameloop::init()
 
 void Gameloop::update()
 {
-	if (inputHandler.getEvent("toogleDebug")) {
+	if (inputHandler.getEvent("toggleDebug")) {
 		isDebug = !isDebug;
 		debugCamera.setInverseViewMatrix(state.getGameCamera().getInverseViewMatrix());
 	}
