@@ -34,11 +34,9 @@ namespace graphics {
 		void setUniform(std::string name, const float val);
 		void setUniform(std::string name, const int textureId);
 		//todo: add 'setUniform' methods if needed
-
-	private:
-
 		GLint getUniformLocation(std::string name);
 
+	private:
 		void createStages();
 		void attachStages();
 		void detachStages();

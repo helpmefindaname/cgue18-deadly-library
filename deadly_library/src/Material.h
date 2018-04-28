@@ -10,7 +10,7 @@
 #include <glm/glm.hpp>
 #include "graphics/shader.h"
 
-#include "Texture.h"
+#include "graphics/texture.h"
 
 
 /* --------------------------------------------- */

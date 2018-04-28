@@ -2,13 +2,26 @@
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="src\physics\PhysicsPipeline.h" />
-    <ClInclude Include="src\Camera.h" />
     <ClCompile Include="src\physics\PhysicsPipeline.cpp" />
+    <ClCompile Include="src\config.cpp" />
+    <ClCompile Include="src\gameState\Planets.cpp" />
+    <ClCompile Include="src\graphics\camera.cpp" />
+    <ClCompile Include="src\input\debugCameraHandler.cpp" />
+    <ClCompile Include="src\graphics\texture.cpp" />
+    <ClCompile Include="src\libimport\glm.cpp" />
+    <ClCompile Include="src\loop\Gameloop.cpp" />
+    <ClCompile Include="src\window.cpp" />
     <ClCompile Include="src\Geometry.cpp" />
+    <ClInclude Include="src\config.h" />
+    <ClInclude Include="src\GameImport.h" />
+    <ClInclude Include="src\gameState\Planets.h" />
     <ClInclude Include="src\Geometry.h" />
     <ClInclude Include="src\graphics\shader.h" />
     <ClInclude Include="src\graphics\shaderStage.h" />
-    <ClInclude Include="src\INIReader.h" />
+    <ClInclude Include="src\graphics\camera.h" />
+    <ClInclude Include="src\input\debugCameraHandler.h" />
+    <ClInclude Include="src\input\inputHandler.h" />
+    <ClInclude Include="src\graphics\texture.h" />
     <ClInclude Include="src\libimport\glew.h" />
     <ClInclude Include="src\libimport\glfw.h" />
     <ClInclude Include="src\libimport\glm.h" />
@@ -16,13 +29,14 @@
     <ClInclude Include="src\Light.h" />
     <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\graphics\shaderStage.cpp" />
+    <ClCompile Include="src\input\inputHandler.cpp" />
     <ClCompile Include="src\libimport\glew.cpp" />
     <ClCompile Include="src\libimport\glfw.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Material.cpp" />
+    <ClInclude Include="src\loop\Gameloop.h" />
     <ClInclude Include="src\Material.h" />
-    <ClInclude Include="src\Texture.h" />
-    <ClInclude Include="src\Utils.h" />
+    <ClInclude Include="src\window.h" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -53,7 +67,13 @@
     <Image Include="assets\textures\bricks_diffuse.dds">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="assets\textures\bricks_diffuse.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="assets\textures\bricks_specular.dds">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\textures\bricks_specular.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="assets\textures\cubemap\negx.dds">
@@ -77,16 +97,31 @@
     <Image Include="assets\textures\earth.dds">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="assets\textures\earth.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="assets\textures\metal_texture.dds">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\textures\metal_texture.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="assets\textures\moon.dds">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="assets\textures\moon.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="assets\textures\sun.dds">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="assets\textures\sun.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="assets\textures\wood_texture.dds">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\textures\wood_texture.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
   </ItemGroup>
@@ -168,7 +203,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)external\lib\;$(SolutionDir)external\lib\PhysX;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>LIBCMT;MSVCRT</IgnoreSpecificDefaultLibraries>
-      <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;ECG_Library_Debug.lib;PxFoundationDEBUG_x86.lib;PxPvdSDKDEBUG_x86.lib;PxTaskDEBUG_x86.lib;LowLevelAABBCHECKED.lib;LowLevelDEBUG.lib;LowLevelClothDEBUG.lib;LowLevelDynamicsDEBUG.lib;LowLevelParticlesDEBUG.lib;PhysX3CharacterKinematicDEBUG_x86.lib;PhysX3DEBUG_x86.lib;PhysX3CommonDEBUG_x86.lib;PhysX3CookingDEBUG_x86.lib;PhysX3ExtensionsDEBUG.lib;PhysX3VehicleDEBUG.lib;SceneQueryDEBUG.lib;SimulationControllerDEBUG.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;PxFoundationDEBUG_x86.lib;PxPvdSDKDEBUG_x86.lib;PxTaskDEBUG_x86.lib;LowLevelAABBCHECKED.lib;LowLevelDEBUG.lib;LowLevelClothDEBUG.lib;LowLevelDynamicsDEBUG.lib;LowLevelParticlesDEBUG.lib;PhysX3CharacterKinematicDEBUG_x86.lib;PhysX3DEBUG_x86.lib;PhysX3CommonDEBUG_x86.lib;PhysX3CookingDEBUG_x86.lib;PhysX3ExtensionsDEBUG.lib;PhysX3VehicleDEBUG.lib;SceneQueryDEBUG.lib;SimulationControllerDEBUG.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -193,7 +228,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)external\lib;$(SolutionDir)external\lib\PhysX;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;ECG_Library_Release.lib;PxFoundation_x86.lib;PxTask_x86.lib;PxPvdSDK_x86.lib;LowLevel.lib;LowLevelAABB.lib;LowLevelCloth.lib;LowLevelDynamics.lib;LowLevelParticles.lib;PhysX3_x86.lib;PhysX3CharacterKinematic_x86.lib;PhysX3Common_x86.lib;PhysX3Cooking_x86.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;SceneQuery.lib;SimulationController.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;PxFoundation_x86.lib;PxTask_x86.lib;PxPvdSDK_x86.lib;LowLevel.lib;LowLevelAABB.lib;LowLevelCloth.lib;LowLevelDynamics.lib;LowLevelParticles.lib;PhysX3_x86.lib;PhysX3CharacterKinematic_x86.lib;PhysX3Common_x86.lib;PhysX3Cooking_x86.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;SceneQuery.lib;SimulationController.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
