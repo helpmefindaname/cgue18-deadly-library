@@ -52,11 +52,11 @@ void InputHandler::process() {
 	});
 
 	this->onPressedEvent(GLFW_KEY_ESCAPE, "close");
-	this->onPressedEvent(GLFW_KEY_F1, "toogleHelp");
+	this->onPressedEvent(GLFW_KEY_F1, "toggleHelp");
 	this->onPressedEvent(GLFW_KEY_F2, "toggleCulling");
-	this->onPressedEvent(GLFW_KEY_F3, "toogleWireFrame");
-	this->onPressedEvent(GLFW_KEY_F4, "toogleNormalMapping");
-	this->onPressedEvent(GLFW_KEY_TAB, "toogleDebug");
+	this->onPressedEvent(GLFW_KEY_F3, "toggleWireFrame");
+	this->onPressedEvent(GLFW_KEY_F4, "toggleNormalMapping");
+	this->onPressedEvent(GLFW_KEY_TAB, "toggleDebug");
 
 	this->onPressed({ GLFW_KEY_W, GLFW_KEY_UP }, "moveForward");
 	this->onPressed({ GLFW_KEY_D, GLFW_KEY_RIGHT }, "moveBackward");
