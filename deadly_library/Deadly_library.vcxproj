@@ -2,13 +2,17 @@
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\config.cpp" />
+    <ClCompile Include="src\gameState\Planets.cpp" />
     <ClCompile Include="src\graphics\camera.cpp" />
     <ClCompile Include="src\input\debugCameraHandler.cpp" />
     <ClCompile Include="src\graphics\texture.cpp" />
     <ClCompile Include="src\libimport\glm.cpp" />
+    <ClCompile Include="src\loop\Gameloop.cpp" />
     <ClCompile Include="src\window.cpp" />
     <ClCompile Include="src\Geometry.cpp" />
     <ClInclude Include="src\config.h" />
+    <ClInclude Include="src\GameImport.h" />
+    <ClInclude Include="src\gameState\Planets.h" />
     <ClInclude Include="src\Geometry.h" />
     <ClInclude Include="src\graphics\shader.h" />
     <ClInclude Include="src\graphics\shaderStage.h" />
@@ -27,6 +31,7 @@
     <ClCompile Include="src\libimport\glfw.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Material.cpp" />
+    <ClInclude Include="src\loop\Gameloop.h" />
     <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\window.h" />
   </ItemGroup>

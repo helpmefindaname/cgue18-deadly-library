@@ -5,11 +5,11 @@
 
 class DebugCameraHandler {
 public:
-	DebugCameraHandler(Camera* camera);
+	DebugCameraHandler(Camera& camera);
 	~DebugCameraHandler();
 
 private:
-	Camera* usedCamera;
+	Camera& usedCamera;
 
 	int width;
 	int height;
