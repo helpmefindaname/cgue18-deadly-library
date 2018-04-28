@@ -173,7 +173,7 @@ int main(int argc, char** argv)
 }
 
 static void handleInput(InputHandler& inputHandler, Window& window, Camera& defaultCamera, Camera& debugCamera) {
-	if (inputHandler.getEvent("toogleDebug")) {
+	if (inputHandler.getEvent("toggleDebug")) {
 		_isDebug = !_isDebug;
 		debugCamera.setInverseViewMatrix(defaultCamera.getInverseViewMatrix());
 	}
