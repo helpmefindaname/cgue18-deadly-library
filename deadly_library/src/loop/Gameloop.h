@@ -1,11 +1,14 @@
 #pragma once
+#include "..\libimport\glew.h"
+#include "..\libimport\glfw.h"
+
 #include "..\GameImport.h"
 #include GAMESTATE_H
 
-#include "..\libimport\glew.h"
-#include "..\libimport\glfw.h"
-#include "..\input\inputHandler.h"
+#include "..\physics\PhysicsPipeline.h"
+
 #include "..\graphics\camera.h"
+#include "..\input\inputHandler.h"
 #include "..\input\debugCameraHandler.h"
 
 class Gameloop {
@@ -26,6 +29,7 @@ private:
 	Camera debugCamera;
 	DebugCameraHandler debugCameraHandler;
 	GAMESTATE state;
+	PhysicsPipeline physixPipe;
 
 public:
 	void run();

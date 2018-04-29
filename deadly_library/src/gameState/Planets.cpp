@@ -4,14 +4,14 @@
 Planets::Planets()
 	:gameCamera(),
 	usedCamera(&gameCamera)
-{}
+{ }
 
 Planets::~Planets()
-{}
+{ }
 
-void Planets::init()
+void Planets::init(PhysicsPipeline& physiX)
 {
-	textureShader = std::make_shared<graphics::Shader>("assets/shader/texture");
+	textureShader = std::make_shared<Shader>("assets/shader/texture");
 	sunTexture = std::make_shared<Texture>("assets/textures/sun.png");
 	moonTexture = std::make_shared<Texture>("assets/textures/moon.png");
 	earthTexture = std::make_shared<Texture>("assets/textures/earth.png");
@@ -57,7 +57,7 @@ void Planets::render()
 
 Camera& Planets::getGameCamera()
 {
-	return gameCamera;
+	return this->gameCamera;
 }
 
 void Planets::setUsedCamera(Camera& usedCamera)

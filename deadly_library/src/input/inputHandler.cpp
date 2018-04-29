@@ -112,7 +112,7 @@ void InputHandler::onPressedEvent(std::vector<int> keys, const std::string event
 }
 
 void InputHandler::onPressed(int key, std::string eventName) {
-	this->onPressed({ key }, eventName);
+	this->onPressed(std::vector<int>({ key }), eventName);
 }
 
 void InputHandler::onPressed(std::vector<int> keys, std::string eventName) {

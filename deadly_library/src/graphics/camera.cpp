@@ -1,5 +1,6 @@
 #include "camera.h"
 #include "../config.h"
+#include "../libimport/glew.h"
 
 Camera::Camera() :
 	viewWidth(1280),
@@ -53,7 +54,7 @@ Camera::Camera(float fieldOfView, float near, float far, unsigned int viewWidth,
 	this->updateProjectionMatrix();
 }
 
-void Camera::uploadData(graphics::Shader& shader) {
+void Camera::uploadData(Shader& shader) {
 	if (this->projectionNeedsUpdate) {
 		this->updateProjectionMatrix();
 	}

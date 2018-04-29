@@ -4,168 +4,166 @@
 #include <sstream>
 #include <regex>
 
-namespace graphics {
-	Shader::Shader(std::string path) :
-		path(path),
-		handle(0)
-	{
-		this->createStages();
+Shader::Shader(std::string path) :
+	path(path),
+	handle(0)
+{
+	this->createStages();
 
-		this->handle = glCreateProgram();
-		if (this->handle == 0) {
-			throw std::runtime_error("Failed to create shader program!");
-		}
-
-		this->attachStages();
-		this->link();
-		this->detachStages();
+	this->handle = glCreateProgram();
+	if (this->handle == 0) {
+		throw std::runtime_error("Failed to create shader program!");
 	}
 
-	Shader::Shader(Shader&& shader) :
-		handle(shader.handle),
-		path(shader.path),
-		stages(std::move(shader.stages)),
-		attributes(std::move(shader.attributes)),
-		uniforms(std::move(shader.uniforms))
-	{
-		shader.handle = 0;
+	this->attachStages();
+	this->link();
+	this->detachStages();
+}
+
+Shader::Shader(Shader&& shader) :
+	handle(shader.handle),
+	path(shader.path),
+	stages(std::move(shader.stages)),
+	attributes(std::move(shader.attributes)),
+	uniforms(std::move(shader.uniforms))
+{
+	shader.handle = 0;
+}
+
+Shader::~Shader() {
+	if (this->handle != 0) {
+		glDeleteProgram(this->handle);
+	}
+}
+
+void Shader::use() {
+	glUseProgram(this->handle);
+}
+
+GLuint Shader::getHandle() {
+	return this->handle;
+}
+
+GLint Shader::getAttributeLocation(std::string name) {
+	try {
+		return this->attributes.at(name);
+	}
+	catch (...) {
+		this->attributes.emplace(name, glGetAttribLocation(this->getHandle(), name.c_str()));
+		return this->attributes.at(name);
+	}
+}
+
+GLint Shader::getUniformLocation(std::string name) {
+	try {
+		return this->uniforms.at(name);
+	}
+	catch (...) {
+		this->uniforms.emplace(name, glGetUniformLocation(this->getHandle(), name.c_str()));
+		return this->uniforms.at(name);
+	}
+}
+
+void Shader::createStages() {
+	std::string filepath;
+
+	filepath = this->path + std::string(".vert");
+	if (this->checkIfExists(filepath.c_str())) {
+		this->stages.push_back(ShaderStage(filepath.c_str(), ShaderStageType::VERTEX));
 	}
 
-	Shader::~Shader() {
-		if (this->handle != 0) {
-			glDeleteProgram(this->handle);
-		}
+	filepath = this->path + std::string(".frag");
+	if (this->checkIfExists(filepath.c_str())) {
+		this->stages.push_back(ShaderStage(filepath.c_str(), ShaderStageType::FRAGMENT));
 	}
 
-	void Shader::use() {
-		glUseProgram(this->handle);
+	filepath = this->path + std::string(".geom");
+	if (this->checkIfExists(filepath.c_str())) {
+		this->stages.push_back(ShaderStage(filepath.c_str(), ShaderStageType::GEOMETRY));
 	}
 
-	GLuint Shader::getHandle() {
-		return this->handle;
+	filepath = this->path + std::string(".comp");
+	if (this->checkIfExists(filepath.c_str())) {
+		this->stages.push_back(ShaderStage(filepath.c_str(), ShaderStageType::COMPUTE));
 	}
 
-	GLint Shader::getAttributeLocation(std::string name) {
-		try {
-			return this->attributes.at(name);
-		}
-		catch (...) {
-			this->attributes.emplace(name, glGetAttribLocation(this->getHandle(), name.c_str()));
-			return this->attributes.at(name);
-		}
+	filepath = this->path + std::string(".teco");
+	if (this->checkIfExists(filepath.c_str())) {
+		this->stages.push_back(ShaderStage(filepath.c_str(), ShaderStageType::TESS_CONTROL));
 	}
 
-	GLint Shader::getUniformLocation(std::string name) {
-		try {
-			return this->uniforms.at(name);
-		}
-		catch (...) {
-			this->uniforms.emplace(name, glGetUniformLocation(this->getHandle(), name.c_str()));
-			return this->uniforms.at(name);
-		}
+	filepath = this->path + std::string(".teev");
+	if (this->checkIfExists(filepath.c_str())) {
+		this->stages.push_back(ShaderStage(filepath.c_str(), ShaderStageType::TESS_EVALUATION));
 	}
 
-	void Shader::createStages() {
-		std::string filepath;
+	if (this->stages.size() == 0) {
+		throw std::runtime_error("No shader stages added to shader '" + std::string(this->path) + "'");
+	}
+}
 
-		filepath = this->path + std::string(".vert");
-		if (this->checkIfExists(filepath.c_str())) {
-			this->stages.push_back(ShaderStage(filepath.c_str(), ShaderStageType::VERTEX));
+void Shader::attachStages() {
+	for (std::size_t i = 0; i < this->stages.size(); i++) {
+		glAttachShader(this->getHandle(), this->stages.at(i).getHandle());
+	}
+}
+
+void Shader::detachStages() {
+	for (std::size_t i = 0; i < this->stages.size(); i++) {
+		glDetachShader(this->getHandle(), this->stages.at(i).getHandle());
+	}
+}
+
+void Shader::link() {
+	glLinkProgram(this->getHandle());
+
+	GLint success = 0;
+	glGetProgramiv(this->handle, GL_LINK_STATUS, &success);
+	if (success == GL_FALSE || !glIsProgram(this->handle)) {
+		GLint logSize;
+		glGetProgramiv(this->handle, GL_INFO_LOG_LENGTH, &logSize);
+
+		if (logSize > 0) {
+			std::vector<GLchar> log(logSize);
+			glGetProgramInfoLog(this->handle, logSize, &logSize, &log[0]);
+
+			throw std::runtime_error("Failed to link shader '" + std::string(this->path) + "'\n" + std::string(&log[0]));
 		}
-
-		filepath = this->path + std::string(".frag");
-		if (this->checkIfExists(filepath.c_str())) {
-			this->stages.push_back(ShaderStage(filepath.c_str(), ShaderStageType::FRAGMENT));
-		}
-
-		filepath = this->path + std::string(".geom");
-		if (this->checkIfExists(filepath.c_str())) {
-			this->stages.push_back(ShaderStage(filepath.c_str(), ShaderStageType::GEOMETRY));
-		}
-
-		filepath = this->path + std::string(".comp");
-		if (this->checkIfExists(filepath.c_str())) {
-			this->stages.push_back(ShaderStage(filepath.c_str(), ShaderStageType::COMPUTE));
-		}
-
-		filepath = this->path + std::string(".teco");
-		if (this->checkIfExists(filepath.c_str())) {
-			this->stages.push_back(ShaderStage(filepath.c_str(), ShaderStageType::TESS_CONTROL));
-		}
-
-		filepath = this->path + std::string(".teev");
-		if (this->checkIfExists(filepath.c_str())) {
-			this->stages.push_back(ShaderStage(filepath.c_str(), ShaderStageType::TESS_EVALUATION));
-		}
-
-		if (this->stages.size() == 0) {
-			throw std::runtime_error("No shader stages added to shader '" + std::string(this->path) + "'");
+		else {
+			throw std::runtime_error("Failed to link shader '" + std::string(this->path) + "'. Infolog not available.");
 		}
 	}
+}
 
-	void Shader::attachStages() {
-		for (std::size_t i = 0; i < this->stages.size(); i++) {
-			glAttachShader(this->getHandle(), this->stages.at(i).getHandle());
-		}
+bool Shader::checkIfExists(std::string file) {
+	std::ifstream stream(file);
+
+	if (!stream) {
+		return false;
+	}
+	else if (stream.is_open()) {
+		stream.close();
 	}
 
-	void Shader::detachStages() {
-		for (std::size_t i = 0; i < this->stages.size(); i++) {
-			glDetachShader(this->getHandle(), this->stages.at(i).getHandle());
-		}
-	}
+	return true;
+}
 
-	void Shader::link() {
-		glLinkProgram(this->getHandle());
+void Shader::setUniform(std::string name, const glm::mat4& matrix) {
+	glUniformMatrix4fv(this->getUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
+}
 
-		GLint success = 0;
-		glGetProgramiv(this->handle, GL_LINK_STATUS, &success);
-		if (success == GL_FALSE || !glIsProgram(this->handle)) {
-			GLint logSize;
-			glGetProgramiv(this->handle, GL_INFO_LOG_LENGTH, &logSize);
+void Shader::setUniform(std::string name, const glm::mat3& matrix) {
+	glUniformMatrix3fv(this->getUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
+}
 
-			if (logSize > 0) {
-				std::vector<GLchar> log(logSize);
-				glGetProgramInfoLog(this->handle, logSize, &logSize, &log[0]);
+void Shader::setUniform(std::string name, const glm::vec3& vector) {
+	glUniform3f(this->getUniformLocation(name), vector.x, vector.y, vector.z);
+}
 
-				throw std::runtime_error("Failed to link shader '" + std::string(this->path) + "'\n" + std::string(&log[0]));
-			}
-			else {
-				throw std::runtime_error("Failed to link shader '" + std::string(this->path) + "'. Infolog not available.");
-			}
-		}
-	}
+void Shader::setUniform(std::string name, float val) {
+	glUniform1f(this->getUniformLocation(name), val);
+}
 
-	bool Shader::checkIfExists(std::string file) {
-		std::ifstream stream(file);
-
-		if (!stream) {
-			return false;
-		}
-		else if (stream.is_open()) {
-			stream.close();
-		}
-
-		return true;
-	}
-
-	void Shader::setUniform(std::string name, const glm::mat4& matrix) {
-		glUniformMatrix4fv(this->getUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
-	}
-
-	void Shader::setUniform(std::string name, const glm::mat3& matrix) {
-		glUniformMatrix3fv(this->getUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
-	}
-
-	void Shader::setUniform(std::string name, const glm::vec3& vector) {
-		glUniform3f(this->getUniformLocation(name), vector.x, vector.y, vector.z);
-	}
-
-	void Shader::setUniform(std::string name, float val) {
-		glUniform1f(this->getUniformLocation(name), val);
-	}
-
-	void Shader::setUniform(std::string name, int textureId) {
-		glUniform1i(this->getUniformLocation(name), textureId);
-	}
+void Shader::setUniform(std::string name, int textureId) {
+	glUniform1i(this->getUniformLocation(name), textureId);
 }
