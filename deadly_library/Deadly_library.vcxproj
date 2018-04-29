@@ -11,6 +11,12 @@
     <ClInclude Include="src\gameState\dL.h" />
     <ClInclude Include="src\physics\PhysicsPipeline.h" />
     <ClCompile Include="src\gameState\dL.cpp" />
+    <ClInclude Include="src\gameObjects\GameObject.h" />
+    <ClInclude Include="src\gameObjects\Player.h" />
+    <ClInclude Include="src\input\GameCameraHandler.h" />
+    <ClCompile Include="src\gameObjects\GameObject.cpp" />
+    <ClCompile Include="src\gameObjects\Player.cpp" />
+    <ClCompile Include="src\input\GameCameraHandler.cpp" />
     <ClCompile Include="src\physics\PhysicsPipeline.cpp" />
     <ClCompile Include="src\config.cpp" />
     <ClCompile Include="src\gameState\Planets.cpp" />
