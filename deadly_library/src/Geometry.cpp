@@ -71,7 +71,7 @@ void Geometry::draw(glm::mat4 matrix)
 {
 	glm::mat4 accumModel = matrix * _transformMatrix * _modelMatrix;
 	if (!_isEmpty) {
-		graphics::Shader* shader = _material->getShader();
+		Shader* shader = _material->getShader();
 		shader->use();
 
 		shader->setUniform("modelMatrix", accumModel);

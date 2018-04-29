@@ -1,4 +1,6 @@
 #pragma once
+#include "..\libimport\glew.h"
+#include "..\libimport\glfw.h"
 #include "../graphics/camera.h"
 #include "../input/inputHandler.h"
 #include <shared_mutex>
@@ -6,6 +8,7 @@
 #include "../graphics/texture.h"
 #include "../Material.h"
 #include "../Geometry.h"
+#include "../physics/PhysicsPipeline.h"
 #include "../Light.h"
 
 
@@ -18,7 +21,7 @@ private:
 	Camera gameCamera;
 	Camera* usedCamera;
 
-	std::shared_ptr<graphics::Shader> textureShader;
+	std::shared_ptr<Shader> textureShader;
 
 	std::shared_ptr<Texture> sunTexture;
 	std::shared_ptr<Texture> moonTexture;
@@ -36,7 +39,7 @@ private:
 	DirectionalLight dirL;
 
 public:
-	void init();
+	void init(PhysicsPipeline& physiX);
 	void update(InputHandler& input, float dt);
 	void render();
 

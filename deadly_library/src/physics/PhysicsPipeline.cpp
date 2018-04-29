@@ -3,19 +3,33 @@
 
 
 PhysicsPipeline::PhysicsPipeline()
+	:gAllocator(),
+	gErrorCallback()
 {
-
+	this->initPhysics();
 }
 
-/*RigidDynamic* PhysicsPipeline::createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity = PxVec3(0))
+PxRigidDynamic* PhysicsPipeline::createDynamic(const PxTransform& t, const PxGeometry& geometry, PxMaterial* material, const PxVec3& velocity)
 {
-	PxRigidDynamic* dynamic = PxCreateDynamic(*this->gPhysicsSDK, t, geometry, *gMaterial, 10.0f);
+	PxRigidDynamic* dynamic = PxCreateDynamic(*this->gPhysicsSDK, t, geometry, *material, 10.0f);
 	dynamic->setAngularDamping(0.5f);
 	dynamic->setLinearVelocity(velocity);
 	gScene->addActor(*dynamic);
 	return dynamic;
-}*/
-PxRigidStatic* PhysicsPipeline::createStatic(const PxTransform& t, const PxGeometry& geometry, PxMaterial* mMaterial)
+}
+
+
+void PhysicsPipeline::createStaticCube(const PxVec3 position, const PxVec3 size) {
+	PxShape* shape = gPhysicsSDK->createShape(PxBoxGeometry(size.x, size.y, size.z), *gNoReboundMaterial);
+
+	PxTransform localTm(position);
+	PxRigidStatic* cube = gPhysicsSDK->createRigidStatic(localTm);
+	cube->attachShape(*shape);
+	gScene->addActor(*cube);
+	shape->release();
+}
+
+PxRigidStatic* PhysicsPipeline::createStatic(const PxTransform& t, const PxGeometry& geometry, const PxMaterial* mMaterial)
 {
 	// Create static actor
 	//
@@ -27,26 +41,8 @@ PxRigidStatic* PhysicsPipeline::createStatic(const PxTransform& t, const PxGeome
 	return plane;
 }
 
-void PhysicsPipeline::createStack(const PxTransform& t, PxU32 size, PxReal halfExtent)
+void PhysicsPipeline::initPhysics()
 {
-	PxShape* shape = gPhysicsSDK->createShape(PxBoxGeometry(halfExtent, halfExtent, halfExtent), *gMaterial);
-	for (PxU32 i = 0; i<size; i++)
-	{
-		for (PxU32 j = 0; j<size - i; j++)
-		{
-			PxTransform localTm(PxVec3(PxReal(j * 2) - PxReal(size - i), PxReal(i * 2 + 1), 0) * halfExtent);
-			PxRigidDynamic* body = gPhysicsSDK->createRigidDynamic(t.transform(localTm));
-			body->attachShape(*shape);
-			PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
-			gScene->addActor(*body);
-		}
-	}
-	shape->release();
-}
-
-void PhysicsPipeline::initPhysics(bool interactive)
-{
-	// Creating foundation for PhysX
 	gFoundation = PxCreateFoundation(PX_FOUNDATION_VERSION, gAllocator, gErrorCallback);
 
 	gPvd = PxCreatePvd(*gFoundation);
@@ -65,15 +61,15 @@ void PhysicsPipeline::initPhysics(bool interactive)
 	sceneDesc.cpuDispatcher = gDispatcher;
 	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
 	gScene = gPhysicsSDK->createScene(sceneDesc);
-/* Think about:
-	// Triggers = obj which can collide, but do not influence other objects (eg automatic door opener)
-	// Exclude shape from simulation and mark it as a trigger shape
-	// Setting trigger flag for 'triggerShape':
-	// 
-	PxShape* triggerShape = nullptr;
-	triggerShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false); //bei Collision kein Abprallen
-	triggerShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true); // bei Collision erhalten einer Nachricht
-	*/
+	/* Think about:
+		// Triggers = obj which can collide, but do not influence other objects (eg automatic door opener)
+		// Exclude shape from simulation and mark it as a trigger shape
+		// Setting trigger flag for 'triggerShape':
+		//
+		PxShape* triggerShape = nullptr;
+		triggerShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false); //bei Collision kein Abprallen
+		triggerShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true); // bei Collision erhalten einer Nachricht
+		*/
 	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
 	if (pvdClient)
 	{
@@ -82,79 +78,12 @@ void PhysicsPipeline::initPhysics(bool interactive)
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
 
-	// Creating material
-	gMaterial = gPhysicsSDK->createMaterial(0.5f, 0.5f, 0.6f);	// static friction, dynamic friction, restitution
-	
-	// Static ground plane
-	PxRigidStatic* groundPlane = PxCreatePlane(*gPhysicsSDK, PxPlane(0, 1, 0, 0), *gMaterial);
-	gScene->addActor(*groundPlane);
-/*
-	for (PxU32 i = 0; i<5; i++)
-		createStack(PxTransform(PxVec3(0, 0, stackZ -= 10.0f)), 10, 2.0f);
-
-	if (!interactive)
-		createDynamic(PxTransform(PxVec3(0, 40, 100)), PxSphereGeometry(10), PxVec3(0, -50, -100));
-	*/
-	// Character controller - gravity has to be implemented manually!
+	gNoReboundMaterial = gPhysicsSDK->createMaterial(0.0f, 0.0f, 1.0f);
 }
 
-void PhysicsPipeline::stepPhysics(bool interactive)
+void PhysicsPipeline::update(float time)
 {
-	PX_UNUSED(interactive);
-	gScene->simulate(1.0f / 60.0f);
-	gScene->fetchResults(true);
-}
-
-/* PX_UNUSED ? wichtig?
-void cleanupPhysics(bool interactive)
-{
-	PX_UNUSED(interactive);
-	gScene->release();
-	gDispatcher->release();
-	gPhysicsSDK->release();
-	PxPvdTransport* transport = gPvd->getTransport();
-	gPvd->release();
-	transport->release();
-
-	gFoundation->release();
-
-	printf("SnippetHelloWorld done.\n");
-}*/
-/* wo anders hin
-void keyPress(unsigned char key, const PxTransform& camera)
-{
-	switch (toupper(key))
-	{
-	case 'B':	createStack(PxTransform(PxVec3(0, 0, stackZ -= 10.0f)), 10, 2.0f);						break;
-	case ' ':	createDynamic(camera, PxSphereGeometry(3.0f), camera.rotate(PxVec3(0, 0, -1)) * 200);	break;
-	}
-}
-
-int snippetMain(int, const char*const*)
-{
-#ifdef RENDER_SNIPPET
-	extern void renderLoop();
-	renderLoop();
-#else
-	static const PxU32 frameCount = 100;
-	initPhysics(false);
-	for (PxU32 i = 0; i<frameCount; i++)
-		stepPhysics(false);
-	cleanupPhysics(false);
-#endif
-
-	return 0;
-}
-*/
-	
-
-// Important: always simulate with a timestep of 1/60!
-//– Accumulate dt until it is >= 1 / 60 ? update with 1 / 60
-//– That requires a framerate of at least 60 fps
-//(hard requirement!!!)
-void PhysicsPipeline::update()
-{
-	gScene->simulate(1.0f / 60.0f);
+	gScene->simulate(time);
 	gScene->fetchResults(true);
 }
 

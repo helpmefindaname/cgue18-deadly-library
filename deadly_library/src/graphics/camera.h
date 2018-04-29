@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../libimport/glm.h"
-#include "../libimport/glew.h"
 #include "shader.h"
 
 	class Camera {
@@ -26,7 +25,7 @@
 		bool projectionNeedsUpdate;
 
 	public:
-		void uploadData(graphics::Shader& shader);
+		void uploadData(Shader& shader);
 
 		void uploadViewMatrix(GLint location);
 		void uploadProjectionMatrix(GLint location);

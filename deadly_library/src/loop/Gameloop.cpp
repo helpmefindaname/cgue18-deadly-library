@@ -12,6 +12,7 @@ Gameloop::Gameloop(unsigned int fps) :
 	debugCamera(),
 	isDebug(false),
 	debugCameraHandler(debugCamera),
+	physixPipe(),
 	state()
 {
 #if _DEBUG
@@ -59,7 +60,7 @@ void Gameloop::init()
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 
-	state.init();
+	state.init(physixPipe);
 }
 
 void Gameloop::update()

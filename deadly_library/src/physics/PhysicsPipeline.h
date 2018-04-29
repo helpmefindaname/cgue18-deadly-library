@@ -16,25 +16,19 @@ private:
 	PxDefaultCpuDispatcher*	gDispatcher = NULL;
 	PxScene*				gScene = NULL;
 
-	PxMaterial*				gMaterial = NULL;
-
 	PxPvd*                  gPvd = NULL;
 
-	PxReal stackZ = 10.0f;
+	PxMaterial*              gNoReboundMaterial;
 
 public:
 
-	void update();
-	PxRigidDynamic* PhysicsPipeline::createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity = PxVec3(0));
-	PxRigidStatic* PhysicsPipeline::createStatic(const PxTransform& t, const PxGeometry& geometry, PxMaterial* mMaterial);
+	void update(float time);
+	void PhysicsPipeline::createStaticCube(const PxVec3 position, const PxVec3 = PxVec3(1.0f));
+	PxRigidDynamic* PhysicsPipeline::createDynamic(const PxTransform& t, const PxGeometry& geometry, PxMaterial* material, const PxVec3& velocity = PxVec3(0));
+	PxRigidStatic* PhysicsPipeline::createStatic(const PxTransform& t, const PxGeometry& geometry, const PxMaterial* mMaterial);
 
 private:
-	void PhysicsPipeline::createStack(const PxTransform& t, PxU32 size, PxReal halfExtent);
-	void PhysicsPipeline::initPhysics(bool interactive);
-	void PhysicsPipeline::stepPhysics(bool interactive);
-	//void cleanupPhysics(bool interactive);
-	//void keyPress(unsigned char key, const PxTransform& camera);
-
+	void PhysicsPipeline::initPhysics();
 };
 
 
