@@ -2,7 +2,7 @@
 #include "../libimport/glm.h"
 #include "../input/inputHandler.h"
 #include <shared_mutex>
-
+#include "../config.h"
 #include "../Geometry.h"
 #include "../physics/PhysicsPipeline.h"
 
@@ -18,10 +18,10 @@ private:
 	PxController* playerObject;
 	float velocityY;
 	
-	float playerSpeed = 0.5f;
-	float roatationSpeed = 0.1f;
 	float jumpPower = 10.0f;
 	float gravity = 9.81f;
+	float playerSpeed = Config::getFloat("PlayerSpeed");
+	float roatationSpeed = Config::getFloat("RotationSpeed");
 
 public:
 	void init(std::shared_ptr<TextureMaterial> playerMaterial, PhysicsPipeline& physiX);

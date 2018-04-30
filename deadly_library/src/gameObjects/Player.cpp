@@ -13,6 +13,7 @@ Player::~Player()
 
 void Player::init(std::shared_ptr<TextureMaterial> playerMaterial, PhysicsPipeline& physiX)
 {
+
 	this->sun = std::make_shared<Geometry>(glm::mat4(1.0f), Geometry::createSphereGeometry(64, 32, 0.5f), playerMaterial); //SUN
 	playerObject = physiX.createController(PxVec3(position.x, position.y, position.z), PxVec3(0.25f));
 }

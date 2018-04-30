@@ -2,6 +2,7 @@
 #include "../graphics/camera.h"
 #include "inputHandler.h"
 #include "../gameObjects/Player.h"
+#include "../config.h"
 
 class GameCameraHandler
 {
@@ -17,11 +18,11 @@ private:
 	float cameraDirection;
 	glm::vec3 cameraPosition;
 
-	float height = 3.0f;
-	float dist = 5.0f;
 	float maxDist = 1.5f;
-	float distChangePerS = 0.25f;
-	float rotChangePerS = Glm::pi / 4.0f;
+	float height = Config::getFloat("Height");
+	float dist = Config::getFloat("Dist");
+	float distChangePerS = Config::getFloat("DistChangePerS");
+	float rotChangePerS =  Config::getFloat("RotChangePerS") *  Glm::pi / 180.0f;
 
 
 public:
