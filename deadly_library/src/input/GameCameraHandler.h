@@ -19,6 +19,7 @@ private:
 
 	float height = 3.0f;
 	float dist = 5.0f;
+	float maxDist = 1.5f;
 	float distChangePerS = 0.25f;
 	float rotChangePerS = Glm::pi / 4.0f;
 

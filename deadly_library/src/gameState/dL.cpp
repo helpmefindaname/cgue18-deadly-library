@@ -5,7 +5,7 @@ DeadlyLibrary::DeadlyLibrary()
 	:gameCamera(),
 	usedCamera(&gameCamera),
 	gBuffer(false, 0, 0, {}, {}, {}, {}),
-	player(new Player(glm::vec3(0, 0, 0), 0.0f)),
+	player(new Player(glm::vec3(0, 5, 0), 0.0f)),
 	gameCameraHandler(this->gameCamera, this->player)
 {}
 
@@ -20,11 +20,9 @@ void DeadlyLibrary::init(PhysicsPipeline& physiX)
 	this->blockTexture = std::make_shared<Texture>("assets/textures/block.png");
 	this->blockMaterial = std::make_shared<TextureMaterial>(this->textureShader, glm::vec3(1.0f, 0.0f, 0.0f), 1.0f, this->blockTexture);
 
-	//IF
 	this->playerTexture = std::make_shared<Texture>("assets/textures/sun.png"); // change for raccoon
 	this->playerMaterial = std::make_shared<TextureMaterial>(textureShader, glm::vec3(1.0f, 0.0f, 0.0f), 1.0f, playerTexture);
-	this->player->init(playerMaterial);
-	//IF end
+	this->player->init(playerMaterial, physiX);
 
 	this->world = reader.createWorldGeometry(this->blockMaterial);
 
