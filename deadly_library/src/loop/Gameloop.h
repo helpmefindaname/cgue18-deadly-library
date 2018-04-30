@@ -10,7 +10,7 @@
 #include "..\graphics\camera.h"
 #include "..\input\inputHandler.h"
 #include "..\input\debugCameraHandler.h"
-//#include "..\input\GameCameraHandler.h" //IF
+#include "..\graphics\Text2dWriter.h"
 
 class Gameloop {
 public:
@@ -25,14 +25,14 @@ private:
 	Glew glew;
 	InputHandler inputHandler;
 	bool isDebug;
+	bool isHelp;
 	bool isWireframe;
 	bool isCulling;
 	Camera debugCamera;
 	DebugCameraHandler debugCameraHandler;
-	//Camera gameCamera; //IF
-	//GameCameraHandler gameCameraHandler; //IF
 	GAMESTATE state;
 	PhysicsPipeline physixPipe;
+	Text2dWriter writer2D;
 
 public:
 	void run();

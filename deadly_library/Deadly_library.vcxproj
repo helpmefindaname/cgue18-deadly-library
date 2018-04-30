@@ -6,6 +6,7 @@
     <ClCompile Include="src\graphics\Framebuffer.cpp" />
     <ClCompile Include="src\level\LevelReader.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\graphics\Text2dWriter.cpp" />
     <ClInclude Include="src\gameObjects\LateralLamp.h" />
     <ClInclude Include="src\graphics\Mesh.h" />
     <ClInclude Include="src\graphics\Framebuffer.h" />
@@ -54,6 +55,7 @@
     <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\window.h" />
     <ClInclude Include="src\graphics\Vertex.h" />
+    <ClInclude Include="src\graphics\Text2dWriter.h" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -71,7 +73,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\1.lvl" />
+    <None Include="assets\objects\lateralLamp1.mtl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="assets\settings.ini">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="assets\shader\textShader.frag">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="assets\shader\textShader.vert">
       <DeploymentContent>true</DeploymentContent>
     </None>
     <None Include="assets\shader\texture.frag">
@@ -121,6 +132,7 @@
     <Image Include="assets\textures\earth.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="assets\textures\font.png" />
     <Image Include="assets\textures\metal_texture.dds">
       <DeploymentContent>true</DeploymentContent>
     </Image>
