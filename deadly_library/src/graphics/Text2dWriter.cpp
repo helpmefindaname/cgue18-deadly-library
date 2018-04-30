@@ -1,7 +1,7 @@
 #include "Text2dWriter.h"
 #include "../libimport/glm.h"
 #include <vector>
-#include "Mesh.h"
+#include "model/Mesh.h"
 
 
 Text2dWriter::Text2dWriter() :

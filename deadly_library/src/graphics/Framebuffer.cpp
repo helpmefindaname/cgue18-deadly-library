@@ -28,7 +28,7 @@ Framebuffer::Framebuffer(bool useDepthStencilBuffer, int depthStencilBufferWidth
 	if (this->useDepthStencilBuffer) {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, this->depthStencilBuffer.getAttachment(), GL_TEXTURE_2D, this->depthStencilBuffer.getHandle(), 0);
 	}
-
+	int i = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	if ((this->useDepthStencilBuffer || this->colorBuffers.size() > 0) && glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 		throw std::runtime_error("Failed to create framebuffer!");
 	}
@@ -100,7 +100,7 @@ void Framebuffer::bindTextures(Shader& shader, std::vector<std::string> colorBuf
 		unit++;
 	}
 }
-void Framebuffer::bindTextures(Shader & shader, int startPosition, std::vector<std::string> colorBufferNames, std::vector<std::string> targetBufferNames)
+void Framebuffer::bindTextures(Shader& shader, int startPosition, std::vector<std::string> colorBufferNames, std::vector<std::string> targetBufferNames)
 {
 	int unit = startPosition;
 

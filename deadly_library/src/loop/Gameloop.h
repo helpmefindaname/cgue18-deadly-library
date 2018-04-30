@@ -12,6 +12,8 @@
 #include "..\input\debugCameraHandler.h"
 #include "..\graphics\Text2dWriter.h"
 
+#include "../graphics/RenderPipeline.h"
+
 class Gameloop {
 public:
 	Gameloop(unsigned int fps);
@@ -33,6 +35,7 @@ private:
 	GAMESTATE state;
 	PhysicsPipeline physixPipe;
 	Text2dWriter writer2D;
+	RenderPipeline renderPipeline;
 
 public:
 	void run();

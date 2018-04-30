@@ -50,8 +50,8 @@ void Player::update(InputHandler& inputHandler, float dt)
 		direction += roatationSpeed * dt;
 	}
 
-	if (direction > Glm::pi)direction -= 2 * Glm::pi;
-	if (direction < Glm::pi)direction += 2 * Glm::pi;
+	if (direction > Glm::pi) direction -= 2 * Glm::pi;
+	if (direction < Glm::pi) direction += 2 * Glm::pi;
 
 	float lastY = position.y;
 	PxExtendedVec3 pos = playerObject->getPosition();
@@ -61,12 +61,20 @@ void Player::update(InputHandler& inputHandler, float dt)
 		velocityY = jumpPower;
 	}
 
-	this->playerGeometry->setTransformMatrix(glm::translate(position)*glm::rotate(direction, glm::vec3(0.0f, 1.0f, 0.0f)));
+	this->playerMesh->setTransformation(glm::translate(position)*glm::rotate(direction, glm::vec3(0.0f, 1.0f, 0.0f)));
+	//this->playerGeometry->setTransformMatrix(glm::translate(position)*glm::rotate(direction, glm::vec3(0.0f, 1.0f, 0.0f)));
 }
 
-void Player::draw()
+void Player::draw(Shader& activeShader)
 {
-	this->playerGeometry->draw();
+	//this->playerGeometry->draw();
+	activeShader.setUniform("useTexture", false);
+	activeShader.setUniform("textureBuffer", -1);
+	activeShader.setUniform("materialColor", glm::vec3(0.5f));
+	activeShader.setUniform("materialSpecularPower", 1.0f);
+	activeShader.setUniform("lightIntensity", 1.0f);
+	this->playerMesh->uploadData(activeShader);
+	this->playerMesh->render();
 }
 
 PxVec3 Player::forward()

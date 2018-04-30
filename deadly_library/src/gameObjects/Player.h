@@ -5,7 +5,7 @@
 #include "../config.h"
 #include "../Geometry.h"
 #include "../physics/PhysicsPipeline.h"
-#include "../graphics/Mesh.h"
+#include "../graphics/model/Mesh.h"
 
 class Player {
 public:
@@ -30,7 +30,7 @@ public:
 	glm::vec3 getPosition();
 	float getDirection();
 	void update(InputHandler& inputHandler, float dt);
-	void draw();
+	void draw(Shader& activeShader);
 
 private:
 

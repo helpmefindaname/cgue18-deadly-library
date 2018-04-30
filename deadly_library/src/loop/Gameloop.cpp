@@ -15,7 +15,8 @@ Gameloop::Gameloop(unsigned int fps) :
 	debugCameraHandler(debugCamera),
 	physixPipe(),
 	state(),
-	writer2D()
+	writer2D(),
+	renderPipeline(state, Config::getInt("WindowWidth"), Config::getInt("WindowHeight"))
 {
 #if _DEBUG
 	// Register your callback function.
@@ -58,10 +59,6 @@ void Gameloop::run()
 
 void Gameloop::init()
 {
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
-
 	state.init(physixPipe);
 }
 
@@ -104,10 +101,9 @@ void Gameloop::update()
 
 void Gameloop::render()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	state.render();
+	//state.render();
+	renderPipeline.render();
 
 	if (isHelp) {
 		char s[] = "AO";

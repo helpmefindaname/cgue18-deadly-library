@@ -4,7 +4,6 @@
 DeadlyLibrary::DeadlyLibrary()
 	:gameCamera(),
 	usedCamera(&gameCamera),
-	gBuffer(false, 0, 0, {}, {}, {}, {}),
 	player(new Player(glm::vec3(0, 5, 0), 0.0f)),
 	gameCameraHandler(this->gameCamera, this->player)
 {}
@@ -35,20 +34,20 @@ void DeadlyLibrary::update(InputHandler& input, float dt)
 	this->gameCameraHandler.update(dt);
 }
 
-void DeadlyLibrary::render()
+void DeadlyLibrary::render(Shader& activeShader)
 {
-	this->textureShader->use();
-	this->usedCamera->uploadData(*this->textureShader);
+	//this->textureShader->use();
+	//this->usedCamera->uploadData(activeShader);
 
-	textureShader->setUniform("dirL.color", glm::vec3(1.0f));
-	textureShader->setUniform("dirL.direction", glm::vec3(1.0f, 0.0f, 0.0f));
-	textureShader->setUniform("pointL.color", glm::vec3(1.0f));
-	textureShader->setUniform("pointL.position", glm::vec3(1.0f));
-	textureShader->setUniform("pointL.attenuation", glm::vec3(1.0f));
+	//textureShader->setUniform("dirL.color", glm::vec3(1.0f));
+	//textureShader->setUniform("dirL.direction", glm::vec3(1.0f, 0.0f, 0.0f));
+	//textureShader->setUniform("pointL.color", glm::vec3(1.0f));
+	//textureShader->setUniform("pointL.position", glm::vec3(1.0f));
+	//textureShader->setUniform("pointL.attenuation", glm::vec3(1.0f));
 
-	this->player->draw();
+	this->player->draw(activeShader);
 
-	this->world->draw();
+	//this->world->draw();
 }
 
 Camera& DeadlyLibrary::getGameCamera()
@@ -59,4 +58,9 @@ Camera& DeadlyLibrary::getGameCamera()
 void DeadlyLibrary::setUsedCamera(Camera& usedCamera)
 {
 	this->usedCamera = &usedCamera;
+}
+
+Camera& DeadlyLibrary::getUsedCamera()
+{
+	return *this->usedCamera;
 }

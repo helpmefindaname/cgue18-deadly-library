@@ -32,16 +32,14 @@ private:
 	std::shared_ptr<Texture> playerTexture;
 	std::shared_ptr<TextureMaterial> playerMaterial;
 
-
-	Framebuffer gBuffer;
-
 public:
 	void init(PhysicsPipeline& physiX);
 	void update(InputHandler& input, float dt);
-	void render();
+	void render(Shader& activeShader);
 
 	Camera& getGameCamera();
 	void setUsedCamera(Camera& usedCamera);
+	Camera& getUsedCamera();
 
 private:
 };

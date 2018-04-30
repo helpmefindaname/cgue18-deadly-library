@@ -1,14 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="src\graphics\model\Attributes.cpp" />
+    <ClCompile Include="src\graphics\RenderPipeline.cpp" />
     <ClCompile Include="src\gameObjects\LateralLamp.cpp" />
-    <ClCompile Include="src\graphics\Mesh.cpp" />
+    <ClCompile Include="src\graphics\model\Mesh.cpp" />
     <ClCompile Include="src\graphics\Framebuffer.cpp" />
     <ClCompile Include="src\level\LevelReader.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\graphics\Text2dWriter.cpp" />
+    <ClInclude Include="src\graphics\model\Attributes.h" />
+    <ClInclude Include="src\graphics\RenderPipeline.h" />
     <ClInclude Include="src\gameObjects\LateralLamp.h" />
-    <ClInclude Include="src\graphics\Mesh.h" />
+    <ClInclude Include="src\graphics\model\Mesh.h" />
     <ClInclude Include="src\graphics\Framebuffer.h" />
     <ClInclude Include="src\level\LevelReader.h" />
     <ClInclude Include="src\gameState\dL.h" />
@@ -72,12 +76,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\1.lvl" >
-	  <DeploymentContent>true</DeploymentContent>
-	</None>
+    <None Include="assets\1.lvl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="assets\settings.ini">
       <DeploymentContent>true</DeploymentContent>
     </None>
+    <None Include="assets\shader\empty.frag" />
+    <None Include="assets\shader\empty.vert" />
+    <None Include="assets\shader\geometrypass.frag" />
+    <None Include="assets\shader\geometrypass.vert" />
     <None Include="assets\shader\textShader.frag">
       <DeploymentContent>true</DeploymentContent>
     </None>
