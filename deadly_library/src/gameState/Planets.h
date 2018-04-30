@@ -3,6 +3,7 @@
 #include "..\libimport\glfw.h"
 #include "../graphics/camera.h"
 #include "../input/inputHandler.h"
+#include "../input/GameCameraHandler.h" //IF
 #include <shared_mutex>
 
 #include "../graphics/texture.h"
@@ -22,6 +23,7 @@ private:
 	Camera* usedCamera;
 
 	std::shared_ptr<Shader> textureShader;
+	//GameCameraHandler gameCameraHandler;
 
 	std::shared_ptr<Texture> sunTexture;
 	std::shared_ptr<Texture> moonTexture;

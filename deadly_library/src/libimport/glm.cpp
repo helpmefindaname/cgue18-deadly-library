@@ -1,5 +1,7 @@
 #include "glm.h"
 
+float Glm::pi = acos(-1);
+
 glm::tmat4x4<float> Glm::lookAt(glm::tvec3<float> const & eye, glm::tvec3<float> const & center, glm::tvec3<float> const & up)
 {
 	glm::tvec3<float> const f(normalize(center - eye));
@@ -20,4 +22,9 @@ glm::tmat4x4<float> Glm::lookAt(glm::tvec3<float> const & eye, glm::tvec3<float>
 	Result[3][1] = -dot(u, eye);
 	Result[3][2] = dot(f, eye);
 	return Result;
+}
+
+int Glm::sign(float f)
+{
+	return f > 0 ? 1 : -1;;
 }

@@ -14,4 +14,8 @@ public:
 	static glm::tmat4x4<float> lookAt(glm::tvec3<float> const & eye,
 		glm::tvec3<float> const & center,
 		glm::tvec3<float> const & up);
+
+	static float pi;
+
+	static int sign(float f);
 };

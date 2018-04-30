@@ -70,6 +70,16 @@ void PhysicsPipeline::initPhysics()
 		triggerShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false); //bei Collision kein Abprallen
 		triggerShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true); // bei Collision erhalten einer Nachricht
 		*/
+
+	//--------------------------------------------------------IF
+	PxControllerManager* mControllerManager = PxCreateControllerManager(*gScene);
+	PxCapsuleControllerDesc desc;
+	PxController* player = mControllerManager->createController(desc);
+	//PxBoxController mBoxController = PxCreateBoxController(*gScene);
+	//PxController::release() = 0;
+	//PxControllerManager::setPreciseSweeps(bool flag);
+
+	//--------------------------------------------------------- IF end
 	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
 	if (pvdClient)
 	{

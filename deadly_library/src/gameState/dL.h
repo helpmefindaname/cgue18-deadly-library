@@ -9,6 +9,9 @@
 #include "../graphics/texture.h"
 #include "../Material.h"
 #include "../Geometry.h"
+#include "../gameObjects/Player.h"
+#include "../input/GameCameraHandler.h"
+
 class DeadlyLibrary
 {
 public:
@@ -18,6 +21,19 @@ public:
 private:
 	Camera gameCamera;
 	Camera* usedCamera;
+	Player* player;
+
+	GameCameraHandler gameCameraHandler;
+
+	std::shared_ptr<Shader> textureShader;
+	std::shared_ptr<Texture> blockTexture;
+	std::shared_ptr<TextureMaterial> blockMaterial;
+	std::shared_ptr<Geometry> world;
+	std::shared_ptr<Texture> playerTexture;
+	std::shared_ptr<TextureMaterial> playerMaterial;
+
+
+	Framebuffer gBuffer;
 
 public:
 	void init(PhysicsPipeline& physiX);
@@ -28,11 +44,5 @@ public:
 	void setUsedCamera(Camera& usedCamera);
 
 private:
-	std::shared_ptr<Shader> textureShader;
-	std::shared_ptr<Texture> blockTexture;
-	std::shared_ptr<TextureMaterial> blockMaterial;
-	std::shared_ptr<Geometry> world;
-
-	Framebuffer gBuffer;
 };
 

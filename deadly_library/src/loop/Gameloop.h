@@ -10,6 +10,7 @@
 #include "..\graphics\camera.h"
 #include "..\input\inputHandler.h"
 #include "..\input\debugCameraHandler.h"
+//#include "..\input\GameCameraHandler.h" //IF
 
 class Gameloop {
 public:
@@ -28,6 +29,8 @@ private:
 	bool isCulling;
 	Camera debugCamera;
 	DebugCameraHandler debugCameraHandler;
+	//Camera gameCamera; //IF
+	//GameCameraHandler gameCameraHandler; //IF
 	GAMESTATE state;
 	PhysicsPipeline physixPipe;
 
