@@ -1,10 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="src\gameObjects\LateralLamp.cpp" />
     <ClCompile Include="src\graphics\Mesh.cpp" />
     <ClCompile Include="src\graphics\Framebuffer.cpp" />
     <ClCompile Include="src\level\LevelReader.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClInclude Include="src\gameObjects\LateralLamp.h" />
     <ClInclude Include="src\graphics\Mesh.h" />
     <ClInclude Include="src\graphics\Framebuffer.h" />
     <ClInclude Include="src\level\LevelReader.h" />

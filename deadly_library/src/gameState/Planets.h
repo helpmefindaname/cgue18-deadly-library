@@ -23,7 +23,7 @@ private:
 	Camera* usedCamera;
 
 	std::shared_ptr<Shader> textureShader;
-	GameCameraHandler gameCameraHandler;
+	//GameCameraHandler gameCameraHandler;
 
 	std::shared_ptr<Texture> sunTexture;
 	std::shared_ptr<Texture> moonTexture;

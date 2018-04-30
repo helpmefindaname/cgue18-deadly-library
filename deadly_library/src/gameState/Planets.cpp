@@ -3,8 +3,8 @@
 
 Planets::Planets()
 	:gameCamera(),
-	usedCamera(&gameCamera),
-	gameCameraHandler(gameCamera)
+	usedCamera(&gameCamera)
+	//gameCameraHandler(gameCamera)
 {}
 
 Planets::~Planets()
@@ -41,7 +41,7 @@ void Planets::update(InputHandler & input, float dt)
 	sun->transform(glm::rotate(glm::mat4(1.0f), glm::radians(15.0f) * dt, glm::vec3(0, 1, 0)));
 	earth->transform(glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f) * dt, glm::vec3(0, 1, 0)));
 	moon->transform(glm::rotate(glm::mat4(1.0f), glm::radians(60.0f) * dt, glm::vec3(0, 1, 0)));
-	gameCameraHandler.checkInput(input); //IF
+	//gameCameraHandler.checkInput(input); //IF
 	//sun->
 	
 }

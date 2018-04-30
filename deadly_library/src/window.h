@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glfw/glfw3.h>
+#include "libimport\glfw.h"
 #include <string>
 
 class Window {

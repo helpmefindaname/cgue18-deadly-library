@@ -59,9 +59,9 @@ void InputHandler::process() {
 	this->onPressedEvent(GLFW_KEY_TAB, "toggleDebug");
 
 	this->onPressed({ GLFW_KEY_W, GLFW_KEY_UP }, "moveForward");
-	this->onPressed({ GLFW_KEY_D, GLFW_KEY_RIGHT }, "moveBackward");
+	this->onPressed({ GLFW_KEY_D, GLFW_KEY_RIGHT }, "turnRight");
 	this->onPressed({ GLFW_KEY_A, GLFW_KEY_LEFT }, "turnLeft");
-	this->onPressed({ GLFW_KEY_S, GLFW_KEY_DOWN }, "turnRight");
+	this->onPressed({ GLFW_KEY_S, GLFW_KEY_DOWN }, "moveBackward");
 
 	this->onPressed({ GLFW_KEY_W, GLFW_KEY_UP }, "cameraForward");
 	this->onPressed({ GLFW_KEY_S, GLFW_KEY_DOWN }, "cameraBackward");
