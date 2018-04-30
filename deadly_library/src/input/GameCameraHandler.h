@@ -18,7 +18,7 @@ private:
 	float cameraDirection;
 	glm::vec3 cameraPosition;
 
-	float maxDist = 1.5f;
+	float maxDist = Config::getFloat("MaxDist");
 	float height = Config::getFloat("Height");
 	float dist = Config::getFloat("Dist");
 	float distChangePerS = Config::getFloat("DistChangePerS");
