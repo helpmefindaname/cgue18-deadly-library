@@ -18,7 +18,7 @@ void DeadlyLibrary::init(PhysicsPipeline& physiX)
 	LevelReader reader("assets\\1.lvl");
 	this->textureShader = std::make_shared<Shader>("assets/shader/texture");
 	this->blockTexture = std::make_shared<Texture>("assets/textures/block.png");
-	this->blockMaterial = std::make_shared<TextureMaterial>(this->textureShader, glm::vec3(1.0f, 0.0f, 0.0f), 1.0f, this->blockTexture);
+	this->blockMaterial = std::make_shared<TextureMaterial>(this->textureShader, glm::vec3(0.1f, 1.0f, 0.0f), 1.0f, this->blockTexture);
 
 	this->playerTexture = std::make_shared<Texture>("assets/textures/sun.png"); // change for raccoon
 	this->playerMaterial = std::make_shared<TextureMaterial>(textureShader, glm::vec3(1.0f, 0.0f, 0.0f), 1.0f, playerTexture);
@@ -42,9 +42,9 @@ void DeadlyLibrary::render()
 
 	textureShader->setUniform("dirL.color", glm::vec3(1.0f));
 	textureShader->setUniform("dirL.direction", glm::vec3(1.0f, 0.0f, 0.0f));
-	textureShader->setUniform("pointL.color", glm::vec3(1.0f));
-	textureShader->setUniform("pointL.position", glm::vec3(1.0f));
-	textureShader->setUniform("pointL.attenuation", glm::vec3(1.0f));
+	textureShader->setUniform("pointL.color", glm::vec3(1.0f, 0.9f, 0.9f));
+	textureShader->setUniform("pointL.position", glm::vec3(0.0f, 5.0f, 2.5f));
+	textureShader->setUniform("pointL.attenuation", glm::vec3(1.0f, 0.0f, 0.01f));
 
 	this->player->draw();
 
