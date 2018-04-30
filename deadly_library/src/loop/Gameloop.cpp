@@ -11,9 +11,11 @@ Gameloop::Gameloop(unsigned int fps) :
 	inputHandler(this->window),
 	debugCamera(),
 	isDebug(false),
+	isHelp(false),
 	debugCameraHandler(debugCamera),
 	physixPipe(),
-	state()
+	state(),
+	writer2D()
 {
 #if _DEBUG
 	// Register your callback function.
@@ -45,7 +47,7 @@ void Gameloop::run()
 		}
 
 		this->render();
-		
+
 
 		dt = t;
 		t = float(glfwGetTime());
@@ -68,6 +70,10 @@ void Gameloop::update()
 	if (inputHandler.getEvent("toggleDebug")) {
 		isDebug = !isDebug;
 		debugCamera.setInverseViewMatrix(state.getGameCamera().getInverseViewMatrix());
+	}
+
+	if (inputHandler.getEvent("toggleHelp")) {
+		isHelp = !isHelp;
 	}
 
 	if (isDebug) {
@@ -99,9 +105,17 @@ void Gameloop::update()
 void Gameloop::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	state.render();
-	
+
+	if (isHelp) {
+		char s[] = "AO";
+		s[0] = (char)0x60;
+
+		writer2D.print(s, 20, 550, 200);
+	}
+
 	this->window.swapBuffers();
 }
 
