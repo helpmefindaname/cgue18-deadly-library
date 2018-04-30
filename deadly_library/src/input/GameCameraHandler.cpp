@@ -24,10 +24,15 @@ void GameCameraHandler::update(float dt)
 	float posL = glm::length(aimPosition - cameraPosition);
 
 	if (posL > distChangePerS * dt) {
-		cameraPosition += normalize(aimPosition - cameraPosition) * distChangePerS * dt;
+		cameraPosition += (aimPosition - cameraPosition)/posL * distChangePerS * dt;
+		posL -= distChangePerS * dt;
 	}
 	else {
 		cameraPosition = aimPosition;
+	}
+
+	if (posL > maxDist) {
+		cameraPosition += (aimPosition - cameraPosition) / posL * (posL- maxDist);
 	}
 
 	float dDir = aimDirection - cameraDirection;

@@ -29,6 +29,22 @@ void PhysicsPipeline::createStaticCube(const PxVec3 position, const PxVec3 size)
 	shape->release();
 }
 
+PxController* PhysicsPipeline::createController(const PxVec3 position, const PxVec3 size)
+{
+	PxBoxControllerDesc desc;
+	desc.position = PxExtendedVec3(position.x, position.y, position.z);
+	desc.stepOffset = 0.01f;
+	desc.halfSideExtent = size.x * 0.5f;
+	desc.halfHeight = size.y * 0.5f;
+	desc.halfForwardExtent = size.z * 0.5f;
+	desc.scaleCoeff = 0.8f;
+	desc.density = 0.0f;
+	desc.material = this->gNoReboundMaterial;
+
+	PxController* c = this->gControllerManager->createController(desc);
+	return c;
+}
+
 PxRigidStatic* PhysicsPipeline::createStatic(const PxTransform& t, const PxGeometry& geometry, const PxMaterial* mMaterial)
 {
 	// Create static actor
@@ -71,13 +87,8 @@ void PhysicsPipeline::initPhysics()
 		triggerShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true); // bei Collision erhalten einer Nachricht
 		*/
 
-	//--------------------------------------------------------IF
-	PxControllerManager* mControllerManager = PxCreateControllerManager(*gScene);
-	PxCapsuleControllerDesc desc;
-	PxController* player = mControllerManager->createController(desc);
-	//PxBoxController mBoxController = PxCreateBoxController(*gScene);
-	//PxController::release() = 0;
-	//PxControllerManager::setPreciseSweeps(bool flag);
+		//--------------------------------------------------------IF
+	gControllerManager = PxCreateControllerManager(*gScene);
 
 	//--------------------------------------------------------- IF end
 	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
@@ -100,6 +111,7 @@ void PhysicsPipeline::update(float time)
 PhysicsPipeline::~PhysicsPipeline()
 {
 	// free resources and destroy all actors
+	gControllerManager->release();
 	gScene->release();
 	gPhysicsSDK->release();
 	gDispatcher->release();
