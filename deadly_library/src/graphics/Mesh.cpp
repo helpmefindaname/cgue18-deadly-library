@@ -127,17 +127,24 @@ void Mesh::readFile() {
 				attributes.normals[3 * index.normal_index + 2]
 			};
 
-			vertex.uv = {
-				attributes.texcoords[2 * index.texcoord_index + 0],
-				attributes.texcoords[2 * index.texcoord_index + 1]
-			};
+			if (index.texcoord_index != -1) {
+				vertex.uv = {
+					attributes.texcoords[2 * index.texcoord_index + 0],
+					attributes.texcoords[2 * index.texcoord_index + 1]
+				};
+			}
+			else {
+				vertex.uv = {-1,-1};
+			}
 
 			if (uniqueVertices.count(vertex) == 0) {
 				uniqueVertices[vertex] = (int)this->vertices.size();
 
 				this->vertices.push_back(vertex.position);
 				this->normals.push_back(vertex.normal);
-				this->uvs.push_back(vertex.uv);
+				if (vertex.uv.x != -1) {
+					this->uvs.push_back(vertex.uv);
+				}
 			}
 
 			this->indices.push_back(uniqueVertices[vertex]);

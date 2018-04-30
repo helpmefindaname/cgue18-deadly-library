@@ -22,6 +22,8 @@ Window::Window() {
 		monitor,
 		nullptr);
 
+	float brightness = Config::getFloat("Brightness");
+	glTranslatef(brightness, brightness, brightness);
 	glfwMakeContextCurrent(this->window);
 }
 

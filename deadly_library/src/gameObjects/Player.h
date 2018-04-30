@@ -5,6 +5,7 @@
 #include "../config.h"
 #include "../Geometry.h"
 #include "../physics/PhysicsPipeline.h"
+#include "../graphics/Mesh.h"
 
 class Player {
 public:
@@ -14,12 +15,13 @@ public:
 private:
 	glm::vec3 position;
 	float direction;
-	std::shared_ptr<Geometry> sun; //SUN
+	std::shared_ptr<Geometry> playerGeometry;
+	Mesh* playerMesh;
 	PxController* playerObject;
 	float velocityY;
 	
-	float jumpPower = 10.0f;
-	float gravity = 9.81f;
+	float jumpPower = Config::getFloat("JumpPower");
+	float gravity = Config::getFloat("Gravity");
 	float playerSpeed = Config::getFloat("PlayerSpeed");
 	float roatationSpeed = Config::getFloat("RotationSpeed");
 
