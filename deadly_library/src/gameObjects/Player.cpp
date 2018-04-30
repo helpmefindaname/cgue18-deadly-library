@@ -4,15 +4,17 @@
 Player::Player(glm::vec3 position, float direction)
 	:position(position),
 	direction(direction),
-	sun()//SUN
+	velocityY(0.0f),
+	sun()
 {}
 
 Player::~Player()
 {}
 
-void Player::init(std::shared_ptr<TextureMaterial> playerMaterial)
+void Player::init(std::shared_ptr<TextureMaterial> playerMaterial, PhysicsPipeline& physiX)
 {
-	this->sun = std::make_shared<Geometry>(glm::mat4(1.0f), Geometry::createSphereGeometry(64, 32, 1.0f), playerMaterial); //SUN
+	this->sun = std::make_shared<Geometry>(glm::mat4(1.0f), Geometry::createSphereGeometry(64, 32, 0.5f), playerMaterial); //TODO:SUN
+	playerObject = physiX.createController(PxVec3(position.x, position.y, position.z), PxVec3(0.25f));
 }
 
 glm::vec3 Player::getPosition() {
@@ -25,14 +27,16 @@ float Player::getDirection() {
 
 void Player::update(InputHandler& inputHandler, float dt)
 {
-	
+	playerObject->move(playerObject->getUpDirection()*velocityY*dt, 0.0001f, dt, 0);
+
+	velocityY -= gravity * dt;
 
 	if (inputHandler.getEvent("moveForward")) {
-		position += forward() * dt* playerSpeed;
+		playerObject->move(forward() * dt* playerSpeed, 0.0001f, dt, 0);
 	}
 
 	if (inputHandler.getEvent("moveBackward")) {
-		position -= forward() * dt* playerSpeed;
+		playerObject->move(-forward() * dt* playerSpeed, 0.0001f, dt, 0);
 	}
 
 	if (inputHandler.getEvent("turnLeft")) {
@@ -46,6 +50,13 @@ void Player::update(InputHandler& inputHandler, float dt)
 	if (direction > Glm::pi)direction -= 2 * Glm::pi;
 	if (direction < Glm::pi)direction += 2 * Glm::pi;
 
+	float lastY = position.y;
+	PxExtendedVec3 pos = playerObject->getPosition();
+	position = glm::vec3(pos.x, pos.y, pos.z);
+
+	if (abs(lastY - position.y) < 0.00001f && inputHandler.getEvent("jump")) {
+		velocityY = jumpPower;
+	}
 
 	this->sun->setTransformMatrix(glm::translate(position)*glm::rotate(direction, glm::vec3(0.0f, 1.0f, 0.0f)));
 }
@@ -55,7 +66,7 @@ void Player::draw()
 	this->sun->draw();
 }
 
-glm::vec3 Player::forward()
+PxVec3 Player::forward()
 {
-	return glm::vec3(sin(direction), 0.0f, -cos(direction));
+	return PxVec3(sin(direction), 0.0f, -cos(direction));
 }
