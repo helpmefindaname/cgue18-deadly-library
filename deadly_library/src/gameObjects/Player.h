@@ -2,7 +2,7 @@
 #include "../libimport/glm.h"
 #include "../input/inputHandler.h"
 #include <shared_mutex>
-
+#include "../config.h"
 #include "../Geometry.h"
 
 class Player {
@@ -15,8 +15,8 @@ private:
 	float direction;
 	std::shared_ptr<Geometry> sun; //SUN
 	
-	float playerSpeed = 0.5f;
-	float roatationSpeed = 0.1f;
+	float playerSpeed = Config::getFloat("PlayerSpeed");
+	float roatationSpeed = Config::getFloat("RotationSpeed");
 
 public:
 	void init(std::shared_ptr<TextureMaterial> playerMaterial);

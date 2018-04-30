@@ -12,7 +12,7 @@ Player::~Player()
 
 void Player::init(std::shared_ptr<TextureMaterial> playerMaterial)
 {
-	this->sun = std::make_shared<Geometry>(glm::mat4(1.0f), Geometry::createSphereGeometry(64, 32, 2.0f), playerMaterial); //SUN
+	this->sun = std::make_shared<Geometry>(glm::mat4(1.0f), Geometry::createSphereGeometry(64, 32, 1.0f), playerMaterial); //SUN
 }
 
 glm::vec3 Player::getPosition() {
