@@ -38,7 +38,7 @@ PxController* PhysicsPipeline::createController(const PxVec3 position, const PxV
 	desc.halfHeight = size.y * 0.5f;
 	desc.halfForwardExtent = size.z * 0.5f;
 	desc.scaleCoeff = 0.8f;
-	desc.density = 0.0f;
+	desc.density = 0.1f;
 	desc.material = this->gNoReboundMaterial;
 
 	PxController* c = this->gControllerManager->createController(desc);

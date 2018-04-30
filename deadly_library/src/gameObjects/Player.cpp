@@ -5,7 +5,7 @@ Player::Player(glm::vec3 position, float direction)
 	:position(position),
 	direction(direction),
 	velocityY(0.0f),
-	sun()
+	playerGeometry()
 {}
 
 Player::~Player()
@@ -13,8 +13,11 @@ Player::~Player()
 
 void Player::init(std::shared_ptr<TextureMaterial> playerMaterial, PhysicsPipeline& physiX)
 {
-	this->sun = std::make_shared<Geometry>(glm::mat4(1.0f), Geometry::createSphereGeometry(64, 32, 0.5f), playerMaterial); //TODO:SUN
+	this->playerGeometry= std::make_shared<Geometry>(glm::mat4(1.0f), Geometry::createSphereGeometry(64, 32, 0.5f), playerMaterial); //TODO:SUN
+	this->playerMesh = new Mesh("assets/objects/raccoon.mesh");
+	//this->playerGeometry = playerMesh-> ;
 	playerObject = physiX.createController(PxVec3(position.x, position.y, position.z), PxVec3(0.25f));
+	
 }
 
 glm::vec3 Player::getPosition() {
@@ -58,12 +61,12 @@ void Player::update(InputHandler& inputHandler, float dt)
 		velocityY = jumpPower;
 	}
 
-	this->sun->setTransformMatrix(glm::translate(position)*glm::rotate(direction, glm::vec3(0.0f, 1.0f, 0.0f)));
+	this->playerGeometry->setTransformMatrix(glm::translate(position)*glm::rotate(direction, glm::vec3(0.0f, 1.0f, 0.0f)));
 }
 
 void Player::draw()
 {
-	this->sun->draw();
+	this->playerGeometry->draw();
 }
 
 PxVec3 Player::forward()
