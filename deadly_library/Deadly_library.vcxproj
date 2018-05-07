@@ -72,9 +72,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\1.lvl" >
-	  <DeploymentContent>true</DeploymentContent>
-	</None>
+    <None Include="assets\1.lvl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="assets\objects\lateralLamp.mesh">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="assets\objects\raccoon.mesh">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="assets\settings.ini">
       <DeploymentContent>true</DeploymentContent>
     </None>
