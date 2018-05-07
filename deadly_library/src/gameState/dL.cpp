@@ -33,8 +33,9 @@ void DeadlyLibrary::update(InputHandler& input, float dt)
 	this->gameCameraHandler.update(dt);
 
 	if (player->getPosition().y < -50.0f) {
+		float f = 53 - player->getPosition().y;
 		player->setPosition(glm::vec3(0, 53, 0));
-		gameCameraHandler.addPosition(100);
+		gameCameraHandler.addPosition(f);
 	}
 }
 

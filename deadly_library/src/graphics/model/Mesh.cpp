@@ -68,13 +68,13 @@ void Mesh::uploadData(Shader& shader) {
 	if (!this->inMemory) {
 		this->copyData();
 		this->inMemory = true;
-	}
 
-	this->createVAO(
-		shader.getAttributeLocation("vertexPosition"),
-		shader.getAttributeLocation("vertexNormal"),
-		shader.getAttributeLocation("vertexUV")
-	);
+		this->createVAO(
+			shader.getAttributeLocation("vertexPosition"),
+			shader.getAttributeLocation("vertexNormal"),
+			shader.getAttributeLocation("vertexUV")
+		);
+	}
 }
 
 void Mesh::deleteData() {
