@@ -3,9 +3,9 @@
 #include "../input/inputHandler.h"
 #include <shared_mutex>
 #include "../config.h"
-#include "../Geometry.h"
+#include "../graphics/model/Geometry.h"
 #include "../physics/PhysicsPipeline.h"
-#include "../graphics/Mesh.h"
+#include "../graphics/model/Mesh.h"
 
 class Player {
 public:
@@ -15,8 +15,7 @@ public:
 private:
 	glm::vec3 position;
 	float direction;
-	std::shared_ptr<Geometry> playerGeometry;
-	Mesh* playerMesh;
+	model::Geometry* playerGeometry;
 	PxController* playerObject;
 	float velocityY;
 	
@@ -26,11 +25,12 @@ private:
 	float roatationSpeed = Config::getFloat("RotationSpeed");
 
 public:
-	void init(std::shared_ptr<TextureMaterial> playerMaterial, PhysicsPipeline& physiX);
+	void init(PhysicsPipeline& physiX);
+	void setPosition(glm::vec3 position);
 	glm::vec3 getPosition();
 	float getDirection();
 	void update(InputHandler& inputHandler, float dt);
-	void draw();
+	void draw(Shader& activeShader);
 
 private:
 

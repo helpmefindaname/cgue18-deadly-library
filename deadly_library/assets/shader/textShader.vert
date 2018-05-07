@@ -14,7 +14,7 @@ void main(){
 	// map [0..800][0..600] to [-1..1][-1..1]
 	vec2 vertexPosition_homoneneousspace = vertexPosition.xy - vec2(400,300); // [0..800][0..600] -> [-400..400][-300..300]
 	vertexPosition_homoneneousspace /= vec2(400,300);
-	gl_Position =  vec4(vertexPosition_homoneneousspace,0,1);
+	gl_Position =  vec4(vertexPosition_homoneneousspace,0.0f,1.0f);
 
 	uvs = vertexUV;
 }

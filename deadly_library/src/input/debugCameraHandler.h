@@ -16,5 +16,5 @@ private:
 	float cameraSpeed;
 
 public:
-	void checkInput(InputHandler& inputhandler);
+	void checkInput(InputHandler& inputhandler, float dt);
 };

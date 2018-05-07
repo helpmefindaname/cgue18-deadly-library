@@ -1,14 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="src\gameObjects\Light.cpp" />
+    <ClCompile Include="src\graphics\model\MaterialLoader.cpp" />
+    <ClCompile Include="src\graphics\model\MeshLoader.cpp" />
+    <ClCompile Include="src\graphics\model\Geometry.cpp" />
+    <ClCompile Include="src\graphics\model\Attributes.cpp" />
+    <ClCompile Include="src\graphics\RenderPipeline.cpp" />
     <ClCompile Include="src\gameObjects\LateralLamp.cpp" />
-    <ClCompile Include="src\graphics\Mesh.cpp" />
+    <ClCompile Include="src\graphics\model\Mesh.cpp" />
     <ClCompile Include="src\graphics\Framebuffer.cpp" />
     <ClCompile Include="src\level\LevelReader.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\graphics\Text2dWriter.cpp" />
+    <ClCompile Include="src\graphics\TextureLoader.cpp" />
+    <ClInclude Include="src\gameObjects\Light.h" />
+    <ClInclude Include="src\graphics\model\MaterialLoader.h" />
+    <ClInclude Include="src\graphics\model\MeshLoader.h" />
+    <ClInclude Include="src\graphics\model\Geometry.h" />
+    <ClInclude Include="src\graphics\model\Attributes.h" />
+    <ClInclude Include="src\graphics\RenderPipeline.h" />
     <ClInclude Include="src\gameObjects\LateralLamp.h" />
-    <ClInclude Include="src\graphics\Mesh.h" />
+    <ClInclude Include="src\graphics\model\Mesh.h" />
     <ClInclude Include="src\graphics\Framebuffer.h" />
     <ClInclude Include="src\level\LevelReader.h" />
     <ClInclude Include="src\gameState\dL.h" />
@@ -22,18 +35,14 @@
     <ClCompile Include="src\input\GameCameraHandler.cpp" />
     <ClCompile Include="src\physics\PhysicsPipeline.cpp" />
     <ClCompile Include="src\config.cpp" />
-    <ClCompile Include="src\gameState\Planets.cpp" />
     <ClCompile Include="src\graphics\camera.cpp" />
     <ClCompile Include="src\input\debugCameraHandler.cpp" />
     <ClCompile Include="src\graphics\texture.cpp" />
     <ClCompile Include="src\libimport\glm.cpp" />
     <ClCompile Include="src\loop\Gameloop.cpp" />
     <ClCompile Include="src\window.cpp" />
-    <ClCompile Include="src\Geometry.cpp" />
     <ClInclude Include="src\config.h" />
     <ClInclude Include="src\GameImport.h" />
-    <ClInclude Include="src\gameState\Planets.h" />
-    <ClInclude Include="src\Geometry.h" />
     <ClInclude Include="src\graphics\shader.h" />
     <ClInclude Include="src\graphics\shaderStage.h" />
     <ClInclude Include="src\graphics\camera.h" />
@@ -44,18 +53,18 @@
     <ClInclude Include="src\libimport\glfw.h" />
     <ClInclude Include="src\libimport\glm.h" />
     <ClInclude Include="src\libimport\physX.h" />
-    <ClInclude Include="src\Light.h" />
     <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\graphics\shaderStage.cpp" />
     <ClCompile Include="src\input\inputHandler.cpp" />
     <ClCompile Include="src\libimport\glew.cpp" />
     <ClCompile Include="src\libimport\glfw.cpp" />
-    <ClCompile Include="src\Material.cpp" />
+    <ClCompile Include="src\graphics\model\Material.cpp" />
     <ClInclude Include="src\loop\Gameloop.h" />
-    <ClInclude Include="src\Material.h" />
+    <ClInclude Include="src\graphics\model\Material.h" />
     <ClInclude Include="src\window.h" />
     <ClInclude Include="src\graphics\Vertex.h" />
     <ClInclude Include="src\graphics\Text2dWriter.h" />
+    <ClInclude Include="src\graphics\TextureLoader.h" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -72,10 +81,40 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\1.lvl" >
-	  <DeploymentContent>true</DeploymentContent>
-	</None>
+    <None Include="assets\1.lvl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="assets\materials\block.material" />
+    <None Include="assets\materials\raccoon.material">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="assets\settings.ini">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="assets\shader\ambient.frag" />
+    <None Include="assets\shader\ambient.vert" />
+    <None Include="assets\shader\empty.frag">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="assets\shader\empty.vert">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="assets\shader\geometrypass.frag">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="assets\shader\geometrypass.vert">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="assets\shader\lightpass.frag">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="assets\shader\lightpass.vert">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="assets\shader\stencilpass.frag">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="assets\shader\stencilpass.vert">
       <DeploymentContent>true</DeploymentContent>
     </None>
     <None Include="assets\shader\textShader.frag">
@@ -128,9 +167,6 @@
     <Image Include="assets\textures\earth.dds">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="assets\textures\earth.png">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
     <Image Include="assets\textures\font.png" />
     <Image Include="assets\textures\metal_texture.dds">
       <DeploymentContent>true</DeploymentContent>
@@ -141,13 +177,7 @@
     <Image Include="assets\textures\moon.dds">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="assets\textures\moon.png">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
     <Image Include="assets\textures\sun.dds">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="assets\textures\sun.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="assets\textures\wood_texture.dds">
@@ -156,11 +186,6 @@
     <Image Include="assets\textures\wood_texture.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="assets\textures\license.txt">
-      <DeploymentContent>true</DeploymentContent>
-    </Text>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{89281764-4192-41E0-B813-DFB62C075125}</ProjectGuid>

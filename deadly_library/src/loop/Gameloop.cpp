@@ -15,7 +15,8 @@ Gameloop::Gameloop(unsigned int fps) :
 	debugCameraHandler(debugCamera),
 	physixPipe(),
 	state(),
-	writer2D()
+	writer2D(),
+	renderPipeline(state, Config::getInt("WindowWidth"), Config::getInt("WindowHeight"))
 {
 #if _DEBUG
 	// Register your callback function.
@@ -46,7 +47,7 @@ void Gameloop::run()
 			this->update();
 		}
 
-		this->render();
+		this->render(dt);
 
 
 		dt = t;
@@ -58,10 +59,6 @@ void Gameloop::run()
 
 void Gameloop::init()
 {
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
-
 	state.init(physixPipe);
 }
 
@@ -77,7 +74,7 @@ void Gameloop::update()
 	}
 
 	if (isDebug) {
-		debugCameraHandler.checkInput(inputHandler);
+		debugCameraHandler.checkInput(inputHandler, this->sPerFrame);
 		state.setUsedCamera(debugCamera);
 	}
 	else {
@@ -102,18 +99,14 @@ void Gameloop::update()
 	inputHandler.process();
 }
 
-void Gameloop::render()
+void Gameloop::render(float dt)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-	state.render();
+	renderPipeline.render(isHelp);
 
 	if (isHelp) {
-		char s[] = "AO";
-		s[0] = (char)0x60;
+		std::string s = "FPS: " + std::to_string(int(1.0f / dt));
 
-		writer2D.print(s, 20, 550, 200);
+		writer2D.print(s.c_str(), 32, 550, 32);
 	}
 
 	this->window.swapBuffers();

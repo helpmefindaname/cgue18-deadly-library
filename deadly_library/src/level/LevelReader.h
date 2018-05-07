@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "../Geometry.h"
+#include "../graphics/model/Geometry.h"
 #include "../physics/PhysicsPipeline.h"
 class LevelReader
 {
@@ -16,7 +16,7 @@ private:
 	int** data;
 
 public:
-	std::shared_ptr<Geometry> createWorldGeometry(std::shared_ptr<Material> material);
+	std::shared_ptr<model::Geometry> createWorldGeometry();
 	void createWorldPhysics(PhysicsPipeline& physiX);
 
 private:

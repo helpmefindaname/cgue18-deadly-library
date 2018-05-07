@@ -60,7 +60,7 @@ void Camera::uploadData(Shader& shader) {
 	}
 
 	glm::mat4 viewProjectionMatrix = this->projectionMatrix * this->inverseViewMatrix;
-	shader.setUniform("viewProjMatrix", viewProjectionMatrix);
+	shader.setUniform("viewProjectionMatrix", viewProjectionMatrix);
 	shader.setUniform("camera_world", getPosition());
 }
 

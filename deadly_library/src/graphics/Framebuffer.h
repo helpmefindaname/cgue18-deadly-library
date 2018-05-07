@@ -3,7 +3,7 @@
 #include <vector>
 #include <unordered_map>
 #include "shader.h"
-#include "Mesh.h"
+#include "model/Mesh.h"
 
 class Framebuffer
 {

@@ -15,9 +15,14 @@ GameCameraHandler::~GameCameraHandler()
 {
 }
 
+void GameCameraHandler::addPosition(float height) {
+	cameraPosition.x = 0;
+	cameraPosition.y += height;
+	cameraPosition.z = 0;
+}
+
 void GameCameraHandler::update(float dt)
 {
-
 	float aimDirection = usedPlayer->getDirection();
 	glm::vec3 aimPosition = usedPlayer->getPosition();
 
@@ -62,5 +67,5 @@ glm::vec3 GameCameraHandler::getForwardDirection(float direction) {
 
 
 glm::vec3 GameCameraHandler::calculateOffset(float direction) {
-	return glm::vec3(-sin(direction)*dist, height, cos(direction)*dist);
+	return glm::vec3(cos(direction)*dist, height, -sin(direction)*dist);
 }
