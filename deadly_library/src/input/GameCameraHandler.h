@@ -27,6 +27,7 @@ private:
 
 public:
 	void update(float dt);
+	void addPosition(float v);
 
 private:
 	glm::vec3 getForwardDirection(float direction);

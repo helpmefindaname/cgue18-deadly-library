@@ -1,5 +1,7 @@
 #include "Player.h"
-
+#include "../graphics/model/MeshLoader.h"
+#include "../graphics/model/MaterialLoader.h"
+#include "../graphics/TextureLoader.h"
 
 Player::Player(glm::vec3 position, float direction)
 	:position(position),
@@ -11,13 +13,17 @@ Player::Player(glm::vec3 position, float direction)
 Player::~Player()
 {}
 
-void Player::init(std::shared_ptr<TextureMaterial> playerMaterial, PhysicsPipeline& physiX)
+void Player::init(PhysicsPipeline& physiX)
 {
-	this->playerGeometry= std::make_shared<Geometry>(glm::mat4(1.0f), Geometry::createSphereGeometry(64, 32, 0.5f), playerMaterial); //TODO:SUN
-	this->playerMesh = new Mesh("assets/objects/raccoon.mesh");
-	//this->playerGeometry = playerMesh-> ;
+	this->playerGeometry = new model::Geometry(MeshLoader::loadMesh("assets/objects/raccoon.mesh"),
+		MaterialLoader::loadMaterial("assets/materials/raccoon.material"), TextureLoader::loadTexture("assets/textures/raccoon.png"), glm::translate(position));
 	playerObject = physiX.createController(PxVec3(position.x, position.y, position.z), PxVec3(0.25f));
 	
+}
+
+void Player::setPosition(glm::vec3 position) {
+	this->position = position;
+	playerObject->setPosition(PxExtendedVec3(position.x, position.y, position.z));
 }
 
 glm::vec3 Player::getPosition() {
@@ -43,15 +49,15 @@ void Player::update(InputHandler& inputHandler, float dt)
 	}
 
 	if (inputHandler.getEvent("turnLeft")) {
-		direction -= roatationSpeed * dt;
-	}
-
-	if (inputHandler.getEvent("turnRight")) {
 		direction += roatationSpeed * dt;
 	}
 
-	if (direction > Glm::pi)direction -= 2 * Glm::pi;
-	if (direction < Glm::pi)direction += 2 * Glm::pi;
+	if (inputHandler.getEvent("turnRight")) {
+		direction -= roatationSpeed * dt;
+	}
+
+	if (direction > Glm::pi) direction -= 2 * Glm::pi;
+	if (direction < Glm::pi) direction += 2 * Glm::pi;
 
 	float lastY = position.y;
 	PxExtendedVec3 pos = playerObject->getPosition();
@@ -64,12 +70,12 @@ void Player::update(InputHandler& inputHandler, float dt)
 	this->playerGeometry->setTransformMatrix(glm::translate(position)*glm::rotate(direction, glm::vec3(0.0f, 1.0f, 0.0f)));
 }
 
-void Player::draw()
+void Player::draw(Shader& activeShader)
 {
-	this->playerGeometry->draw();
+	this->playerGeometry->render(activeShader);
 }
 
 PxVec3 Player::forward()
 {
-	return PxVec3(sin(direction), 0.0f, -cos(direction));
+	return PxVec3(-cos(direction), 0.0f, sin(direction));
 }

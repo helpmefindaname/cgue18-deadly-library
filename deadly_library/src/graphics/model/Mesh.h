@@ -2,9 +2,11 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <memory>
 
-#include "../libimport/glm.h"
-#include "shader.h"
+#include "../../libimport/glm.h"
+#include "../shader.h"
+#include "Attributes.h"
 
 class Mesh {
 public:
@@ -41,6 +43,9 @@ public:
 	void load(std::string filepath);
 
 	float getCollisionRadius();
+
+	static std::shared_ptr<Mesh> createCubeMesh(float width, float height, float depth);
+	static std::shared_ptr<Mesh> createPlaneMesh(glm::vec3 aa, glm::vec3 ab, glm::vec3 ba, glm::vec3 bb, glm::vec3 normal);
 
 private:
 	void readFile();

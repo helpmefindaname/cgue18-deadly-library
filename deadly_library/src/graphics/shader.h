@@ -25,11 +25,13 @@ private:
 public:
 	void use();
 	GLuint getHandle();
+	std::string getName();
 	GLint getAttributeLocation(std::string name);
 
 	void setUniform(std::string name, const glm::mat4& matrix);
 	void setUniform(std::string name, const glm::mat3& matrix);
 	void setUniform(std::string name, const glm::vec3& vector);
+	void setUniform(std::string name, const glm::vec2& vector);
 	void setUniform(std::string name, const float val);
 	void setUniform(std::string name, const int textureId);
 	//todo: add 'setUniform' methods if needed

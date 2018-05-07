@@ -1,6 +1,6 @@
 #include "glm.h"
 
-float Glm::pi = acos(-1);
+float Glm::pi = (float)acos(-1);
 
 glm::tmat4x4<float> Glm::lookAt(glm::tvec3<float> const & eye, glm::tvec3<float> const & center, glm::tvec3<float> const & up)
 {

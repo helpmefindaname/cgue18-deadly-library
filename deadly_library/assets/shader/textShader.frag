@@ -11,12 +11,5 @@ uniform sampler2D myTextureSampler;
 
 void main(){
 
-	color = texture( myTextureSampler, uvs);
-
-	if(color.a < 0.5f) 
-	    color = vec4(0.0f,0.0f,0.0f,1.0f);
-
-    color = vec4(uvs.x, 1.0f-uvs.x, 0.0f,1.0f);
-
-	//color = vec4(1.0f,1.0f,1.0f,1.0f);
+	color = texture(myTextureSampler, uvs);
 }
