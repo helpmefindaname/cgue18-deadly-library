@@ -15,9 +15,14 @@ GameCameraHandler::~GameCameraHandler()
 {
 }
 
+void GameCameraHandler::addPosition(float height) {
+	cameraPosition.x = 0;
+	cameraPosition.y += height;
+	cameraPosition.z = 0;
+}
+
 void GameCameraHandler::update(float dt)
 {
-
 	float aimDirection = usedPlayer->getDirection();
 	glm::vec3 aimPosition = usedPlayer->getPosition();
 

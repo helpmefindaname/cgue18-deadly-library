@@ -4,7 +4,7 @@
 DeadlyLibrary::DeadlyLibrary()
 	:gameCamera(),
 	usedCamera(&gameCamera),
-	player(new Player(glm::vec3(0, 5, 0), -Glm::pi / 2)),
+	player(new Player(glm::vec3(0, 3, 0), -Glm::pi / 2)),
 	gameCameraHandler(this->gameCamera, this->player)
 {}
 
@@ -31,6 +31,11 @@ void DeadlyLibrary::update(InputHandler& input, float dt)
 {
 	this->player->update(input, dt);
 	this->gameCameraHandler.update(dt);
+
+	if (player->getPosition().y < -50.0f) {
+		player->setPosition(glm::vec3(0, 53, 0));
+		gameCameraHandler.addPosition(100);
+	}
 }
 
 void DeadlyLibrary::render(Shader& activeShader)

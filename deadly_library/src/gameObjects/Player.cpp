@@ -21,6 +21,11 @@ void Player::init(PhysicsPipeline& physiX)
 	
 }
 
+void Player::setPosition(glm::vec3 position) {
+	this->position = position;
+	playerObject->setPosition(PxExtendedVec3(position.x, position.y, position.z));
+}
+
 glm::vec3 Player::getPosition() {
 	return this->position;
 }

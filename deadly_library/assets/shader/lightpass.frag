@@ -57,7 +57,7 @@ float calculcateLightPower(vec3 position, vec3 normal, vec4 material) {
 		}
 	}
 
-	return (ambientIntensity + diffuseIntensity * diffuseFactor + specularIntensity * specularFactor) * lightIntensity * attenuation;
+	return (diffuseIntensity * diffuseFactor + specularIntensity * specularFactor) * lightIntensity * attenuation;
 }
 
 void main() {

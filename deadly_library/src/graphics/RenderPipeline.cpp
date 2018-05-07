@@ -8,6 +8,7 @@ RenderPipeline::RenderPipeline(GAMESTATE& state, int width, int height)
 	geometryPassShader("assets/shader/geometrypass"),
 	stencilTestShader("assets/shader/stencilpass"),
 	lightShader("assets/shader/lightpass"),
+	ambientLightShader("assets/shader/ambient"),
 	width(Config::getInt("WindowWidth")),
 	currentTargetFramebuffer(-1),
 	currentSourceFramebuffer(-1),
@@ -35,9 +36,10 @@ void RenderPipeline::render(bool debug) {
 
 	this->doLightPass();
 
+	/*
 	if (debug) {
 		this->lastPass = "color";
-	}
+	}/**/
 
 	this->doFinalPass();
 
@@ -105,7 +107,13 @@ void RenderPipeline::doLightPass()
 	this->gBuffer.bindTargetColorBuffers({ "light" });
 	glClear(GL_COLOR_BUFFER_BIT);
 
+	this->useShader(this->ambientLightShader);
+	this->gBuffer.bindTextures(*this->activeShader, { "color", "material" }, { "colorBuffer", "materialBuffer" });
 
+	this->activeShader->setUniform("resolution", glm::vec2(this->width, this->height));
+	this->activeShader->setUniform("brightness", Config::getFloat("Brightness"));
+
+	this->gBuffer.renderQuad(*this->activeShader);
 
 	std::vector<std::shared_ptr<Light>> lights = state.getLights();
 

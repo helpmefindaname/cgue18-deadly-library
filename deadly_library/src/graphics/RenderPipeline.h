@@ -20,6 +20,7 @@ private:
 	GLint currentSourceFramebuffer;
 	Shader emptyShader;
 	Shader stencilTestShader;
+	Shader ambientLightShader;
 	Shader lightShader;
 	Shader geometryPassShader;
 

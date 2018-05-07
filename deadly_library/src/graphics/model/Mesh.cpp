@@ -224,6 +224,40 @@ std::shared_ptr<Mesh> Mesh::createCubeMesh(float width, float height, float dept
 }
 
 
+std::shared_ptr<Mesh> Mesh::createPlaneMesh(glm::vec3 aa, glm::vec3 ab, glm::vec3 ba, glm::vec3 bb, glm::vec3 normal)
+{
+	std::vector<glm::vec3> positions = {
+		aa,
+		ab,
+		ba,
+		bb
+	};
+
+	std::vector<glm::vec3> normals = {
+		// front
+		normal,
+		normal,
+		normal,
+		normal
+	};
+
+	std::vector<glm::vec2> uvs = {
+		// front
+		glm::vec2(0, 0),
+		glm::vec2(1, 0),
+		glm::vec2(1, 1),
+		glm::vec2(0, 1)
+	};
+
+	std::vector<unsigned int> indices = {
+		// front
+		0, 1, 2,
+		2, 3, 0,
+	};
+
+	return std::make_shared<Mesh>(indices, positions, normals, uvs);
+}
+
 void Mesh::readFile() {
 	tinyobj::attrib_t attributes;
 	std::vector<tinyobj::shape_t> shapes;

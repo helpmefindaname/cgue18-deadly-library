@@ -26,6 +26,7 @@ private:
 
 public:
 	void init(PhysicsPipeline& physiX);
+	void setPosition(glm::vec3 position);
 	glm::vec3 getPosition();
 	float getDirection();
 	void update(InputHandler& inputHandler, float dt);

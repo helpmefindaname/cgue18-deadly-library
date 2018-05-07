@@ -20,9 +20,43 @@ LevelReader::~LevelReader()
 std::shared_ptr<model::Geometry> LevelReader::createWorldGeometry()
 {
 	std::shared_ptr<Mesh> cube = Mesh::createCubeMesh(1.0f, 1.0f, 1.0f);
+
+	std::shared_ptr<Mesh> plane1 = Mesh::createPlaneMesh(
+		glm::vec3(-width / 2.0f - 0.5f, 10.0f, .5f),
+		glm::vec3(width / 2.0f + 0.5f, 10.0f, .5f),
+		glm::vec3(width / 2.0f + 0.5f, -10.0f, .5f),
+		glm::vec3(-width / 2.0f - 0.5f, -10.0f, .5f),
+		glm::vec3(0, 0, -1.0f));
+	std::shared_ptr<Mesh> plane2 = Mesh::createPlaneMesh(
+		glm::vec3(width / 2.0f + 0.5f, 10.0f, -height + 0.5f),
+		glm::vec3(-width / 2.0f - 0.5f, 10.0f, -height + 0.5f),
+		glm::vec3(-width / 2.0f - 0.5f, -10.0f, -height + 0.5f),
+		glm::vec3(width / 2.0f + 0.5f, -10.0f, -height + 0.5f),
+		glm::vec3(0, 0, 1.0f));
+	std::shared_ptr<Mesh> plane3 = Mesh::createPlaneMesh(
+		glm::vec3(width / 2.0f + 0.5f, 10.0f, 1.0f),
+		glm::vec3(-width / 2.0f - 0.5f, 10.0f, 1.0f),
+		glm::vec3(-width / 2.0f - 0.5f, 10.0f, -height),
+		glm::vec3(width / 2.0f + 0.5f, 10.0f, -height),
+		glm::vec3(0.0f, -1.0f, 0.0f));
+	std::shared_ptr<Mesh> plane4 = Mesh::createPlaneMesh(
+		glm::vec3(width / 2.0f - .5f, 10.0f, 1.0f),
+		glm::vec3(width / 2.0f - .5f, 10.0f, -height),
+		glm::vec3(width / 2.0f - .5f, -10.0f, -height),
+		glm::vec3(width / 2.0f - .5f, -10.0f, 1.0f),
+		glm::vec3(-1.0f, 0.0f, 0.0f));
+	std::shared_ptr<Mesh> plane5 = Mesh::createPlaneMesh(
+		glm::vec3(-width / 2.0f - .5f, -10.0f, 1.0f),
+		glm::vec3(-width / 2.0f - .5f, -10.0f, -height),
+		glm::vec3(-width / 2.0f - .5f, 10.0f, -height),
+		glm::vec3(-width / 2.0f - .5f, 10.0f, 1.0f),
+		glm::vec3(1.0f, 0.0f, 0.0f));
+
 	std::shared_ptr<model::Geometry> scene = std::make_shared<model::Geometry>();
 	std::shared_ptr<Material> material = MaterialLoader::loadMaterial("assets/materials/block.material");
 	std::shared_ptr<Texture> texture = TextureLoader::loadTexture("assets/textures/block.png");
+	std::shared_ptr<Texture> wallTexture = TextureLoader::loadTexture("assets/textures/wall.png");
+
 
 	for (int i = 0; i < this->width; i++)
 	{
@@ -33,6 +67,11 @@ std::shared_ptr<model::Geometry> LevelReader::createWorldGeometry()
 			}
 		}
 	}
+
+	scene->addChild(std::make_unique<model::Geometry>(plane1, material, wallTexture, glm::mat4(1.0f)));
+	scene->addChild(std::make_unique<model::Geometry>(plane2, material, wallTexture, glm::mat4(1.0f)));
+	scene->addChild(std::make_unique<model::Geometry>(plane4, material, wallTexture, glm::mat4(1.0f)));
+	scene->addChild(std::make_unique<model::Geometry>(plane5, material, wallTexture, glm::mat4(1.0f)));
 
 	return scene;
 }
@@ -48,6 +87,12 @@ void LevelReader::createWorldPhysics(PhysicsPipeline& physiX)
 			}
 		}
 	}
+
+	physiX.createStaticCube(PxVec3(0.0f, 0.0f, .5f), PxVec3(width, 20.0f, .25f));
+	physiX.createStaticCube(PxVec3(0.0f, 0.0f, 0.5f - height), PxVec3(width, 20.0f, .25f));
+
+	physiX.createStaticCube(PxVec3(width / 2.0f - .5f, 0.0f, 0.0f), PxVec3(.5f, 20.0f, height - 1.0f));
+	physiX.createStaticCube(PxVec3(-width / 2.0f - .5f, 0.0f, 0.0f), PxVec3(.5f, 20.0f, height - 1.0f));
 }
 
 void LevelReader::readFile() {
