@@ -7,8 +7,7 @@
 #include "../vertex.h"
 
 Mesh::Mesh() :
-	inMemory(false),
-	position(glm::mat4())
+	inMemory(false)
 {}
 
 Mesh::Mesh(Mesh&& mesh) :
@@ -23,16 +22,14 @@ Mesh::Mesh(Mesh&& mesh) :
 	vertices(std::move(mesh.vertices)),
 	normals(std::move(mesh.normals)),
 	uvs(std::move(mesh.uvs)),
-	collisionRadius(mesh.collisionRadius),
-	position(mesh.position.clone())
+	collisionRadius(mesh.collisionRadius)
 {
 	mesh.inMemory = false;
 }
 
-Mesh::Mesh(std::string filepath, glm::mat4 mat) :
+Mesh::Mesh(std::string filepath) :
 	filepath(filepath),
-	inMemory(false),
-	position(Attributes(mat))
+	inMemory(false)
 {
 	this->readFile();
 }
@@ -67,25 +64,17 @@ void Mesh::render() {
 	glBindVertexArray(0);
 }
 
-void Mesh::setTransformation(glm::mat4 matrix)
-{
-	this->position.setMatrix(matrix);
-}
-
 void Mesh::uploadData(Shader& shader) {
 	if (!this->inMemory) {
 		this->copyData();
-
-		this->createVAO(
-			shader.getAttributeLocation("vertexPosition"),
-			shader.getAttributeLocation("vertexNormal"),
-			shader.getAttributeLocation("vertexUV")
-		);
-
 		this->inMemory = true;
 	}
 
-	shader.setUniform("modelMatrix", this->position.getParentMatrix());
+	this->createVAO(
+		shader.getAttributeLocation("vertexPosition"),
+		shader.getAttributeLocation("vertexNormal"),
+		shader.getAttributeLocation("vertexUV")
+	);
 }
 
 void Mesh::deleteData() {
@@ -108,6 +97,132 @@ void Mesh::load(std::string filepath) {
 float Mesh::getCollisionRadius() {
 	return this->collisionRadius;
 }
+
+std::shared_ptr<Mesh> Mesh::createCubeMesh(float width, float height, float depth)
+{
+	std::vector<glm::vec3> positions = {
+		// front
+		glm::vec3(-width / 2.0f, -height / 2.0f,  depth / 2.0f),
+		glm::vec3(width / 2.0f, -height / 2.0f,  depth / 2.0f),
+		glm::vec3(width / 2.0f, height / 2.0f,  depth / 2.0f),
+		glm::vec3(-width / 2.0f, height / 2.0f,  depth / 2.0f),
+		// back
+		glm::vec3(width / 2.0f, -height / 2.0f,  -depth / 2.0f),
+		glm::vec3(-width / 2.0f, -height / 2.0f,  -depth / 2.0f),
+		glm::vec3(-width / 2.0f, height / 2.0f,  -depth / 2.0f),
+		glm::vec3(width / 2.0f, height / 2.0f,  -depth / 2.0f),
+		// right
+		glm::vec3(width / 2.0f, -height / 2.0f,  depth / 2.0f),
+		glm::vec3(width / 2.0f, -height / 2.0f,  -depth / 2.0f),
+		glm::vec3(width / 2.0f, height / 2.0f,  -depth / 2.0f),
+		glm::vec3(width / 2.0f, height / 2.0f,  depth / 2.0f),
+		// left
+		glm::vec3(-width / 2.0f, -height / 2.0f,  -depth / 2.0f),
+		glm::vec3(-width / 2.0f, -height / 2.0f,  depth / 2.0f),
+		glm::vec3(-width / 2.0f, height / 2.0f,  depth / 2.0f),
+		glm::vec3(-width / 2.0f, height / 2.0f,  -depth / 2.0f),
+		// top
+		glm::vec3(-width / 2.0f, height / 2.0f,  -depth / 2.0f),
+		glm::vec3(-width / 2.0f, height / 2.0f,  depth / 2.0f),
+		glm::vec3(width / 2.0f, height / 2.0f,  depth / 2.0f),
+		glm::vec3(width / 2.0f, height / 2.0f,  -depth / 2.0f),
+		// bottom
+		glm::vec3(-width / 2.0f, -height / 2.0f,  -depth / 2.0f),
+		glm::vec3(width / 2.0f, -height / 2.0f,  -depth / 2.0f),
+		glm::vec3(width / 2.0f, -height / 2.0f,  depth / 2.0f),
+		glm::vec3(-width / 2.0f, -height / 2.0f,  depth / 2.0f)
+	};
+
+	std::vector<glm::vec3> normals = {
+		// front
+		glm::vec3(0, 0, 1),
+		glm::vec3(0, 0, 1),
+		glm::vec3(0, 0, 1),
+		glm::vec3(0, 0, 1),
+		// back
+		glm::vec3(0, 0, -1),
+		glm::vec3(0, 0, -1),
+		glm::vec3(0, 0, -1),
+		glm::vec3(0, 0, -1),
+		// right
+		glm::vec3(1, 0, 0),
+		glm::vec3(1, 0, 0),
+		glm::vec3(1, 0, 0),
+		glm::vec3(1, 0, 0),
+		// left
+		glm::vec3(-1, 0, 0),
+		glm::vec3(-1, 0, 0),
+		glm::vec3(-1, 0, 0),
+		glm::vec3(-1, 0, 0),
+		// top
+		glm::vec3(0, 1, 0),
+		glm::vec3(0, 1, 0),
+		glm::vec3(0, 1, 0),
+		glm::vec3(0, 1, 0),
+		// bottom
+		glm::vec3(0, -1, 0),
+		glm::vec3(0, -1, 0),
+		glm::vec3(0, -1, 0),
+		glm::vec3(0, -1, 0)
+	};
+
+	std::vector<glm::vec2> uvs = {
+		// front
+		glm::vec2(0, 0),
+		glm::vec2(1, 0),
+		glm::vec2(1, 1),
+		glm::vec2(0, 1),
+		// back
+		glm::vec2(0, 0),
+		glm::vec2(1, 0),
+		glm::vec2(1, 1),
+		glm::vec2(0, 1),
+		// right
+		glm::vec2(0, 0),
+		glm::vec2(1, 0),
+		glm::vec2(1, 1),
+		glm::vec2(0, 1),
+		// left
+		glm::vec2(0, 0),
+		glm::vec2(1, 0),
+		glm::vec2(1, 1),
+		glm::vec2(0, 1),
+		// top
+		glm::vec2(0, 0),
+		glm::vec2(1, 0),
+		glm::vec2(1, 1),
+		glm::vec2(0, 1),
+		// bottom
+		glm::vec2(0, 0),
+		glm::vec2(1, 0),
+		glm::vec2(1, 1),
+		glm::vec2(0, 1)
+	};
+
+	std::vector<unsigned int> indices = {
+		// front
+		0, 1, 2,
+		2, 3, 0,
+		// back
+		4, 5, 6,
+		6, 7, 4,
+		// right
+		8, 9, 10,
+		10, 11, 8,
+		// left
+		12, 13, 14,
+		14, 15, 12,
+		// top
+		16, 17, 18,
+		18, 19, 16,
+		// bottom
+		20, 21, 22,
+		22, 23, 20
+	};
+
+	return std::make_shared<Mesh>(indices, positions, normals, uvs);
+}
+
 
 void Mesh::readFile() {
 	tinyobj::attrib_t attributes;
@@ -144,7 +259,7 @@ void Mesh::readFile() {
 				};
 			}
 			else {
-				vertex.uv = {-1,-1};
+				vertex.uv = { -1,-1 };
 			}
 
 			if (uniqueVertices.count(vertex) == 0) {

@@ -2,7 +2,7 @@
 
 in vec3 vertexPosition;
 in vec3 vertexNormal;
-//in vec2 vertexUV;
+in vec2 vertexUV;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewProjectionMatrix;
@@ -16,7 +16,7 @@ void main() {
 
 	fragPositionWorldspace = worldspacePosition.xyz;
 	fragNormalWorldspace = (modelMatrix * vec4(vertexNormal, 0.0)).xyz;
-	//fragUV = vertexUV;
+	fragUV = vertexUV;
 
 	gl_Position = viewProjectionMatrix * worldspacePosition;
 }

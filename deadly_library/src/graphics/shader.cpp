@@ -160,10 +160,18 @@ void Shader::setUniform(std::string name, const glm::vec3& vector) {
 	glUniform3f(this->getUniformLocation(name), vector.x, vector.y, vector.z);
 }
 
+void Shader::setUniform(std::string name, const glm::vec2& vector) {
+	glUniform2f(this->getUniformLocation(name), vector.x, vector.y);
+}
+
 void Shader::setUniform(std::string name, float val) {
 	glUniform1f(this->getUniformLocation(name), val);
 }
 
 void Shader::setUniform(std::string name, int textureId) {
 	glUniform1i(this->getUniformLocation(name), textureId);
+}
+
+std::string Shader::getName() {
+	return this->path;
 }

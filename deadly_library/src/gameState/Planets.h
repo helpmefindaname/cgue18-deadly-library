@@ -7,7 +7,7 @@
 #include <shared_mutex>
 
 #include "../graphics/texture.h"
-#include "../Material.h"
+#include "../graphics\model\Material.h"
 #include "../Geometry.h"
 #include "../physics/PhysicsPipeline.h"
 #include "../Light.h"

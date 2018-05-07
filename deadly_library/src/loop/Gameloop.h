@@ -43,7 +43,7 @@ public:
 private:
 	void init();
 	void update();
-	void render();
+	void render(float dt);
 
 	static void APIENTRY DebugCallbackDefault(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const GLvoid* userParam);
 	static std::string FormatDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, const char* msg);

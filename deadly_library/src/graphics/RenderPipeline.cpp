@@ -1,12 +1,17 @@
 #include "RenderPipeline.h"
 #include "../config.h"
-
+#include "../gameObjects/Light.h"
 
 RenderPipeline::RenderPipeline(GAMESTATE& state, int width, int height)
 	:emptyShader("assets/shader/empty"),
 	state(state),
 	geometryPassShader("assets/shader/geometrypass"),
+	stencilTestShader("assets/shader/stencilpass"),
+	lightShader("assets/shader/lightpass"),
 	width(Config::getInt("WindowWidth")),
+	currentTargetFramebuffer(-1),
+	currentSourceFramebuffer(-1),
+	activeShader(nullptr),
 	height(Config::getInt("WindowHeight")),
 	gBuffer(
 		true, width, height,
@@ -15,21 +20,24 @@ RenderPipeline::RenderPipeline(GAMESTATE& state, int width, int height)
 		{ height, height, height, height, height, height },
 		{ GL_RGBA16F, GL_RGBA16F, GL_RGBA16F, GL_RGBA8, GL_RGBA16F, GL_RGBA8 }
 	)
-{
-}
+{ }
 
 
 RenderPipeline::~RenderPipeline()
 {
 }
 
-void RenderPipeline::render() {
+void RenderPipeline::render(bool debug) {
 
 	this->reset();
 
 	this->doGeometryPass();
 
-	//this->doLightPass();
+	this->doLightPass();
+
+	if (debug) {
+		this->lastPass = "color";
+	}
 
 	this->doFinalPass();
 
@@ -42,9 +50,6 @@ void RenderPipeline::useShader(Shader& shader) {
 }
 
 void RenderPipeline::reset() {
-	bindDefaultFramebuffer();
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
 	glUseProgram(0);
 	this->activeShader = &this->emptyShader;
 }
@@ -76,13 +81,14 @@ void RenderPipeline::doGeometryPass()
 	this->useShader(this->geometryPassShader);
 	this->bindTargetFramebuffer(this->gBuffer);
 
+	this->gBuffer.bindTargetColorBuffers({ "color", "position", "normal", "material" });
+
 	glDepthMask(GL_TRUE);
-	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
 
-	this->gBuffer.bindTargetColorBuffers({ "color", "position", "normal", "material" });
 
 	this->state.getUsedCamera().uploadData(*this->activeShader);
 
@@ -91,6 +97,65 @@ void RenderPipeline::doGeometryPass()
 	glDepthMask(GL_FALSE);
 
 	lastPass = "color";
+}
+
+void RenderPipeline::doLightPass()
+{
+	this->bindTargetFramebuffer(this->gBuffer);
+	this->gBuffer.bindTargetColorBuffers({ "light" });
+	glClear(GL_COLOR_BUFFER_BIT);
+
+
+
+	std::vector<std::shared_ptr<Light>> lights = state.getLights();
+
+	for (auto light : lights) {
+		this->useShader(this->stencilTestShader);
+		this->bindTargetFramebuffer(gBuffer);
+		this->bindSourceFramebuffer(gBuffer);
+		glDrawBuffer(GL_NONE);
+
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_STENCIL_TEST);
+		glDisable(GL_CULL_FACE);
+		glClear(GL_STENCIL_BUFFER_BIT);
+
+		glStencilFunc(GL_ALWAYS, 0, 0);
+		glStencilOpSeparate(GL_BACK, GL_KEEP, GL_INCR_WRAP, GL_KEEP);
+		glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
+
+		this->state.getUsedCamera().uploadData(*this->activeShader);
+		light->render(*this->activeShader);
+
+		// ------------------------------
+
+		this->useShader(this->lightShader);
+
+		this->gBuffer.bindTargetColorBuffers({ "light" });
+		this->gBuffer.bindTextures(*this->activeShader, { "color", "position", "normal", "material" }, { "colorBuffer", "positionBuffer", "normalBuffer", "materialBuffer" });
+
+		this->activeShader->setUniform("resolution", glm::vec2(this->width, this->height));
+
+		glStencilFunc(GL_NOTEQUAL, 0, 0xFF);
+		glDisable(GL_DEPTH_TEST);
+
+		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
+		glBlendFunc(GL_ONE, GL_ONE);
+
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		this->state.getUsedCamera().uploadData(*this->activeShader);
+		light->render(*this->activeShader);
+
+		glCullFace(GL_BACK);
+		glDisable(GL_BLEND);
+	}
+
+	glDisable(GL_STENCIL_TEST);
+
+
+	lastPass = "light";
 }
 
 void RenderPipeline::doFinalPass()

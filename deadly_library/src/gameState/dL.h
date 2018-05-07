@@ -7,10 +7,11 @@
 #include "../graphics/Framebuffer.h"
 #include <memory>
 #include "../graphics/texture.h"
-#include "../Material.h"
-#include "../Geometry.h"
+#include "../graphics\model\Material.h"
+#include "../graphics/model/Geometry.h"
 #include "../gameObjects/Player.h"
 #include "../input/GameCameraHandler.h"
+#include "../gameObjects/Light.h"
 
 class DeadlyLibrary
 {
@@ -21,16 +22,13 @@ public:
 private:
 	Camera gameCamera;
 	Camera* usedCamera;
+
 	Player* player;
+	std::shared_ptr<model::Geometry> world;
 
 	GameCameraHandler gameCameraHandler;
 
-	std::shared_ptr<Shader> textureShader;
-	std::shared_ptr<Texture> blockTexture;
-	std::shared_ptr<TextureMaterial> blockMaterial;
-	std::shared_ptr<Geometry> world;
-	std::shared_ptr<Texture> playerTexture;
-	std::shared_ptr<TextureMaterial> playerMaterial;
+	std::vector<std::shared_ptr<Light>> lights;
 
 public:
 	void init(PhysicsPipeline& physiX);
@@ -40,6 +38,8 @@ public:
 	Camera& getGameCamera();
 	void setUsedCamera(Camera& usedCamera);
 	Camera& getUsedCamera();
+
+	std::vector<std::shared_ptr<Light>> getLights();
 
 private:
 };

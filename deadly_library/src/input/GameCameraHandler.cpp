@@ -62,5 +62,5 @@ glm::vec3 GameCameraHandler::getForwardDirection(float direction) {
 
 
 glm::vec3 GameCameraHandler::calculateOffset(float direction) {
-	return glm::vec3(-sin(direction)*dist, height, cos(direction)*dist);
+	return glm::vec3(cos(direction)*dist, height, -sin(direction)*dist);
 }

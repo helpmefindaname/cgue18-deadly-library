@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <memory>
 
 #include "../../libimport/glm.h"
 #include "../shader.h"
@@ -11,7 +12,7 @@ class Mesh {
 public:
 	Mesh();
 	Mesh(Mesh&& mesh);
-	Mesh(std::string filepath, glm::mat4 modelMatrix = glm::mat4(1.0f));
+	Mesh(std::string filepath);
 	Mesh(std::vector<unsigned int> indices, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals = std::vector<glm::vec3>(), std::vector<glm::vec2> uvs = std::vector<glm::vec2>());
 	~Mesh();
 
@@ -33,12 +34,8 @@ private:
 
 	float collisionRadius;
 
-	Attributes position;
-
 public:
 	void render();
-
-	void setTransformation(glm::mat4 matrix);
 
 	void uploadData(Shader& shader);
 	void deleteData();
@@ -46,6 +43,8 @@ public:
 	void load(std::string filepath);
 
 	float getCollisionRadius();
+
+	static std::shared_ptr<Mesh> createCubeMesh(float width, float height, float depth);
 
 private:
 	void readFile();

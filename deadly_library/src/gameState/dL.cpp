@@ -4,7 +4,7 @@
 DeadlyLibrary::DeadlyLibrary()
 	:gameCamera(),
 	usedCamera(&gameCamera),
-	player(new Player(glm::vec3(0, 5, 0), 0.0f)),
+	player(new Player(glm::vec3(0, 5, 0), -Glm::pi / 2)),
 	gameCameraHandler(this->gameCamera, this->player)
 {}
 
@@ -15,17 +15,16 @@ DeadlyLibrary::~DeadlyLibrary()
 void DeadlyLibrary::init(PhysicsPipeline& physiX)
 {
 	LevelReader reader("assets\\1.lvl");
-	this->textureShader = std::make_shared<Shader>("assets/shader/texture");
-	this->blockTexture = std::make_shared<Texture>("assets/textures/block.png");
-	this->blockMaterial = std::make_shared<TextureMaterial>(this->textureShader, glm::vec3(1.0f, 0.0f, 0.0f), 1.0f, this->blockTexture);
+	this->player->init(physiX);
 
-	this->playerTexture = std::make_shared<Texture>("assets/textures/sun.png"); // change for raccoon
-	this->playerMaterial = std::make_shared<TextureMaterial>(textureShader, glm::vec3(1.0f, 0.0f, 0.0f), 1.0f, playerTexture);
-	this->player->init(playerMaterial, physiX);
-
-	this->world = reader.createWorldGeometry(this->blockMaterial);
+	this->world = reader.createWorldGeometry();
 
 	reader.createWorldPhysics(physiX);
+
+	lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 10.0f, 2.5f), 100.0f));
+	lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 10.0f, -5.5f), 100.0f));
+	lights.push_back(std::make_shared<Light>(glm::vec3(10.0f, 10.0f, -25.5f), 10.0f));
+	lights.push_back(std::make_shared<Light>(glm::vec3(-10.0f, 10.0f, -25.5f), 10.0f));
 }
 
 void DeadlyLibrary::update(InputHandler& input, float dt)
@@ -36,18 +35,8 @@ void DeadlyLibrary::update(InputHandler& input, float dt)
 
 void DeadlyLibrary::render(Shader& activeShader)
 {
-	//this->textureShader->use();
-	//this->usedCamera->uploadData(activeShader);
-
-	//textureShader->setUniform("dirL.color", glm::vec3(1.0f));
-	//textureShader->setUniform("dirL.direction", glm::vec3(1.0f, 0.0f, 0.0f));
-	//textureShader->setUniform("pointL.color", glm::vec3(1.0f));
-	//textureShader->setUniform("pointL.position", glm::vec3(1.0f));
-	//textureShader->setUniform("pointL.attenuation", glm::vec3(1.0f));
-
+	this->world->render(activeShader);
 	this->player->draw(activeShader);
-
-	//this->world->draw();
 }
 
 Camera& DeadlyLibrary::getGameCamera()
@@ -63,4 +52,9 @@ void DeadlyLibrary::setUsedCamera(Camera& usedCamera)
 Camera& DeadlyLibrary::getUsedCamera()
 {
 	return *this->usedCamera;
+}
+
+std::vector<std::shared_ptr<Light>> DeadlyLibrary::getLights()
+{
+	return lights;
 }

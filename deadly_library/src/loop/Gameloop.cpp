@@ -47,7 +47,7 @@ void Gameloop::run()
 			this->update();
 		}
 
-		this->render();
+		this->render(dt);
 
 
 		dt = t;
@@ -74,7 +74,7 @@ void Gameloop::update()
 	}
 
 	if (isDebug) {
-		debugCameraHandler.checkInput(inputHandler);
+		debugCameraHandler.checkInput(inputHandler, this->sPerFrame);
 		state.setUsedCamera(debugCamera);
 	}
 	else {
@@ -99,17 +99,14 @@ void Gameloop::update()
 	inputHandler.process();
 }
 
-void Gameloop::render()
+void Gameloop::render(float dt)
 {
-
-	//state.render();
-	renderPipeline.render();
+	renderPipeline.render(isHelp);
 
 	if (isHelp) {
-		char s[] = "AO";
-		s[0] = (char)0x60;
+		std::string s = "FPS: " + std::to_string(int(1.0f / dt));
 
-		writer2D.print(s, 20, 550, 200);
+		writer2D.print(s.c_str(), 32, 550, 32);
 	}
 
 	this->window.swapBuffers();

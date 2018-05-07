@@ -19,7 +19,8 @@ private:
 	GLint currentTargetFramebuffer;
 	GLint currentSourceFramebuffer;
 	Shader emptyShader;
-
+	Shader stencilTestShader;
+	Shader lightShader;
 	Shader geometryPassShader;
 
 	Framebuffer gBuffer;
@@ -27,7 +28,7 @@ private:
 	int height;
 
 public:
-	void render();
+	void render(bool debug);
 
 private:
 	void useShader(Shader& shader);

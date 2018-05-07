@@ -25,7 +25,7 @@ private:
 public:
 
 	void update(float time);
-	void PhysicsPipeline::createStaticCube(const PxVec3 position, const PxVec3 = PxVec3(1.0f));
+	void PhysicsPipeline::createStaticCube(const PxVec3 position, const PxVec3 = PxVec3(0.5f));
 	PxController* PhysicsPipeline::createController(const PxVec3 position, const PxVec3 size);
 
 
