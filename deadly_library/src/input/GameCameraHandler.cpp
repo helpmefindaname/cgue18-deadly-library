@@ -19,6 +19,7 @@ void GameCameraHandler::addPosition(float height) {
 	cameraPosition.x = 0;
 	cameraPosition.y += height;
 	cameraPosition.z = 0;
+	cameraDirection = -Glm::pi / 2;
 }
 
 void GameCameraHandler::update(float dt)
