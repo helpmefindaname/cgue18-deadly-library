@@ -30,6 +30,8 @@ private:
 
 	std::vector<std::shared_ptr<Light>> lights;
 
+	std::string lvlFile = Config::getString("LvlFile");
+
 public:
 	void init(PhysicsPipeline& physiX);
 	void update(InputHandler& input, float dt);
