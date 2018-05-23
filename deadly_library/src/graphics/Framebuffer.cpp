@@ -15,7 +15,7 @@ Framebuffer::Framebuffer(bool useDepthStencilBuffer, int depthStencilBufferWidth
 		})
 {
 	for (size_t i = 0; i < colorBufferNames.size(); i++) {
-		this->colorBuffers.emplace(colorBufferNames.at(i), Texture(colorBufferWidths.at(i), colorBufferHeights.at(i), GL_RGBA, internalFormats.at(i), GL_FLOAT, GL_COLOR_ATTACHMENT0 + (int)i, GL_LINEAR, GL_CLAMP_TO_EDGE));
+		this->colorBuffers.emplace(colorBufferNames.at(i), Texture(colorBufferWidths.at(i), colorBufferHeights.at(i), GL_RGBA, internalFormats.at(i), GL_FLOAT, GL_COLOR_ATTACHMENT0 + (int)i, GL_LINEAR_MIPMAP_LINEAR, GL_CLAMP_TO_EDGE));
 	}
 
 	glGenFramebuffers(1, &this->handle);

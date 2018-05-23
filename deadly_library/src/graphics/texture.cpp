@@ -25,6 +25,10 @@ Texture::Texture(unsigned int width, unsigned int height, GLenum format, GLint i
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->wrap);
 	glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->format, this->precision, 0);
 
+	if (this->filter == GL_LINEAR_MIPMAP_LINEAR) {
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
@@ -87,11 +91,12 @@ void Texture::readFile() {
 		this->precision = GL_UNSIGNED_BYTE;
 		this->wrap = GL_CLAMP_TO_EDGE;
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->wrap);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->wrap);
 		glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->format, this->precision, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
 
 		stbi_image_free(data);
 		glBindTexture(GL_TEXTURE_2D, 0);

@@ -32,6 +32,7 @@ void Light::render(Shader & shader)
 
 	mesh->uploadData(shader);
 	mesh->render();
+	mesh->deleteData();
 }
 
 void Light::setPosition(glm::vec3 position) {
