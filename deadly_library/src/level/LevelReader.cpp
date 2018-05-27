@@ -62,8 +62,9 @@ std::shared_ptr<model::Geometry> LevelReader::createWorldGeometry()
 	{
 		for (int j = 0; j < this->height; j++)
 		{
-			if (data[j][i] == 1) {
-				scene->addChild(std::make_unique<model::Geometry>(cube, material, texture, glm::translate(glm::vec3(i - width / 2.0f, -2, -j))));
+			if (data[j][i] >= 1 && data[j][i] <= 9) {
+				int blockheight = data[j][i];
+				scene->addChild(std::make_unique<model::Geometry>(cube, material, texture, glm::translate(glm::vec3(i - width / 2.0f, blockheight, -j))));
 			}
 		}
 	}
@@ -81,9 +82,10 @@ void LevelReader::createWorldPhysics(PhysicsPipeline& physiX)
 	for (int i = 0; i < this->width; i++)
 	{
 		for (int j = 0; j < this->height; j++)
-		{
-			if (data[j][i] == 1) {
-				physiX.createStaticCube(PxVec3(i - width / 2.0f, -2.0f, (float)-j));
+		{	
+			if (data[j][i] >= 1 && data [j][i] <=9) {
+				int blockheight = data[j][i];
+				physiX.createStaticCube(PxVec3(i - width / 2.0f, blockheight, (float)-j));
 			}
 		}
 	}
@@ -107,7 +109,7 @@ void LevelReader::readFile() {
 
 	//atm:
 	//0 -> hole
-	//1 -> piece at height 1
+	//1 -9 -> piece at height 1 until 9
 
 	data = new int*[height];
 

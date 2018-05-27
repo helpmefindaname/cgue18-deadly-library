@@ -2,22 +2,16 @@
 #include "../config.h"
 #include "../graphics/model/MeshLoader.h"
 
-Light::Light(glm::vec3 position, float intensity, glm::vec3 color)
-	: attenuationConstant(Config::getFloat("LightAttenuationConstant")),
-	attenuationLinear(Config::getFloat("LightAttenuationLinear")),
-	attenuationSquared(Config::getFloat("LightAttenuationSquared")),
-	mesh(MeshLoader::loadMesh("assets/objects/lightBounds.mesh")),
-	position(position),
-	intensity(intensity),
-	color(color)
+Light::Light(glm::vec3 position)
+	: position(position)
 {
-	this->calculateRadius();
 }
 
 
 Light::~Light()
 {
 }
+
 
 void Light::render(Shader & shader)
 {
@@ -39,15 +33,6 @@ void Light::setPosition(glm::vec3 position) {
 	this->position = position;
 }
 
-void Light::calculateRadius() {
-	float maxChannel = std::fmaxf(std::fmaxf(this->color.r, this->color.g), this->color.b);
-	const float threshold = 256.0f / 1.0f;
-
-	float a = attenuationSquared;
-	float b = attenuationLinear;
-	float c = attenuationConstant - threshold * maxChannel * this->intensity;
-
-	float d = b * b - 4.0f*a*c;
-
-	this->lightRadius = (-b + std::sqrt(d)) / (2.0f*a);
+glm::vec3 Light::getPosition() {
+	return this->position;
 }

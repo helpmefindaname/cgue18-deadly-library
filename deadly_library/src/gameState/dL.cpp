@@ -14,17 +14,17 @@ DeadlyLibrary::~DeadlyLibrary()
 
 void DeadlyLibrary::init(PhysicsPipeline& physiX)
 {
-	LevelReader reader("assets\\1.lvl");
+	LevelReader reader("assets\\"+(lvlFile));
 	this->player->init(physiX);
 
 	this->world = reader.createWorldGeometry();
 
 	reader.createWorldPhysics(physiX);
 
-	lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 10.0f, 2.5f), 100.0f));
-	lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 10.0f, -5.5f), 100.0f));
-	lights.push_back(std::make_shared<Light>(glm::vec3(10.0f, 10.0f, -25.5f), 10.0f));
-	lights.push_back(std::make_shared<Light>(glm::vec3(-10.0f, 10.0f, -25.5f), 10.0f));
+	lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 10.0f, 2.5f)));
+	lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 10.0f, -5.5f)));
+	lights.push_back(std::make_shared<Light>(glm::vec3(10.0f, 10.0f, -25.5f)));
+	lights.push_back(std::make_shared<Light>(glm::vec3(-10.0f, 10.0f, -25.5f)));
 }
 
 void DeadlyLibrary::update(InputHandler& input, float dt)
