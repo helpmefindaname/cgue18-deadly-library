@@ -172,6 +172,10 @@ void Shader::setUniform(std::string name, int textureId) {
 	glUniform1i(this->getUniformLocation(name), textureId);
 }
 
+void Shader::setUniform(std::string name, std::vector<glm::vec3>& vector) {
+	glUniform3fv(this->getUniformLocation(name), vector.size(), glm::value_ptr(vector[0]));
+}
+
 std::string Shader::getName() {
 	return this->path;
 }

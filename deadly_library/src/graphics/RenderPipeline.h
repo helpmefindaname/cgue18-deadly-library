@@ -20,13 +20,19 @@ private:
 	GLint currentSourceFramebuffer;
 	Shader emptyShader;
 	Shader stencilTestShader;
-	Shader ambientLightShader;
 	Shader lightShader;
 	Shader geometryPassShader;
 
 	Framebuffer gBuffer;
 	int width;
 	int height;
+
+	float lightAttenuationConstant;
+	float lightAttenuationLinear;
+	float lightAttenuationSquared;
+	glm::vec3 lightColor;
+	float lightIntensity;
+	float lightRadius;
 
 public:
 	void render(bool debug);
@@ -44,5 +50,7 @@ private:
 	void doLightPass();
 	void doFinalPass();
 	void doHudPass();
+
+	void calculateRadius();
 };
 

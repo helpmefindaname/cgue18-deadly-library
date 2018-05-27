@@ -1,8 +1,8 @@
 
 color 0.8 0.8 0.8
 
-ambientFactor 0.8
-diffuseFactor 0.2
-specularPower 0.0
+ambientFactor 0.3
+diffuseFactor 0.8
+specularPower 0.2
 
 usesTexture 0
