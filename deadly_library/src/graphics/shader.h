@@ -34,6 +34,7 @@ public:
 	void setUniform(std::string name, const glm::vec2& vector);
 	void setUniform(std::string name, const float val);
 	void setUniform(std::string name, const int textureId);
+	void setUniform(std::string name, std::vector<glm::vec3>& vector);
 	//todo: add 'setUniform' methods if needed
 	GLint getUniformLocation(std::string name);
 

@@ -8,12 +8,16 @@ RenderPipeline::RenderPipeline(GAMESTATE& state, int width, int height)
 	geometryPassShader("assets/shader/geometrypass"),
 	stencilTestShader("assets/shader/stencilpass"),
 	lightShader("assets/shader/lightpass"),
-	ambientLightShader("assets/shader/ambient"),
 	width(Config::getInt("WindowWidth")),
 	currentTargetFramebuffer(-1),
 	currentSourceFramebuffer(-1),
 	activeShader(nullptr),
 	height(Config::getInt("WindowHeight")),
+	lightAttenuationConstant(Config::getFloat("LightAttenuationConstant")),
+	lightAttenuationLinear(Config::getFloat("LightAttenuationLinear")),
+	lightAttenuationSquared(Config::getFloat("LightAttenuationSquared")),
+	lightColor(Config::getVec3("LightColor")),
+	lightIntensity(Config::getFloat("LightIntensity")),
 	gBuffer(
 		true, width, height,
 		{ "color", "position", "normal", "material", "light", "final" },
@@ -21,7 +25,9 @@ RenderPipeline::RenderPipeline(GAMESTATE& state, int width, int height)
 		{ height, height, height, height, height, height },
 		{ GL_RGBA16F, GL_RGBA16F, GL_RGBA16F, GL_RGBA8, GL_RGBA16F, GL_RGBA8 }
 	)
-{ }
+{
+	this->calculateRadius();
+}
 
 
 RenderPipeline::~RenderPipeline()
@@ -106,62 +112,34 @@ void RenderPipeline::doLightPass()
 	this->bindTargetFramebuffer(this->gBuffer);
 	this->gBuffer.bindTargetColorBuffers({ "light" });
 	glClear(GL_COLOR_BUFFER_BIT);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 
-	this->useShader(this->ambientLightShader);
-	this->gBuffer.bindTextures(*this->activeShader, { "color", "material" }, { "colorBuffer", "materialBuffer" });
+	this->useShader(this->lightShader);
+	this->gBuffer.bindTextures(*this->activeShader, { "color", "position", "normal", "material" }, { "colorBuffer", "positionBuffer", "normalBuffer", "materialBuffer" });
 
 	this->activeShader->setUniform("resolution", glm::vec2(this->width, this->height));
 	this->activeShader->setUniform("brightness", Config::getFloat("Brightness"));
 
-	this->gBuffer.renderQuad(*this->activeShader);
-
 	std::vector<std::shared_ptr<Light>> lights = state.getLights();
 
+	this->activeShader->setUniform("attenuationConstant", this->lightAttenuationConstant);
+	this->activeShader->setUniform("attenuationLinear", this->lightAttenuationLinear);
+	this->activeShader->setUniform("attenuationSquared", this->lightAttenuationSquared);
+	this->activeShader->setUniform("lightColor", this->lightColor);
+	this->activeShader->setUniform("lightIntensity", this->lightIntensity);
+	this->activeShader->setUniform("lightRadius", this->lightRadius);
+
+	std::vector<glm::vec3> positions;
+
 	for (auto light : lights) {
-		this->useShader(this->stencilTestShader);
-		this->bindTargetFramebuffer(gBuffer);
-		this->bindSourceFramebuffer(gBuffer);
-		glDrawBuffer(GL_NONE);
-
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_STENCIL_TEST);
-		glDisable(GL_CULL_FACE);
-		glClear(GL_STENCIL_BUFFER_BIT);
-
-		glStencilFunc(GL_ALWAYS, 0, 0);
-		glStencilOpSeparate(GL_BACK, GL_KEEP, GL_INCR_WRAP, GL_KEEP);
-		glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
-
-		this->state.getUsedCamera().uploadData(*this->activeShader);
-		light->render(*this->activeShader);
-
-		// ------------------------------
-
-		this->useShader(this->lightShader);
-
-		this->gBuffer.bindTargetColorBuffers({ "light" });
-		this->gBuffer.bindTextures(*this->activeShader, { "color", "position", "normal", "material" }, { "colorBuffer", "positionBuffer", "normalBuffer", "materialBuffer" });
-
-		this->activeShader->setUniform("resolution", glm::vec2(this->width, this->height));
-
-		glStencilFunc(GL_NOTEQUAL, 0, 0xFF);
-		glDisable(GL_DEPTH_TEST);
-
-		glEnable(GL_BLEND);
-		glBlendEquation(GL_FUNC_ADD);
-		glBlendFunc(GL_ONE, GL_ONE);
-
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_FRONT);
-		this->state.getUsedCamera().uploadData(*this->activeShader);
-		light->render(*this->activeShader);
-
-		glCullFace(GL_BACK);
-		glDisable(GL_BLEND);
+		positions.push_back(light->getPosition());
 	}
 
-	glDisable(GL_STENCIL_TEST);
+	this->activeShader->setUniform("lightPositions", positions);
+	this->activeShader->setUniform("lightCount", (int)positions.size());
 
+	this->gBuffer.renderQuad(*this->activeShader);
 
 	lastPass = "light";
 }
@@ -177,4 +155,18 @@ void RenderPipeline::doFinalPass()
 		0, 0, this->width, this->height,
 		GL_COLOR_BUFFER_BIT, GL_NEAREST
 	);
+}
+
+void RenderPipeline::calculateRadius()
+{
+	float maxChannel = std::fmaxf(std::fmaxf(this->lightColor.r, this->lightColor.g), this->lightColor.b);
+	const float threshold = 256.0f / 1.0f;
+
+	float a = this->lightAttenuationSquared;
+	float b = this->lightAttenuationLinear;
+	float c = this->lightAttenuationConstant - threshold * maxChannel * this->lightIntensity;
+
+	float d = b * b - 4.0f*a*c;
+
+	this->lightRadius = (-b + std::sqrt(d)) / (2.0f*a);
 }
