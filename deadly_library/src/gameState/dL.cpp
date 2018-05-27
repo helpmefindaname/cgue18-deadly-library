@@ -14,7 +14,7 @@ DeadlyLibrary::~DeadlyLibrary()
 
 void DeadlyLibrary::init(PhysicsPipeline& physiX)
 {
-	LevelReader reader("assets\\"+std::string(lvlFile));
+	LevelReader reader("assets\\"+(lvlFile));
 	this->player->init(physiX);
 
 	this->world = reader.createWorldGeometry();
