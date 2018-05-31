@@ -26,8 +26,6 @@ private:
 	Window window;
 	Glew glew;
 	InputHandler inputHandler;
-	bool isDebug;
-	bool isHelp;
 	bool isWireframe;
 	bool isCulling;
 	Camera debugCamera;

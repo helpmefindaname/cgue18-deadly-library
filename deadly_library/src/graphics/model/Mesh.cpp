@@ -166,37 +166,40 @@ std::shared_ptr<Mesh> Mesh::createCubeMesh(float width, float height, float dept
 		glm::vec3(0, -1, 0)
 	};
 
+	float widthOffset = 1.0f / 3.0f;
+	float heightOffset = 1.0f / 2.0f;
+
 	std::vector<glm::vec2> uvs = {
 		// front
 		glm::vec2(0, 0),
-		glm::vec2(1, 0),
-		glm::vec2(1, 1),
-		glm::vec2(0, 1),
+		glm::vec2(widthOffset, 0),
+		glm::vec2(widthOffset, heightOffset),
+		glm::vec2(0, heightOffset),
 		// back
-		glm::vec2(0, 0),
-		glm::vec2(1, 0),
-		glm::vec2(1, 1),
-		glm::vec2(0, 1),
+		glm::vec2(widthOffset, 0),
+		glm::vec2(widthOffset * 2, 0),
+		glm::vec2(widthOffset * 2, heightOffset),
+		glm::vec2(widthOffset, heightOffset),
 		// right
-		glm::vec2(0, 0),
-		glm::vec2(1, 0),
-		glm::vec2(1, 1),
-		glm::vec2(0, 1),
+		glm::vec2(widthOffset * 2, 0),
+		glm::vec2(widthOffset * 3, 0),
+		glm::vec2(widthOffset * 3, heightOffset),
+		glm::vec2(widthOffset * 2, heightOffset),
 		// left
-		glm::vec2(0, 0),
-		glm::vec2(1, 0),
-		glm::vec2(1, 1),
-		glm::vec2(0, 1),
+		glm::vec2(0, heightOffset),
+		glm::vec2(widthOffset, heightOffset),
+		glm::vec2(widthOffset, heightOffset * 2),
+		glm::vec2(0, heightOffset * 2),
 		// top
-		glm::vec2(0, 0),
-		glm::vec2(1, 0),
-		glm::vec2(1, 1),
-		glm::vec2(0, 1),
+		glm::vec2(widthOffset, heightOffset),
+		glm::vec2(widthOffset * 2, heightOffset),
+		glm::vec2(widthOffset * 2, heightOffset * 2),
+		glm::vec2(widthOffset, heightOffset * 2),
 		// bottom
-		glm::vec2(0, 0),
-		glm::vec2(1, 0),
-		glm::vec2(1, 1),
-		glm::vec2(0, 1)
+		glm::vec2(widthOffset * 2, heightOffset),
+		glm::vec2(widthOffset * 3, heightOffset),
+		glm::vec2(widthOffset * 3, heightOffset * 2),
+		glm::vec2(widthOffset * 2, heightOffset * 2)
 	};
 
 	std::vector<unsigned int> indices = {

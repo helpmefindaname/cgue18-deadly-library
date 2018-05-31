@@ -54,7 +54,7 @@ std::shared_ptr<model::Geometry> LevelReader::createWorldGeometry()
 
 	std::shared_ptr<model::Geometry> scene = std::make_shared<model::Geometry>();
 	std::shared_ptr<Material> material = MaterialLoader::loadMaterial("assets/materials/block.material");
-	std::shared_ptr<Texture> texture = TextureLoader::loadTexture("assets/textures/block.png");
+	std::shared_ptr<Texture> texture = TextureLoader::loadTexture("assets/textures/block2.png");
 	std::shared_ptr<Texture> wallTexture = TextureLoader::loadTexture("assets/textures/wall.png");
 
 

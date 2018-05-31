@@ -1,7 +1,5 @@
 #pragma once
-#include "../graphics/shader.h"
-#include <memory>
-#include "../graphics/model/Mesh.h"
+#include "../libimport/glm.h"
 class Light
 {
 public:
@@ -13,7 +11,6 @@ private:
 	glm::vec3 position;
 
 public:
-	void render(Shader& shader);
 	void setPosition(glm::vec3 position);
 	glm::vec3 getPosition();
 };

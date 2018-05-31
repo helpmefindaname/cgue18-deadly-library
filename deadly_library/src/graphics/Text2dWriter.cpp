@@ -68,13 +68,9 @@ void Text2dWriter::print(const char * text, int x, int y, int size) {
 
 	drawMesh.uploadData(fontShader);
 
-	glEnable(GL_BLEND);
-	glBlendEquation(GL_FUNC_ADD);
-	glBlendFunc(GL_ONE, GL_ONE);
-
 	drawMesh.render();
 
-	glDisable(GL_BLEND);
+	
 
 	drawMesh.deleteData();
 }

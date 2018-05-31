@@ -18,7 +18,7 @@ void Player::init(PhysicsPipeline& physiX)
 	this->playerGeometry = new model::Geometry(MeshLoader::loadMesh("assets/objects/raccoon.mesh"),
 		MaterialLoader::loadMaterial("assets/materials/raccoon.material"), TextureLoader::loadTexture("assets/textures/raccoon.png"), glm::translate(position));
 	playerObject = physiX.createController(PxVec3(position.x, position.y, position.z), PxVec3(0.25f));
-	
+
 }
 
 void Player::setPosition(glm::vec3 position) {
@@ -37,16 +37,16 @@ float Player::getDirection() {
 
 void Player::update(InputHandler& inputHandler, float dt)
 {
-	playerObject->move(playerObject->getUpDirection()*velocityY*dt, 0.0001f, dt, 0);
-
 	velocityY -= gravity * dt;
 
+	playerObject->move(playerObject->getUpDirection() * velocityY * dt, 0.0001f, dt, 0);
+
 	if (inputHandler.getEvent("moveForward")) {
-		playerObject->move(forward() * dt* playerSpeed, 0.0001f, dt, 0);
+		playerObject->move(forward() * dt * playerSpeed, 0.0001f, dt, 0);
 	}
 
 	if (inputHandler.getEvent("moveBackward")) {
-		playerObject->move(-forward() * dt* playerSpeed, 0.0001f, dt, 0);
+		playerObject->move(-forward() * dt * playerSpeed, 0.0001f, dt, 0);
 	}
 
 	if (inputHandler.getEvent("turnLeft")) {
@@ -64,9 +64,14 @@ void Player::update(InputHandler& inputHandler, float dt)
 	PxExtendedVec3 pos = playerObject->getPosition();
 	position = glm::vec3(pos.x, pos.y, pos.z);
 
+	if (abs(lastY - position.y) < 0.00001f) {
+		velocityY = 0.0f;
+	}
+
 	if (abs(lastY - position.y) < 0.00001f && inputHandler.getEvent("jump")) {
 		velocityY = jumpPower;
 	}
+
 
 	this->playerGeometry->setTransformMatrix(glm::translate(position)*glm::rotate(direction, glm::vec3(0.0f, 1.0f, 0.0f)));
 }
