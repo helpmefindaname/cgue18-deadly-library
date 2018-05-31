@@ -4,6 +4,7 @@
 #include "shader.h"
 #include "Framebuffer.h"
 #include "../GameImport.h"
+#include "../graphics/Text2dWriter.h"
 #include GAMESTATE_H
 
 class RenderPipeline
@@ -22,6 +23,7 @@ private:
 	Shader stencilTestShader;
 	Shader lightShader;
 	Shader geometryPassShader;
+	Text2dWriter writer2D;
 
 	Framebuffer gBuffer;
 	int width;
@@ -35,7 +37,7 @@ private:
 	float lightRadius;
 
 public:
-	void render(bool debug);
+	void render();
 
 private:
 	void useShader(Shader& shader);
@@ -44,7 +46,6 @@ private:
 	void bindTargetFramebuffer(Framebuffer& framebuffer);
 	void bindSourceFramebuffer(Framebuffer& framebuffer);
 	void bindDefaultFramebuffer();
-
 
 	void doGeometryPass();
 	void doLightPass();

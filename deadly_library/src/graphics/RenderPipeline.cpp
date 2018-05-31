@@ -1,6 +1,7 @@
 #include "RenderPipeline.h"
 #include "../config.h"
 #include "../gameObjects/Light.h"
+#include "../Globals.h"
 
 RenderPipeline::RenderPipeline(GAMESTATE& state, int width, int height)
 	:emptyShader("assets/shader/empty"),
@@ -24,7 +25,9 @@ RenderPipeline::RenderPipeline(GAMESTATE& state, int width, int height)
 		{ width, width, width, width, width, width },
 		{ height, height, height, height, height, height },
 		{ GL_RGBA16F, GL_RGBA16F, GL_RGBA16F, GL_RGBA8, GL_RGBA16F, GL_RGBA8 }
-	)
+	),
+	writer2D()
+
 {
 	this->calculateRadius();
 }
@@ -34,7 +37,7 @@ RenderPipeline::~RenderPipeline()
 {
 }
 
-void RenderPipeline::render(bool debug) {
+void RenderPipeline::render() {
 
 	this->reset();
 
@@ -42,14 +45,9 @@ void RenderPipeline::render(bool debug) {
 
 	this->doLightPass();
 
-	/*
-	if (debug) {
-		this->lastPass = "color";
-	}/**/
-
 	this->doFinalPass();
 
-	//this->doHudPass();
+	this->doHudPass();
 }
 
 void RenderPipeline::useShader(Shader& shader) {
@@ -60,6 +58,7 @@ void RenderPipeline::useShader(Shader& shader) {
 void RenderPipeline::reset() {
 	glUseProgram(0);
 	this->activeShader = &this->emptyShader;
+	lastPass = "color";
 }
 
 void RenderPipeline::bindTargetFramebuffer(Framebuffer& framebuffer) {
@@ -95,7 +94,6 @@ void RenderPipeline::doGeometryPass()
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_BLEND);
 
 
 	this->state.getUsedCamera().uploadData(*this->activeShader);
@@ -103,6 +101,7 @@ void RenderPipeline::doGeometryPass()
 	this->state.render(*this->activeShader);
 
 	glDepthMask(GL_FALSE);
+	glDisable(GL_DEPTH_TEST);
 
 	lastPass = "color";
 }
@@ -155,6 +154,24 @@ void RenderPipeline::doFinalPass()
 		0, 0, this->width, this->height,
 		GL_COLOR_BUFFER_BIT, GL_NEAREST
 	);
+}
+
+void RenderPipeline::doHudPass()
+{
+	this->bindDefaultFramebuffer();
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glDepthMask(GL_FALSE);
+	glEnable(GL_BLEND);
+	glBlendEquation(GL_FUNC_ADD);
+	glBlendFunc(GL_ONE, GL_ONE);
+
+	if (Globals::isHelp) {
+		std::string s = "FPS: " + std::to_string(Globals::fps);
+
+		writer2D.print(s.c_str(), 32, 550, 32);
+	}
+
+	glDisable(GL_BLEND);
 }
 
 void RenderPipeline::calculateRadius()

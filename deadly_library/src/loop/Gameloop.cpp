@@ -1,6 +1,7 @@
 #include "Gameloop.h"
 #include <sstream>
 #include <iostream>
+#include "../Globals.h"
 
 Gameloop::Gameloop(unsigned int fps) :
 	fps(fps),
@@ -10,8 +11,6 @@ Gameloop::Gameloop(unsigned int fps) :
 	glew(),
 	inputHandler(this->window),
 	debugCamera(),
-	isDebug(false),
-	isHelp(false),
 	debugCameraHandler(debugCamera),
 	physixPipe(),
 	state(),
@@ -65,15 +64,15 @@ void Gameloop::init()
 void Gameloop::update()
 {
 	if (inputHandler.getEvent("toggleDebug")) {
-		isDebug = !isDebug;
+		Globals::isDebug = !Globals::isDebug;
 		debugCamera.setInverseViewMatrix(state.getGameCamera().getInverseViewMatrix());
 	}
 
 	if (inputHandler.getEvent("toggleHelp")) {
-		isHelp = !isHelp;
+		Globals::isHelp = !Globals::isHelp;
 	}
 
-	if (isDebug) {
+	if (Globals::isDebug) {
 		debugCameraHandler.checkInput(inputHandler, this->sPerFrame);
 		state.setUsedCamera(debugCamera);
 	}
@@ -101,13 +100,9 @@ void Gameloop::update()
 
 void Gameloop::render(float dt)
 {
-	renderPipeline.render(isHelp);
+	Globals::fps = int(1.0f / dt);
 
-	if (isHelp) {
-		std::string s = "FPS: " + std::to_string(int(1.0f / dt));
-
-		writer2D.print(s.c_str(), 32, 550, 32);
-	}
+	renderPipeline.render();
 
 	this->window.swapBuffers();
 }
