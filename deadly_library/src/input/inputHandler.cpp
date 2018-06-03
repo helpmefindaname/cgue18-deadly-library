@@ -50,7 +50,8 @@ void InputHandler::process() {
 		this->mouseMovement.x = 0.0f;
 		this->mouseMovement.y = 0.0f;
 	});
-
+	
+	this->onPressedEvent(GLFW_KEY_ENTER, "next");
 	this->onPressedEvent(GLFW_KEY_ESCAPE, "close");
 	this->onPressedEvent(GLFW_KEY_F1, "toggleHelp");
 	this->onPressedEvent(GLFW_KEY_F2, "toggleCulling");

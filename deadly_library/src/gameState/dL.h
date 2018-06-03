@@ -12,6 +12,7 @@
 #include "../gameObjects/Player.h"
 #include "../input/GameCameraHandler.h"
 #include "../gameObjects/Light.h"
+#include "../graphics/HudWriter.h"
 
 class DeadlyLibrary
 {
@@ -32,6 +33,16 @@ private:
 
 	std::string lvlFile = Config::getString("LvlFile");
 
+	bool isStart;
+	bool isWin;
+	bool isEnd;
+
+	int lives;
+
+	std::shared_ptr<Texture> startScreen;
+	std::shared_ptr<Texture> winScreen;
+	std::shared_ptr<Texture> looseScreen;
+
 public:
 	void init(PhysicsPipeline& physiX);
 	void update(InputHandler& input, float dt);
@@ -42,6 +53,8 @@ public:
 	Camera& getUsedCamera();
 
 	std::vector<std::shared_ptr<Light>> getLights();
+
+	void renderHud(HudWriter& writer2D);
 
 private:
 };
