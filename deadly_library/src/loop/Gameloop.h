@@ -14,6 +14,8 @@
 
 #include "../graphics/RenderPipeline.h"
 
+#define FPS_MEMORY_SIZE 120
+
 class Gameloop {
 public:
 	Gameloop(unsigned int fps);
@@ -22,6 +24,8 @@ public:
 private:
 	unsigned int fps;
 	float sPerFrame;
+	float fpsMemory[FPS_MEMORY_SIZE];
+	int fpsIndex;
 	Glfw glfw;
 	Window window;
 	Glew glew;

@@ -90,6 +90,8 @@ void RenderPipeline::doGeometryPass()
 
 	this->gBuffer.bindTargetColorBuffers({ "color", "position", "normal", "material" });
 
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 	glDepthMask(GL_TRUE);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
