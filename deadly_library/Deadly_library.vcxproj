@@ -13,7 +13,7 @@
     <ClCompile Include="src\graphics\Framebuffer.cpp" />
     <ClCompile Include="src\level\LevelReader.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\graphics\Text2dWriter.cpp" />
+    <ClCompile Include="src\graphics\HudWriter.cpp" />
     <ClCompile Include="src\graphics\TextureLoader.cpp" />
     <ClInclude Include="src\gameObjects\Light.h" />
     <ClInclude Include="src\Globals.h" />
@@ -65,7 +65,7 @@
     <ClInclude Include="src\graphics\model\Material.h" />
     <ClInclude Include="src\window.h" />
     <ClInclude Include="src\graphics\Vertex.h" />
-    <ClInclude Include="src\graphics\Text2dWriter.h" />
+    <ClInclude Include="src\graphics\HudWriter.h" />
     <ClInclude Include="src\graphics\TextureLoader.h" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
@@ -122,10 +122,10 @@
     <None Include="assets\shader\stencilpass.vert">
       <DeploymentContent>true</DeploymentContent>
     </None>
-    <None Include="assets\shader\textShader.frag">
+    <None Include="assets\shader\hudShader.frag">
       <DeploymentContent>true</DeploymentContent>
     </None>
-    <None Include="assets\shader\textShader.vert">
+    <None Include="assets\shader\hudShader.vert">
       <DeploymentContent>true</DeploymentContent>
     </None>
     <None Include="assets\shader\texture.frag">
@@ -169,10 +169,18 @@
     <Image Include="assets\textures\cubemap\posz.dds">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="assets\textures\dialog_begin.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="assets\textures\earth.dds">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="assets\textures\font.png" />
+    <Image Include="assets\textures\font.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\textures\loose_condition.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="assets\textures\metal_texture.dds">
       <DeploymentContent>true</DeploymentContent>
     </Image>
@@ -183,6 +191,9 @@
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="assets\textures\sun.dds">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\textures\win_condition.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="assets\textures\wood_texture.dds">

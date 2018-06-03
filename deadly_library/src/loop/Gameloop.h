@@ -10,7 +10,7 @@
 #include "..\graphics\camera.h"
 #include "..\input\inputHandler.h"
 #include "..\input\debugCameraHandler.h"
-#include "..\graphics\Text2dWriter.h"
+#include "..\graphics\HudWriter.h"
 
 #include "../graphics/RenderPipeline.h"
 
@@ -36,7 +36,7 @@ private:
 	DebugCameraHandler debugCameraHandler;
 	GAMESTATE state;
 	PhysicsPipeline physixPipe;
-	Text2dWriter writer2D;
+	HudWriter writer2D;
 	RenderPipeline renderPipeline;
 
 public:

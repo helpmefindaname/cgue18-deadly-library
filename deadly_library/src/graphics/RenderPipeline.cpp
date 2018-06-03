@@ -173,6 +173,7 @@ void RenderPipeline::doHudPass()
 		writer2D.print(s.c_str(), 32, 550, 32);
 	}
 
+	state.renderHud(writer2D);
 	glDisable(GL_BLEND);
 }
 

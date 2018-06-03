@@ -4,7 +4,7 @@
 #include "shader.h"
 #include "Framebuffer.h"
 #include "../GameImport.h"
-#include "../graphics/Text2dWriter.h"
+#include "../graphics/HudWriter.h"
 #include GAMESTATE_H
 
 class RenderPipeline
@@ -23,7 +23,7 @@ private:
 	Shader stencilTestShader;
 	Shader lightShader;
 	Shader geometryPassShader;
-	Text2dWriter writer2D;
+	HudWriter writer2D;
 
 	Framebuffer gBuffer;
 	int width;

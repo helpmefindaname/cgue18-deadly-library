@@ -1,23 +1,23 @@
-#include "Text2dWriter.h"
+#include "HudWriter.h"
 #include "../libimport/glm.h"
 #include <vector>
 #include "model/Mesh.h"
 
 
-Text2dWriter::Text2dWriter() :
+HudWriter::HudWriter() :
 	font("assets/textures/font.png"),
-	fontShader("assets/shader/textshader")
+	fontShader("assets/shader/hudshader")
 {
-	glGenBuffers(1, &Text2DVertexBufferID);
-	glGenBuffers(1, &Text2DUVBufferID);
+	glGenBuffers(1, &hudVertexBufferID);
+	glGenBuffers(1, &hudUVBufferID);
 }
 
 
-Text2dWriter::~Text2dWriter()
+HudWriter::~HudWriter()
 {
 }
 
-void Text2dWriter::print(const char * text, int x, int y, int size) {
+void HudWriter::print(const char * text, int x, int y, int size) {
 
 	unsigned int length = strlen(text);
 
@@ -70,7 +70,43 @@ void Text2dWriter::print(const char * text, int x, int y, int size) {
 
 	drawMesh.render();
 
-	
+	drawMesh.deleteData();
+}
+
+void HudWriter::drawtexture(int x, int y, int width, int height, Texture & texture)
+{
+	std::vector<unsigned int> indices;
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec2> UVs;
+
+	vertices.push_back(glm::vec3(x, y + height, 0));
+	vertices.push_back(glm::vec3(x + width, y + height, 0));
+	vertices.push_back(glm::vec3(x + width, y, 0));
+	vertices.push_back(glm::vec3(x, y, 0));
+
+	indices.push_back(2);
+	indices.push_back(1);
+	indices.push_back(0);
+
+	indices.push_back(0);
+	indices.push_back(3);
+	indices.push_back(2);
+
+	UVs.push_back(glm::vec2(0.0f, 0.0f));
+	UVs.push_back(glm::vec2(1.0f, 0.0f));
+	UVs.push_back(glm::vec2(1.0f, 1.0f));
+	UVs.push_back(glm::vec2(0.0f, 1.0f));
+
+	Mesh drawMesh(indices, vertices, std::vector<glm::vec3>(), UVs);
+
+	fontShader.use();
+
+	texture.bind(5);
+	fontShader.setUniform("myTextureSampler", 5);
+
+	drawMesh.uploadData(fontShader);
+
+	drawMesh.render();
 
 	drawMesh.deleteData();
 }
