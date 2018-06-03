@@ -15,8 +15,13 @@ Gameloop::Gameloop(unsigned int fps) :
 	physixPipe(),
 	state(),
 	writer2D(),
-	renderPipeline(state, Config::getInt("WindowWidth"), Config::getInt("WindowHeight"))
+	renderPipeline(state, Config::getInt("WindowWidth"), Config::getInt("WindowHeight")),
+	fpsIndex(0)
 {
+	for (int i = 0; i < FPS_MEMORY_SIZE; i++)
+	{
+		fpsMemory[i] = sPerFrame;
+	}
 #if _DEBUG
 	// Register your callback function.
 	glDebugMessageCallback(DebugCallbackDefault, NULL);
@@ -100,7 +105,16 @@ void Gameloop::update()
 
 void Gameloop::render(float dt)
 {
-	Globals::fps = int(1.0f / dt);
+	fpsMemory[fpsIndex++ % FPS_MEMORY_SIZE] = dt;
+	float avgDt = 0.0f;
+	for (int i = 0; i < FPS_MEMORY_SIZE; i++)
+	{
+		avgDt += fpsMemory[i];
+	}
+
+	avgDt /= FPS_MEMORY_SIZE;
+
+	Globals::fps = int(1.0f / avgDt);
 
 	renderPipeline.render();
 
