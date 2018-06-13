@@ -39,4 +39,6 @@ public:
 
 	void bindTextures(Shader& shader, std::vector<std::string> colorBufferNames, std::vector<std::string> targetBufferNames, bool bindDepthTexture = false, std::string targetBufferName = "");
 	void bindTextures(Shader& shader, int startPosition, std::vector<std::string> colorBufferNames, std::vector<std::string> targetBufferNames);
+
+	std::shared_ptr<Texture> createScreenShot(std::string colorBufferName);
 };

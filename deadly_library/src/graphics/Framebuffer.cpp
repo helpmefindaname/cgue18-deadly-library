@@ -16,11 +16,11 @@ Framebuffer::Framebuffer(bool useDepthStencilBuffer, int depthStencilBufferWidth
 		{ glm::vec2(0.0f,0.0f),
 		glm::vec2(1.0f,0.0f),
 		glm::vec2(0.0f,1.0f),
-		glm::vec2(1.0f,1.0f) 
+		glm::vec2(1.0f,1.0f)
 		})
 {
 	for (size_t i = 0; i < colorBufferNames.size(); i++) {
-		this->colorBuffers.emplace(colorBufferNames.at(i), Texture(colorBufferWidths.at(i), colorBufferHeights.at(i), GL_RGBA, internalFormats.at(i), GL_FLOAT, GL_COLOR_ATTACHMENT0 + (int)i, GL_LINEAR_MIPMAP_LINEAR, GL_CLAMP_TO_EDGE));
+		this->colorBuffers.emplace(colorBufferNames.at(i), Texture(colorBufferWidths.at(i), colorBufferHeights.at(i), GL_RGBA, internalFormats.at(i), GL_FLOAT, GL_COLOR_ATTACHMENT0 + (int)i, GL_LINEAR, GL_CLAMP_TO_EDGE));
 	}
 
 	glGenFramebuffers(1, &this->handle);
@@ -105,6 +105,7 @@ void Framebuffer::bindTextures(Shader& shader, std::vector<std::string> colorBuf
 		unit++;
 	}
 }
+
 void Framebuffer::bindTextures(Shader& shader, int startPosition, std::vector<std::string> colorBufferNames, std::vector<std::string> targetBufferNames)
 {
 	int unit = startPosition;
@@ -117,4 +118,22 @@ void Framebuffer::bindTextures(Shader& shader, int startPosition, std::vector<st
 
 		unit++;
 	}
+}
+
+std::shared_ptr<Texture> Framebuffer::createScreenShot(std::string colorBufferName)
+{
+	Texture& source = this->colorBuffers.at(colorBufferName);
+
+	int width = source.getWidth();
+	int height = source.getHeight();
+	std::shared_ptr<Texture> result = std::make_shared<Texture>(source.getWidth(), source.getHeight(), GL_RGBA, source.getInternalFormat(), GL_FLOAT, source.getAttachment(), GL_LINEAR, GL_CLAMP_TO_EDGE);
+	glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorBuffers.size(), GL_TEXTURE_2D, source.getHandle(), 0);
+	glReadBuffer(GL_COLOR_ATTACHMENT0 + colorBuffers.size());
+	this->bindSourceColorBuffer({ colorBufferName });
+	//glBindTexture(GL_TEXTURE_2D, result->getHandle());
+	result->bind(colorBuffers.size());
+
+	glCopyTexImage2D(GL_TEXTURE_2D, 0, source.getInternalFormat(), 0, 0, width, height, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	return result;
 }

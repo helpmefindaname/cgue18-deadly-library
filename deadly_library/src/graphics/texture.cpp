@@ -32,11 +32,21 @@ Texture::Texture(unsigned int width, unsigned int height, GLenum format, GLint i
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+Texture::Texture(int handle) :
+	handle(handle)
+{
+}
+
 Texture::Texture(std::string filepath) :
 	handle(0),
 	filepath(filepath)
 {
 	this->readFile();
+}
+
+Texture::Texture(int width, int height, unsigned char* data)
+{
+	this->applyData(width, height, data);
 }
 
 Texture::Texture(Texture&& texture) :
@@ -51,11 +61,25 @@ Texture::Texture(Texture&& texture) :
 	filter(texture.filter),
 	wrap(texture.wrap)
 {
-	texture.handle = 0;
+	glGenTextures(1, &this->handle);
+	glBindTexture(GL_TEXTURE_2D, this->handle);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->filter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->filter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->wrap);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->wrap);
+	glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->format, this->precision, 0);
+
+	if (this->filter == GL_LINEAR_MIPMAP_LINEAR) {
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 }
 
 Texture::~Texture() {
-	if (this->handle != 0) {
+	if (this->handle) {
 		glDeleteTextures(1, &this->handle);
 	}
 }
@@ -73,10 +97,41 @@ GLenum Texture::getAttachment() {
 	return this->attachment;
 }
 
-void Texture::readFile() {
+GLenum Texture::getInternalFormat()
+{
+	return this->internalFormat;
+}
+
+int Texture::getWidth()
+{
+	return this->width;
+}
+
+int Texture::getHeight()
+{
+	return this->height;
+}
+
+void Texture::applyData(int width, int height, unsigned char* data) {
 	glGenTextures(1, &this->handle);
 	glBindTexture(GL_TEXTURE_2D, this->handle);
+	this->width = width;
+	this->height = height;
+	this->format = GL_RGB;
+	this->internalFormat = GL_RGB;
+	this->precision = GL_UNSIGNED_BYTE;
+	this->wrap = GL_CLAMP_TO_EDGE;
 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->wrap);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->wrap);
+	glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->format, this->precision, data);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Texture::readFile() {
 	int imageWidth;
 	int imageHeight;
 	int channels;
@@ -84,24 +139,14 @@ void Texture::readFile() {
 	stbi_uc* data = stbi_load(this->filepath.c_str(), &imageWidth, &imageHeight, &channels, STBI_rgb);
 
 	if (data) {
-		this->width = imageWidth;
-		this->height = imageHeight;
-		this->format = GL_RGB;
-		this->internalFormat = GL_RGB;
-		this->precision = GL_UNSIGNED_BYTE;
-		this->wrap = GL_CLAMP_TO_EDGE;
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->wrap);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->wrap);
-		glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->format, this->precision, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
+		applyData(imageWidth, imageHeight, data);
 		stbi_image_free(data);
-		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	else {
 		throw std::runtime_error("Error loading texture file " + this->filepath);
 	}
+}
+
+void Texture::resetHandle() {
+	this->handle = 0;
 }
