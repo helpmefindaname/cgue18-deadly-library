@@ -1,9 +1,13 @@
 #pragma once
+#include "graphics\texture.h"
+#include <memory>
 class Globals
 {
 public:
 	static bool isHelp;
 	static bool isDebug;
+	static bool showFps;
+	static bool useLightMap;
 	static int fps;
 };
 

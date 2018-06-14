@@ -7,6 +7,7 @@ RenderPipeline::RenderPipeline(GAMESTATE& state)
 	:emptyShader("assets/shader/empty"),
 	state(state),
 	geometryPassShader("assets/shader/geometrypass"),
+	lightMapGeometryShader("assets/shader/lightMapGeometryPass"),
 	stencilTestShader("assets/shader/stencilpass"),
 	lightShader("assets/shader/lightpass"),
 	lightMapShader("assets/shader/lightMapPass"),
@@ -60,6 +61,7 @@ void RenderPipeline::init()
 
 	std::vector<std::shared_ptr<Light>> lights = state.getLights();
 
+	this->activeShader->setUniform("brightness", Config::getFloat("Brightness"));
 	this->activeShader->setUniform("attenuationConstant", this->lightAttenuationConstant);
 	this->activeShader->setUniform("attenuationLinear", this->lightAttenuationLinear);
 	this->activeShader->setUniform("attenuationSquared", this->lightAttenuationSquared);
@@ -130,7 +132,6 @@ void RenderPipeline::bindDefaultFramebuffer() {
 
 void RenderPipeline::doGeometryPass()
 {
-	this->useShader(this->geometryPassShader);
 	this->bindTargetFramebuffer(this->gBuffer);
 
 	this->gBuffer.bindTargetColorBuffers({ "color", "position", "normal", "material" });
@@ -142,9 +143,12 @@ void RenderPipeline::doGeometryPass()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 
-
+	this->useShader(this->lightMapGeometryShader);
 	this->state.getUsedCamera().uploadData(*this->activeShader);
+	this->state.render(*this->activeShader);
 
+	this->useShader(this->geometryPassShader);
+	this->state.getUsedCamera().uploadData(*this->activeShader);
 	this->state.render(*this->activeShader);
 
 	glDepthMask(GL_FALSE);
@@ -187,7 +191,7 @@ void RenderPipeline::doLightPass()
 
 	this->gBuffer.renderQuad(*this->activeShader);
 
-	lastPass = "color";
+	lastPass = "light";
 }
 
 void RenderPipeline::doFinalPass()
@@ -212,10 +216,21 @@ void RenderPipeline::doHudPass()
 	glBlendEquation(GL_FUNC_ADD);
 	glBlendFunc(GL_ONE, GL_ONE);
 
-	if (Globals::isHelp) {
+	if (Globals::showFps) {
 		std::string s = "FPS: " + std::to_string(Globals::fps);
 
 		writer2D.print(s.c_str(), 32, 550, 32);
+	}
+	if (Globals::isHelp) {
+		std::string help =      "Show help-F1:      " + std::to_string(Globals::isHelp);
+		std::string debug =     "Show debug-F2:     " + std::to_string(Globals::isDebug);
+		std::string normalMap = "Show normalmap-F4: 0";
+		std::string lightMap =  "Show lightmap-F5:  " + std::to_string(Globals::useLightMap);
+
+		writer2D.print(help.c_str(), 32, 500, 26);
+		writer2D.print(debug.c_str(), 32, 470, 26);
+		writer2D.print(normalMap.c_str(), 32, 440, 26);
+		writer2D.print(lightMap.c_str(), 32, 410, 26);
 	}
 
 	state.renderHud(writer2D);

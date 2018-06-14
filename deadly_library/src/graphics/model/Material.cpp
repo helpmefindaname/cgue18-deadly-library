@@ -3,6 +3,7 @@
 #include <sstream>
 #include "../../config.h"
 #include <stdexcept>
+#include "../../Globals.h"
 
 Material::Material() :
 	color(1.0f),
@@ -40,10 +41,16 @@ void Material::uploadLightData(Shader & shader)
 }
 
 bool Material::appliesToShader(Shader & shader)
-{ 
+{
 	std::string shadername = shader.getName();
 	if (shadername == "assets/shader/lightMapPass" && !useLightmapping) {
-	//	return false;
+		return false;
+	}
+	if (shadername == "assets/shader/geometrypass" && useLightmapping && Globals::useLightMap) {
+		return false;
+	}
+	if (shadername == "assets/shader/lightMapGeometryPass" && !(useLightmapping && Globals::useLightMap)) {
+		return false;
 	}
 	return true;
 }

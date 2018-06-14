@@ -54,9 +54,10 @@ void InputHandler::process() {
 	this->onPressedEvent(GLFW_KEY_ENTER, "next");
 	this->onPressedEvent(GLFW_KEY_ESCAPE, "close");
 	this->onPressedEvent(GLFW_KEY_F1, "toggleHelp");
-	this->onPressedEvent(GLFW_KEY_F2, "toggleCulling");
+	this->onPressedEvent(GLFW_KEY_F2, "toggleFps");
 	this->onPressedEvent(GLFW_KEY_F3, "toggleWireFrame");
 	this->onPressedEvent(GLFW_KEY_F4, "toggleNormalMapping");
+	this->onPressedEvent(GLFW_KEY_F5, "toggleLightMap");
 	this->onPressedEvent(GLFW_KEY_TAB, "toggleDebug");
 
 	this->onPressed({ GLFW_KEY_W, GLFW_KEY_UP }, "moveForward");
