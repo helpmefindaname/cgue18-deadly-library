@@ -196,6 +196,9 @@
     <Image Include="assets\textures\moon.dds">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="assets\textures\redHeart.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="assets\textures\sun.dds">
       <DeploymentContent>true</DeploymentContent>
     </Image>
@@ -309,6 +312,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)external\lib;$(SolutionDir)external\lib\PhysX;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;PxFoundation_x86.lib;PxTask_x86.lib;PxPvdSDK_x86.lib;LowLevel.lib;LowLevelAABB.lib;LowLevelCloth.lib;LowLevelDynamics.lib;LowLevelParticles.lib;PhysX3_x86.lib;PhysX3CharacterKinematic_x86.lib;PhysX3Common_x86.lib;PhysX3Cooking_x86.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;SceneQuery.lib;SimulationController.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
+      <Profile>true</Profile>
     </Link>
     <PostBuildEvent>
       <Command>
