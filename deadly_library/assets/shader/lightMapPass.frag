@@ -12,8 +12,6 @@ uniform float ambientFactor;
 uniform float diffuseFactor;
 uniform float specularFactor;
 
-uniform vec3 camera_world;
-
 uniform vec3[100] lightPositions;
 uniform int lightCount;
 
@@ -33,8 +31,6 @@ out vec4 outputColor;
 float calculcateLightPower(vec3 position, vec3 normal, vec3 lightPosition) {
 	
 	float attenuation = 0;
-	float specularPower = 32.0f;
-	float specularIntensity = 0.0f;
 	float diffuseIntensity = 0.0f;
 
 	vec3 lightToVertex = position - lightPosition;
@@ -46,24 +42,13 @@ float calculcateLightPower(vec3 position, vec3 normal, vec3 lightPosition) {
 
 		diffuseIntensity = dot(normal, -lightDirection);
 		if (diffuseIntensity > 0) {
-
 			attenuation = 1.0 / (attenuationConstant + attenuationLinear * distance + attenuationSquared * distanceSqr);
-
-			vec3 vertexToCamera = normalize(camera_world - position);
-			vec3 vertexReflect = normalize(reflect(lightDirection, normal));
-
-			specularIntensity = dot(vertexToCamera, vertexReflect);
-			if (specularIntensity > 0) {
-				specularIntensity = pow(specularIntensity, specularPower);
-			}else{
-			    specularIntensity = 0.0f;
-			}
 		}else {
 		   diffuseIntensity = 0.0f;
 		}
 	}
 
-	return (diffuseIntensity * diffuseFactor + specularIntensity * specularFactor) * lightIntensity * attenuation;
+	return (diffuseIntensity * diffuseFactor) * lightIntensity * attenuation;
 }
 
 vec3 calculcateDiffuseLight(vec3 color, vec3 position, vec3 normal) {
@@ -82,6 +67,7 @@ vec3 calculateAmbientLight(vec3 color) {
 void main() {
 	
 	outputColor = vec4(.1f, .1f, .1f, 1.0f);
+	
 	vec2 bufferCoordinates = fragUV;
 
 	vec3 color;
@@ -94,6 +80,7 @@ void main() {
 
 	vec3 ambientLight = calculateAmbientLight(color);
 	vec3 light = calculcateDiffuseLight(color, fragPositionWorldspace, fragNormalWorldspace);
-
+	
 	outputColor = vec4(brightness * (ambientLight + light), 1.0);
+	/**/
 }

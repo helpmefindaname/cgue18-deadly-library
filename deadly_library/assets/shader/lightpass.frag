@@ -82,12 +82,16 @@ void main() {
 	vec2 bufferCoordinates = uvs;
 
 	vec3 color = texture(colorBuffer, bufferCoordinates).xyz;
-	vec3 position = texture(positionBuffer, bufferCoordinates).xyz;
-	vec3 normal = normalize(texture(normalBuffer, bufferCoordinates).xyz);
 	vec4 material = texture(materialBuffer, bufferCoordinates);
+	if(material.w < 0.5f) {
+		vec3 position = texture(positionBuffer, bufferCoordinates).xyz;
+		vec3 normal = normalize(texture(normalBuffer, bufferCoordinates).xyz);
 
-	vec3 ambientLight = calculateAmbientLight(color, material);
-	vec3 light = calculcateDiffuseLight(color, position, normal, material);
+		vec3 ambientLight = calculateAmbientLight(color, material);
+		vec3 light = calculcateDiffuseLight(color, position, normal, material);
 
-	outputColor = vec4(brightness * (ambientLight + light), 1.0);
+		outputColor = vec4(brightness * (ambientLight + light), 1.0);
+	} else {
+		outputColor = vec4(brightness * color, 1.0f);
+	}
 }

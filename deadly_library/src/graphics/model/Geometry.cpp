@@ -1,6 +1,5 @@
 #include "Geometry.h"
 
-
 namespace model {
 	Geometry::Geometry(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material, std::shared_ptr<Texture> texture, glm::mat4 position)
 		: attributes(position),
@@ -44,11 +43,11 @@ namespace model {
 				else {
 					shader.setUniform("useTexture", false);
 				}
-				/*
+
 				if (lightMap) {
-					lightMap->bind(11);
-					shader.setUniform("lightMapTexture", 11);
-				}/**/
+					lightMap->bind(8);
+					shader.setUniform("lightMapBuffer", 8);
+				}
 				mesh->render();
 			}
 		}

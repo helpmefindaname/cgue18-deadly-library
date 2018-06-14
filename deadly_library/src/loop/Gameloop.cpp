@@ -78,6 +78,14 @@ void Gameloop::update()
 		Globals::isHelp = !Globals::isHelp;
 	}
 
+	if (inputHandler.getEvent("toggleFps")) {
+		Globals::showFps = !Globals::showFps;
+	}
+
+	if (inputHandler.getEvent("toggleLightMap")) {
+		Globals::useLightMap = !Globals::useLightMap;
+	}
+
 	if (Globals::isDebug) {
 		debugCameraHandler.checkInput(inputHandler, this->sPerFrame);
 		state.setUsedCamera(debugCamera);
