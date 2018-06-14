@@ -45,6 +45,7 @@ private:
 
 public:
 	void init(PhysicsPipeline& physiX);
+	void generateLightMaps(Shader& shader, Framebuffer& lightMapBuffer);
 	void update(InputHandler& input, float dt);
 	void render(Shader& activeShader);
 

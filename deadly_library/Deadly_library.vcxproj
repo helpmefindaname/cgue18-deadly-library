@@ -110,6 +110,12 @@
     <None Include="assets\shader\geometrypass.vert">
       <DeploymentContent>true</DeploymentContent>
     </None>
+    <None Include="assets\shader\lightMapPass.frag">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="assets\shader\lightMapPass.vert">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="assets\shader\lightpass.frag">
       <DeploymentContent>true</DeploymentContent>
     </None>
