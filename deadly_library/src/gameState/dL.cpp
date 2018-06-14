@@ -35,6 +35,11 @@ void DeadlyLibrary::init(PhysicsPipeline& physiX)
 	lights.push_back(std::make_shared<Light>(glm::vec3(-10.0f, 10.0f, -25.5f)));
 }
 
+void DeadlyLibrary::generateLightMaps(Shader & shader, Framebuffer & lightMapBuffer)
+{
+	this->world->generateLightmap(shader, lightMapBuffer);
+}
+
 void DeadlyLibrary::update(InputHandler& input, float dt)
 {
 	if (!isStart && !isEnd) {
@@ -85,7 +90,7 @@ std::vector<std::shared_ptr<Light>> DeadlyLibrary::getLights()
 void DeadlyLibrary::renderHud(HudWriter& writer2D)
 {
 	if (isStart) {
-		writer2D.drawtexture(0, 0, 800, 600, *startScreen);
+		writer2D.drawtexture(0, 0, 800, 300, *startScreen);
 	}
 	if (isEnd) {
 		if (isWin) {

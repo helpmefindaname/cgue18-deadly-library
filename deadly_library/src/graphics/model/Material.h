@@ -27,6 +27,7 @@ private:
 	float specularPower;
 
 	bool usesTexture;
+	bool useLightmapping;
 
 public:
 	void uploadData(Shader& shader);

@@ -40,7 +40,11 @@ void Material::uploadLightData(Shader & shader)
 }
 
 bool Material::appliesToShader(Shader & shader)
-{
+{ 
+	std::string shadername = shader.getName();
+	if (shadername == "assets/shader/lightMapPass" && !useLightmapping) {
+	//	return false;
+	}
 	return true;
 }
 
@@ -92,6 +96,11 @@ void Material::readFile() {
 			float value;
 			if (!(iss >> value)) { break; }
 			this->usesTexture = value > 0.2f;
+		}
+		else if (valueName == "useLightmapping") {
+			float value;
+			if (!(iss >> value)) { break; }
+			this->useLightmapping = value > 0.2f;
 		}
 	}
 

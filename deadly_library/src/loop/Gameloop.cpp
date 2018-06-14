@@ -15,7 +15,7 @@ Gameloop::Gameloop(unsigned int fps) :
 	physixPipe(),
 	state(),
 	writer2D(),
-	renderPipeline(state, Config::getInt("WindowWidth"), Config::getInt("WindowHeight")),
+	renderPipeline(state),
 	fpsIndex(0)
 {
 	for (int i = 0; i < FPS_MEMORY_SIZE; i++)
@@ -64,6 +64,7 @@ void Gameloop::run()
 void Gameloop::init()
 {
 	state.init(physixPipe);
+	renderPipeline.init();
 }
 
 void Gameloop::update()

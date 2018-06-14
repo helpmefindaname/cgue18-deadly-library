@@ -7,7 +7,8 @@ namespace model {
 		mesh(mesh),
 		material(material),
 		texture(texture),
-		isEmpty(false)
+		isEmpty(false),
+		lightMap(NULL)
 	{
 	}
 
@@ -43,6 +44,11 @@ namespace model {
 				else {
 					shader.setUniform("useTexture", false);
 				}
+				/*
+				if (lightMap) {
+					lightMap->bind(11);
+					shader.setUniform("lightMapTexture", 11);
+				}/**/
 				mesh->render();
 			}
 		}
@@ -55,5 +61,32 @@ namespace model {
 
 	void Geometry::setTransformMatrix(glm::mat4 matrix) {
 		this->attributes.setMatrix(matrix);
+	}
+	void Geometry::generateLightmap(Shader & shader, Framebuffer& framebuffer)
+	{
+		if (!isEmpty) {
+			if (material->appliesToShader(shader)) {
+
+				shader.setUniform("modelMatrix", this->attributes.getParentMatrix());
+				mesh->uploadData(shader);
+				material->uploadData(shader);
+				if (texture) {
+					shader.setUniform("useTexture", true);
+					texture->bind(12);
+					shader.setUniform("textureBuffer", 12);
+				}
+				else {
+					shader.setUniform("useTexture", false);
+				}
+				mesh->render();
+
+				lightMap = framebuffer.createScreenShot("lightMap");
+			}
+		}
+
+		for (int i = 0; i < (int)children.size(); i++)
+		{
+			children[i]->generateLightmap(shader, framebuffer);
+		}
 	}
 };

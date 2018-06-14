@@ -10,11 +10,11 @@
 class RenderPipeline
 {
 public:
-	RenderPipeline(GAMESTATE& state, int width, int height);
+	RenderPipeline(GAMESTATE& state);
 	~RenderPipeline();
 
 private:
-	GAMESTATE& state;
+	GAMESTATE & state;
 	Shader* activeShader;
 	std::string lastPass;
 	GLint currentTargetFramebuffer;
@@ -23,11 +23,17 @@ private:
 	Shader stencilTestShader;
 	Shader lightShader;
 	Shader geometryPassShader;
+	Shader lightMapShader;
 	HudWriter writer2D;
 
-	Framebuffer gBuffer;
 	int width;
 	int height;
+	int lightMapWidth;
+	int lightMapHeight;
+	Framebuffer gBuffer;
+	Framebuffer lightMapBuffer;
+
+
 
 	float lightAttenuationConstant;
 	float lightAttenuationLinear;
@@ -37,6 +43,7 @@ private:
 	float lightRadius;
 
 public:
+	void init();
 	void render();
 
 private:

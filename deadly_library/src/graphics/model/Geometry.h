@@ -6,6 +6,7 @@
 #include "Material.h"
 #include "../shader.h"
 #include "../texture.h"
+#include "../Framebuffer.h"
 namespace model {
 	class Geometry
 	{
@@ -21,10 +22,12 @@ namespace model {
 		std::shared_ptr<Material> material;
 		std::shared_ptr<Texture> texture;
 		bool isEmpty;
+		std::shared_ptr<Texture> lightMap;
 
 	public:
 		Geometry* addChild(std::unique_ptr<Geometry> child);
 		void render(Shader& shader);
 		void setTransformMatrix(glm::mat4 matrix);
+		void generateLightmap(Shader& shader, Framebuffer& framebuffer);
 	};
 };
