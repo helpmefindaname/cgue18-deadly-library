@@ -13,7 +13,8 @@ DeadlyLibrary::DeadlyLibrary()
 	lives(3),
 	startScreen(TextureLoader::loadTexture("assets/textures/dialog_begin.png")),
 	winScreen(TextureLoader::loadTexture("assets/textures/win_condition.png")),
-	looseScreen(TextureLoader::loadTexture("assets/textures/loose_condition.png"))
+	looseScreen(TextureLoader::loadTexture("assets/textures/loose_condition.png")),
+	heartScreen(TextureLoader::loadTexture("assets/textures/redHeart.png"))
 {}
 
 
@@ -22,7 +23,7 @@ DeadlyLibrary::~DeadlyLibrary()
 
 void DeadlyLibrary::init(PhysicsPipeline& physiX)
 {
-	LevelReader reader("assets\\"+(lvlFile));
+	LevelReader reader("assets\\" + (lvlFile));
 	this->player->init(physiX);
 
 	this->world = reader.createWorldGeometry();
@@ -55,6 +56,7 @@ void DeadlyLibrary::update(InputHandler& input, float dt)
 				isEnd = true;
 			}
 		}
+
 	}
 	else if (isStart) {
 		isStart = !input.getEvent("next");
@@ -92,12 +94,18 @@ void DeadlyLibrary::renderHud(HudWriter& writer2D)
 	if (isStart) {
 		writer2D.drawtexture(0, 0, 800, 300, *startScreen);
 	}
-	if (isEnd) {
+	else if (isEnd) {
 		if (isWin) {
 			writer2D.drawtexture(0, 0, 800, 600, *winScreen);
 		}
 		else {
 			writer2D.drawtexture(0, 0, 800, 600, *looseScreen);
+		}
+	}
+	else {
+		for (int i = 0; i < lives; i++)
+		{
+			writer2D.drawtexture(10 + 100 * i, 10, 80, 80, *heartScreen);
 		}
 	}
 }

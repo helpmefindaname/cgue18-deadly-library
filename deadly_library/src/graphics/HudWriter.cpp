@@ -1,7 +1,7 @@
 #include "HudWriter.h"
 #include "../libimport/glm.h"
 #include <vector>
-#include "model/Mesh.h"
+
 
 
 HudWriter::HudWriter() :
@@ -10,6 +10,30 @@ HudWriter::HudWriter() :
 {
 	glGenBuffers(1, &hudVertexBufferID);
 	glGenBuffers(1, &hudUVBufferID);
+
+	std::vector<unsigned int> indices;
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec2> UVs;
+
+	vertices.push_back(glm::vec3(0, 1.0f, 0));
+	vertices.push_back(glm::vec3(1.0f, 1.0f, 0));
+	vertices.push_back(glm::vec3(1.0f, 0, 0));
+	vertices.push_back(glm::vec3(0.0f, 0, 0));
+
+	indices.push_back(2);
+	indices.push_back(1);
+	indices.push_back(0);
+
+	indices.push_back(0);
+	indices.push_back(3);
+	indices.push_back(2);
+
+	UVs.push_back(glm::vec2(0.0f, 0.0f));
+	UVs.push_back(glm::vec2(1.0f, 0.0f));
+	UVs.push_back(glm::vec2(1.0f, 1.0f));
+	UVs.push_back(glm::vec2(0.0f, 1.0f));
+
+	textureMesh = std::make_unique<Mesh>(indices, vertices, std::vector<glm::vec3>(), UVs);
 }
 
 
@@ -65,6 +89,7 @@ void HudWriter::print(const char * text, int x, int y, int size) {
 
 	font.bind(5);
 	fontShader.setUniform("myTextureSampler", 5);
+	fontShader.setUniform("transform", false);
 
 	drawMesh.uploadData(fontShader);
 
@@ -75,38 +100,18 @@ void HudWriter::print(const char * text, int x, int y, int size) {
 
 void HudWriter::drawtexture(int x, int y, int width, int height, Texture & texture)
 {
-	std::vector<unsigned int> indices;
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec2> UVs;
-
-	vertices.push_back(glm::vec3(x, y + height, 0));
-	vertices.push_back(glm::vec3(x + width, y + height, 0));
-	vertices.push_back(glm::vec3(x + width, y, 0));
-	vertices.push_back(glm::vec3(x, y, 0));
-
-	indices.push_back(2);
-	indices.push_back(1);
-	indices.push_back(0);
-
-	indices.push_back(0);
-	indices.push_back(3);
-	indices.push_back(2);
-
-	UVs.push_back(glm::vec2(0.0f, 0.0f));
-	UVs.push_back(glm::vec2(1.0f, 0.0f));
-	UVs.push_back(glm::vec2(1.0f, 1.0f));
-	UVs.push_back(glm::vec2(0.0f, 1.0f));
-
-	Mesh drawMesh(indices, vertices, std::vector<glm::vec3>(), UVs);
 
 	fontShader.use();
 
 	texture.bind(5);
+	fontShader.setUniform("x", (float)x);
+	fontShader.setUniform("y", (float)y);
+	fontShader.setUniform("width", (float)width);
+	fontShader.setUniform("height", (float)height);
+	fontShader.setUniform("transform", true);
 	fontShader.setUniform("myTextureSampler", 5);
 
-	drawMesh.uploadData(fontShader);
+	textureMesh->uploadData(fontShader);
 
-	drawMesh.render();
-
-	drawMesh.deleteData();
+	textureMesh->render();
 }

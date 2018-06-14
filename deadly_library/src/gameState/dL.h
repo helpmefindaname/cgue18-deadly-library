@@ -42,6 +42,7 @@ private:
 	std::shared_ptr<Texture> startScreen;
 	std::shared_ptr<Texture> winScreen;
 	std::shared_ptr<Texture> looseScreen;
+	std::shared_ptr<Texture> heartScreen;
 
 public:
 	void init(PhysicsPipeline& physiX);
