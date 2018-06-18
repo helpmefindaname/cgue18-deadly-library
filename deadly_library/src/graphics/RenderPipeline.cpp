@@ -6,6 +6,7 @@
 RenderPipeline::RenderPipeline(GAMESTATE& state)
 	:emptyShader("assets/shader/empty"),
 	state(state),
+	debugShader("assets/shader/debugpass"),
 	geometryPassShader("assets/shader/geometrypass"),
 	lightMapGeometryShader("assets/shader/lightMapGeometryPass"),
 	lightShader("assets/shader/lightpass"),
@@ -80,9 +81,15 @@ void RenderPipeline::render() {
 
 	this->reset();
 
-	this->doGeometryPass();
-	this->doLightPass();
-	this->doFinalPass();
+	if (Globals::isWireFrameMode) {
+		this->doWireFrameMode();
+	}
+	else 
+	{
+		this->doGeometryPass();
+		this->doLightPass();
+		this->doFinalPass();
+	}
 	this->doHudPass();
 }
 
@@ -95,6 +102,9 @@ void RenderPipeline::reset() {
 	glUseProgram(0);
 	this->activeShader = &this->emptyShader;
 	lastPass = "color";
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	bindDefaultFramebuffer();
 }
 
@@ -118,6 +128,14 @@ void RenderPipeline::bindDefaultFramebuffer() {
 	if (this->currentSourceFramebuffer != 0) {
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 	}
+}
+
+void RenderPipeline::doWireFrameMode() 
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	this->useShader(this->debugShader);
+	this->state.getUsedCamera().uploadData(*this->activeShader);
+	this->state.render(*this->activeShader);
 }
 
 void RenderPipeline::doGeometryPass()
@@ -211,11 +229,15 @@ void RenderPipeline::doHudPass()
 	glBlendEquation(GL_FUNC_ADD);
 	glBlendFunc(GL_ONE, GL_ONE);
 
+	state.renderHud(writer2D);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	if (Globals::showFps) {
 		std::string s = "FPS: " + std::to_string(Globals::fps);
 
 		writer2D.print(s.c_str(), 32, 550, 32);
 	}
+
 	if (Globals::isHelp) {
 		std::string help = "Show help-F1:      " + std::to_string(Globals::isHelp);
 		std::string debug = "Show debug-F2:     " + std::to_string(Globals::isDebug);
@@ -232,7 +254,6 @@ void RenderPipeline::doHudPass()
 		writer2D.print(subdivision.c_str(), 32, 350, 26);
 	}
 
-	state.renderHud(writer2D);
 	glDisable(GL_BLEND);
 }
 

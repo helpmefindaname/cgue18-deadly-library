@@ -45,16 +45,18 @@ void HudWriter::print(const char * text, int x, int y, int size) {
 
 	unsigned int length = strlen(text);
 
+	float aRatio = 0.5f;
+
 	std::vector<unsigned int> indices;
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> UVs;
 
 	for (unsigned int i = 0; i < length; i++) {
 
-		glm::vec3 vertex_up_left = glm::vec3(x + i * size, y + size, 0);
-		glm::vec3 vertex_up_right = glm::vec3(x + i * size + size, y + size, 0);
-		glm::vec3 vertex_down_right = glm::vec3(x + i * size + size, y, 0);
-		glm::vec3 vertex_down_left = glm::vec3(x + i * size, y, 0);
+		glm::vec3 vertex_up_left = glm::vec3(x + i * size*aRatio, y + size, 0);
+		glm::vec3 vertex_up_right = glm::vec3(x + i * size*aRatio + size, y + size, 0);
+		glm::vec3 vertex_down_right = glm::vec3(x + i * size*aRatio + size, y, 0);
+		glm::vec3 vertex_down_left = glm::vec3(x + i * size*aRatio, y, 0);
 
 		indices.push_back(i * 4 + 0);
 		indices.push_back(i * 4 + 1);

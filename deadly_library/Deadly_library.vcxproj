@@ -93,17 +93,14 @@
     <None Include="assets\materials\raccoon.material">
       <DeploymentContent>true</DeploymentContent>
     </None>
-    <None Include="assets\materials\wall.material" />
-    <None Include="assets\objects\raccoonBody.mesh">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="assets\objects\raccoonLeftFoot.mesh" />
     <None Include="assets\objects\raccoonRightFoot.mesh" />
     <None Include="assets\settings.ini">
       <DeploymentContent>true</DeploymentContent>
     </None>
     <None Include="assets\shader\ambient.frag" />
     <None Include="assets\shader\ambient.vert" />
+    <None Include="assets\shader\debugpass.frag" />
+    <None Include="assets\shader\debugpass.vert" />
     <None Include="assets\shader\empty.frag">
       <DeploymentContent>true</DeploymentContent>
     </None>
@@ -132,12 +129,6 @@
       <DeploymentContent>true</DeploymentContent>
     </None>
     <None Include="assets\shader\lightpass.vert">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="assets\shader\normalMappingGeometryPass.frag">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="assets\shader\normalMappingGeometryPass.vert">
       <DeploymentContent>true</DeploymentContent>
     </None>
     <None Include="assets\shader\stencilpass.frag">
@@ -217,7 +208,6 @@
     <Image Include="assets\textures\redHeart.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="assets\textures\regal_depth_gen.jpg" />
     <Image Include="assets\textures\sun.dds">
       <DeploymentContent>true</DeploymentContent>
     </Image>
