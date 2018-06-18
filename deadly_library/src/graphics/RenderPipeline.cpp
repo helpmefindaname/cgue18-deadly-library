@@ -156,6 +156,8 @@ void RenderPipeline::doGeometryPass()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 
+	this->state.getUsedCamera().setFrustumPlanes();
+
 	this->useShader(this->lightMapGeometryShader);
 	this->state.getUsedCamera().uploadData(*this->activeShader);
 	this->state.render(*this->activeShader);
@@ -163,7 +165,6 @@ void RenderPipeline::doGeometryPass()
 	this->useShader(this->geometryPassShader);
 	this->state.getUsedCamera().uploadData(*this->activeShader);
 	this->state.render(*this->activeShader);
-
 
 	this->useShader(this->normalMappingGeometryShader);
 	this->state.getUsedCamera().uploadData(*this->activeShader);

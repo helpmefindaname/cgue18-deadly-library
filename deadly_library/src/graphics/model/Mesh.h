@@ -63,7 +63,7 @@ public:
 	float getCollisionRadius();
 
 	static std::shared_ptr<Mesh> createCubeMesh(float width, float height, float depth);
-	static std::shared_ptr<Mesh> createPlaneMesh(glm::vec3 aa, glm::vec3 ab, glm::vec3 ba, glm::vec3 bb, glm::vec3 normal);
+	static std::shared_ptr<Mesh> createPlaneMesh(glm::vec3 width, glm::vec3 height);
 
 private:
 	void uploadData(Shader& shader);

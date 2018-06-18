@@ -1,6 +1,7 @@
 #include "camera.h"
 #include "../config.h"
 #include "../libimport/glew.h"
+#include "../Globals.h"
 
 Camera::Camera() :
 	viewWidth(1280),
@@ -132,6 +133,51 @@ void Camera::translateUp(float value) {
 
 void Camera::translateDown(float value) {
 	inverseViewMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, value, 0.0f)) * inverseViewMatrix;
+}
+
+void Camera::setFrustumPlanes()
+{
+	std::vector<glm::vec4> frustumPlanes(6);
+
+	glm::mat4 viewProjection = this->getProjectionMatrix() * this->getInverseViewMatrix();
+
+	// right
+	frustumPlanes[0].x = viewProjection[0][3] + viewProjection[0][0];
+	frustumPlanes[0].y = viewProjection[1][3] + viewProjection[1][0];
+	frustumPlanes[0].z = viewProjection[2][3] + viewProjection[2][0];
+	frustumPlanes[0].w = viewProjection[3][3] + viewProjection[3][0];
+
+	// left
+	frustumPlanes[1].x = viewProjection[0][3] - viewProjection[0][0];
+	frustumPlanes[1].y = viewProjection[1][3] - viewProjection[1][0];
+	frustumPlanes[1].z = viewProjection[2][3] - viewProjection[2][0];
+	frustumPlanes[1].w = viewProjection[3][3] - viewProjection[3][0];
+
+	// top
+	frustumPlanes[2].x = viewProjection[0][3] - viewProjection[0][1];
+	frustumPlanes[2].y = viewProjection[1][3] - viewProjection[1][1];
+	frustumPlanes[2].z = viewProjection[2][3] - viewProjection[2][1];
+	frustumPlanes[2].w = viewProjection[3][3] - viewProjection[3][1];
+
+	// bottom
+	frustumPlanes[3].x = viewProjection[0][3] + viewProjection[0][1];
+	frustumPlanes[3].y = viewProjection[1][3] + viewProjection[1][1];
+	frustumPlanes[3].z = viewProjection[2][3] + viewProjection[2][1];
+	frustumPlanes[3].w = viewProjection[3][3] + viewProjection[3][1];
+
+	// far
+	frustumPlanes[4].x = viewProjection[0][2];
+	frustumPlanes[4].y = viewProjection[1][2];
+	frustumPlanes[4].z = viewProjection[2][2];
+	frustumPlanes[4].w = viewProjection[3][2];
+
+	// near
+	frustumPlanes[5].x = viewProjection[0][3] - viewProjection[0][2];
+	frustumPlanes[5].y = viewProjection[1][3] - viewProjection[1][2];
+	frustumPlanes[5].z = viewProjection[2][3] - viewProjection[2][2];
+	frustumPlanes[5].w = viewProjection[3][3] - viewProjection[3][2];
+
+	Globals::frustumPlanes = frustumPlanes;
 }
 
 void Camera::roll(float value) {

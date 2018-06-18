@@ -21,32 +21,6 @@ std::shared_ptr<model::Geometry> LevelReader::createWorldGeometry()
 {
 	std::shared_ptr<Mesh> cube = Mesh::createCubeMesh(1.0f, 1.0f, 1.0f);
 
-	std::shared_ptr<Mesh> plane1 = Mesh::createPlaneMesh( //back
-		glm::vec3(-width / 2.0f - 0.5f, 10.0f, .5f),
-		glm::vec3(width / 2.0f + 0.5f, 10.0f, .5f),
-		glm::vec3(width / 2.0f + 0.5f, -10.0f, .5f),
-		glm::vec3(-width / 2.0f - 0.5f, -10.0f, .5f),
-		glm::vec3(0, 0, -1.0f));
-	std::shared_ptr<Mesh> plane2 = Mesh::createPlaneMesh(        //front
-		glm::vec3(width / 2.0f + 0.5f, 10.0f, -height + 0.5f),
-		glm::vec3(-width / 2.0f - 0.5f, 10.0f, -height + 0.5f),
-		glm::vec3(-width / 2.0f - 0.5f, -10.0f, -height + 0.5f),
-		glm::vec3(width / 2.0f + 0.5f, -10.0f, -height + 0.5f),
-		glm::vec3(0, 0, 1.0f));
-
-	std::shared_ptr<Mesh> plane4 = Mesh::createPlaneMesh( //right
-		glm::vec3(width / 2.0f - .5f, 10.0f, 1.0f),
-		glm::vec3(width / 2.0f - .5f, 10.0f, -height),
-		glm::vec3(width / 2.0f - .5f, -10.0f, -height),
-		glm::vec3(width / 2.0f - .5f, -10.0f, 1.0f),
-		glm::vec3(-1.0f, 0.0f, 0.0f));
-	std::shared_ptr<Mesh> plane5 = Mesh::createPlaneMesh(
-		glm::vec3(-width / 2.0f - .5f, 10.0f, -height),
-		glm::vec3(-width / 2.0f - .5f, 10.0f, 1.0f),
-		glm::vec3(-width / 2.0f - .5f, -10.0f, 1.0f),
-		glm::vec3(-width / 2.0f - .5f, -10.0f, -height),
-		glm::vec3(1.0f, 0.0f, 0.0f));
-
 	std::shared_ptr<model::Geometry> scene = std::make_shared<model::Geometry>();
 	std::shared_ptr<Material> material = MaterialLoader::loadMaterial("assets/materials/block.material");
 	std::shared_ptr<Material> wallMaterial = MaterialLoader::loadMaterial("assets/materials/wall.material");
@@ -54,6 +28,27 @@ std::shared_ptr<model::Geometry> LevelReader::createWorldGeometry()
 	std::shared_ptr<Texture> wallTexture = TextureLoader::loadTexture("assets/textures/regal_color.jpg");
 	std::shared_ptr<Texture> wallNormals = TextureLoader::loadTexture("assets/textures/regal_normals.jpg");
 	std::shared_ptr<Texture> wallDepth = TextureLoader::loadTexture("assets/textures/regal_depth_gen.jpg");
+
+	std::shared_ptr<Mesh> plane1 = Mesh::createPlaneMesh( //back
+		glm::vec3(0.0f, 20.0f, 0.0f),
+		glm::vec3(width + 1.0f, 0.0f, 0.0f));
+
+	std::shared_ptr<Mesh> plane2 = Mesh::createPlaneMesh( //front
+		glm::vec3(0.0f, 20.0f, 0.0f),
+		glm::vec3(width + 1.0f, 0.0f, 0.0f));
+
+	std::shared_ptr<Mesh> plane4 = Mesh::createPlaneMesh( //right
+		glm::vec3(0.0f, 20.0f, 0.0f),
+		glm::vec3(0.0f, 0.0f, height + 1));
+
+	std::shared_ptr<Mesh> plane5 = Mesh::createPlaneMesh( //left
+		glm::vec3(0.0f, 20.0f, 0.0f),
+		glm::vec3(0.0f, 0.0f, height + 1));
+
+	scene->addChild(std::make_unique<model::Geometry>(plane1, wallMaterial, wallTexture, wallNormals, wallDepth, glm::translate(glm::vec3(0.0f, 0.0f, 0.5f))));
+	scene->addChild(std::make_unique<model::Geometry>(plane2, wallMaterial, wallTexture, wallNormals, wallDepth, glm::translate(glm::vec3(0.0f, 0.0f, 0.5f - height)) * glm::rotate(Glm::pi, glm::vec3(0.0f, 1.0f, 0.0f))));
+	scene->addChild(std::make_unique<model::Geometry>(plane4, wallMaterial, wallTexture, wallNormals, wallDepth, glm::translate(glm::vec3(width / 2.0f - .5f, 0, (1.0f - height)*0.5f)) * glm::rotate(Glm::pi, glm::vec3(0.0f, 1.0f, 0.0f))));
+	scene->addChild(std::make_unique<model::Geometry>(plane5, wallMaterial, wallTexture, wallNormals, wallDepth, glm::translate(glm::vec3(-width / 2.0f - .5f, 0, (1.0f - height)*0.5f))));
 
 	for (int i = 0; i < this->width; i++)
 	{
@@ -66,11 +61,6 @@ std::shared_ptr<model::Geometry> LevelReader::createWorldGeometry()
 		}
 	}
 
-	scene->addChild(std::make_unique<model::Geometry>(plane1, wallMaterial, wallTexture, wallNormals, wallDepth, glm::mat4(1.0f)));
-	scene->addChild(std::make_unique<model::Geometry>(plane2, wallMaterial, wallTexture, wallNormals, wallDepth, glm::mat4(1.0f)));
-	scene->addChild(std::make_unique<model::Geometry>(plane4, wallMaterial, wallTexture, wallNormals, wallDepth, glm::mat4(1.0f)));
-	scene->addChild(std::make_unique<model::Geometry>(plane5, wallMaterial, wallTexture, wallNormals, wallDepth, glm::mat4(1.0f)));
-	/**/
 	return scene;
 }
 
