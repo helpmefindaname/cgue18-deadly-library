@@ -60,6 +60,7 @@ void InputHandler::process() {
 	this->onPressedEvent(GLFW_KEY_F5, "toggleLightMap");
 	this->onPressedEvent(GLFW_KEY_F6, "toogleSubdivisionSurfaces");
 	this->onPressedEvent(GLFW_KEY_F7, "toggleCelShading");
+	this->onPressedEvent(GLFW_KEY_F8, "toogleFustrumculling");
 	this->onPressedEvent(GLFW_KEY_TAB, "toggleDebug");
 
 	this->onPressed({ GLFW_KEY_W, GLFW_KEY_UP }, "moveForward");
