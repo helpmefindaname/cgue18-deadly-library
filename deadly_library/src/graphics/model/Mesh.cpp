@@ -293,8 +293,8 @@ std::shared_ptr<Mesh> Mesh::createPlaneMesh(glm::vec3 height, glm::vec3 width)
 
 	std::vector<unsigned int> indices = {
 		// front
-		0, 1, 2,
-		2, 3, 0,
+		1, 0, 2,
+		3, 2, 0,
 	};
 
 	return std::make_shared<Mesh>(indices, positions, normals, uvs);
