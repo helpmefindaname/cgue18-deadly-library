@@ -5,7 +5,6 @@ layout(location = 1) in vec3 vertexNormal;
 layout(location = 2) in vec2 vertexUV;
 
 uniform mat4 modelMatrix;
-uniform mat4 viewProjectionMatrix;
 
 out vec3 fragPositionWorldspace;
 out vec3 fragNormalWorldspace;

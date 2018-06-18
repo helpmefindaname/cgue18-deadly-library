@@ -17,6 +17,7 @@ void Player::init(PhysicsPipeline& physiX)
 {
 	this->playerGeometry = new model::Geometry(MeshLoader::loadMesh("assets/objects/raccoonBody.mesh"),
 		MaterialLoader::loadMaterial("assets/materials/raccoon.material"), TextureLoader::loadTexture("assets/textures/raccoon.png"), glm::translate(position));
+	playerGeometry->subdivide();
 	leftFoot = playerGeometry->addChild(std::make_unique<model::Geometry>(MeshLoader::loadMesh("assets/objects/raccoonLeftFoot.mesh"),
 		MaterialLoader::loadMaterial("assets/materials/raccoon.material"), TextureLoader::loadTexture("assets/textures/raccoon.png")));
 	rightFoot = playerGeometry->addChild(std::make_unique<model::Geometry>(MeshLoader::loadMesh("assets/objects/raccoonRightFoot.mesh"),
