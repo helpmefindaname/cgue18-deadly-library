@@ -10,6 +10,7 @@ public:
 	static bool showFps;
 	static bool useLightMap;
 	static bool useNormalMap;
+	static bool isCelShading;
 	static int fps;
 	static int subdivisionLevel;
 };

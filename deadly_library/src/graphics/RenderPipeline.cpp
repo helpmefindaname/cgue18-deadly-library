@@ -11,6 +11,7 @@ RenderPipeline::RenderPipeline(GAMESTATE& state)
 	lightMapGeometryShader("assets/shader/lightMapGeometryPass"),
 	lightShader("assets/shader/lightpass"),
 	lightMapShader("assets/shader/lightMapPass"),
+	celShader("assets/shader/celShadingPass"),
 	normalMappingGeometryShader("assets/shader/normalMappingGeometryPass"),
 	currentTargetFramebuffer(-1),
 	currentSourceFramebuffer(-1),
@@ -26,10 +27,10 @@ RenderPipeline::RenderPipeline(GAMESTATE& state)
 	lightIntensity(Config::getFloat("LightIntensity")),
 	gBuffer(
 		true, width, height,
-		{ "color", "position", "normal", "material", "light", "final", "lightMap" },
-		{ width, width, width, width, width, width, lightMapWidth },
-		{ height, height, height, height, height, height, lightMapHeight },
-		{ GL_RGB8, GL_RGB16F, GL_RGB16F, GL_RGBA8, GL_RGB8, GL_RGB8,GL_RGB8 }
+		{ "color", "position", "normal", "material", "light", "final", "lightMap", "celShading" },
+		{ width, width, width, width, width, width, lightMapWidth, width },
+		{ height, height, height, height, height, height, lightMapHeight, height },
+		{ GL_RGB8, GL_RGB16F, GL_RGB16F, GL_RGBA8, GL_RGB8, GL_RGB8,GL_RGB8, GL_RGB8 }
 	),
 	writer2D()
 {
@@ -84,13 +85,17 @@ void RenderPipeline::render() {
 	if (Globals::isWireFrameMode) {
 		this->doWireFrameMode();
 	}
-	else 
+	else
 	{
 		this->doGeometryPass();
 		this->doLightPass();
+		if (Globals::isCelShading) {
+			this->doCelShadingPass();
+		}
 		this->doFinalPass();
 	}
 	this->doHudPass();
+
 }
 
 void RenderPipeline::useShader(Shader& shader) {
@@ -130,7 +135,7 @@ void RenderPipeline::bindDefaultFramebuffer() {
 	}
 }
 
-void RenderPipeline::doWireFrameMode() 
+void RenderPipeline::doWireFrameMode()
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	this->useShader(this->debugShader);
@@ -207,6 +212,23 @@ void RenderPipeline::doLightPass()
 	lastPass = "light";
 }
 
+void RenderPipeline::doCelShadingPass()
+{
+	this->bindSourceFramebuffer(this->gBuffer);
+	this->bindTargetFramebuffer(this->gBuffer);
+
+	this->useShader(this->celShader);
+
+	this->activeShader->setUniform("celCount", 3);
+	this->activeShader->setUniform("resolution", glm::vec2(this->width, this->height));
+
+	this->gBuffer.bindTextures(*this->activeShader, 0, { lastPass }, { "inputBuffer" });
+	this->gBuffer.bindTargetColorBuffers({ "celShading" });
+
+	this->gBuffer.renderQuad(*activeShader);
+	lastPass = "celShading";
+}
+
 void RenderPipeline::doFinalPass()
 {
 	this->bindDefaultFramebuffer();
@@ -242,7 +264,7 @@ void RenderPipeline::doHudPass()
 		std::string help = "Show help-F1:      " + std::to_string(Globals::isHelp);
 		std::string debug = "Show debug-F2:     " + std::to_string(Globals::isDebug);
 		std::string wireframe = "Show wireframe-F3: " + std::to_string(false);
-		std::string normalMap = "Show normalmap-F4: "+std::to_string(Globals::useNormalMap);
+		std::string normalMap = "Show normalmap-F4: " + std::to_string(Globals::useNormalMap);
 		std::string lightMap = "Show lightmap-F5:  " + std::to_string(Globals::useLightMap);
 		std::string subdivision = "Show subdivision level-F6:  " + std::to_string(Globals::subdivisionLevel);
 

@@ -22,6 +22,7 @@ private:
 	Shader emptyShader;
 	Shader debugShader;
 	Shader lightShader;
+	Shader celShader;
 	Shader geometryPassShader;
 	Shader lightMapShader;
 	Shader lightMapGeometryShader;
@@ -56,6 +57,7 @@ private:
 	void doWireFrameMode();
 	void doGeometryPass();
 	void doLightPass();
+	void doCelShadingPass();
 	void doFinalPass();
 	void doHudPass();
 

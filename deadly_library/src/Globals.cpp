@@ -6,5 +6,6 @@ bool Globals::showFps = false;
 bool Globals::isHelp = false;
 bool Globals::useLightMap = true;
 bool Globals::useNormalMap = true;
+bool Globals::isCelShading = true;
 int Globals::fps = 60;
 int Globals::subdivisionLevel = 1;

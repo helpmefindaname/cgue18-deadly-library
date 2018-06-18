@@ -113,6 +113,10 @@ void Gameloop::update()
 		Globals::isWireFrameMode = !Globals::isWireFrameMode;
 	}
 
+	if (inputHandler.getEvent("toggleCelShading")) {
+		Globals::isCelShading = !Globals::isCelShading;
+	}
+
 	inputHandler.process();
 }
 
