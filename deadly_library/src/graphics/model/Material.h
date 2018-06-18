@@ -27,6 +27,7 @@ private:
 	float specularPower;
 
 	bool usesTexture;
+	bool useNormalmapping;
 	bool useLightmapping;
 
 public:

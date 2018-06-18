@@ -49,8 +49,8 @@ void DeadlyLibrary::init(PhysicsPipeline& physiX)
 
 	lights.clear();
 
-	lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 10.0f, 2.5f)));
-	lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 10.0f, -5.5f)));
+	lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 2.0f, -2.5f)));
+	lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 8.0f, -5.5f)));
 	lights.push_back(std::make_shared<Light>(glm::vec3(10.0f, 10.0f, -25.5f)));
 	lights.push_back(std::make_shared<Light>(glm::vec3(-10.0f, 10.0f, -25.5f)));
 }

@@ -21,41 +21,39 @@ std::shared_ptr<model::Geometry> LevelReader::createWorldGeometry()
 {
 	std::shared_ptr<Mesh> cube = Mesh::createCubeMesh(1.0f, 1.0f, 1.0f);
 
-	std::shared_ptr<Mesh> plane1 = Mesh::createPlaneMesh(
+	std::shared_ptr<Mesh> plane1 = Mesh::createPlaneMesh( //back
 		glm::vec3(-width / 2.0f - 0.5f, 10.0f, .5f),
 		glm::vec3(width / 2.0f + 0.5f, 10.0f, .5f),
 		glm::vec3(width / 2.0f + 0.5f, -10.0f, .5f),
 		glm::vec3(-width / 2.0f - 0.5f, -10.0f, .5f),
 		glm::vec3(0, 0, -1.0f));
-	std::shared_ptr<Mesh> plane2 = Mesh::createPlaneMesh(
+	std::shared_ptr<Mesh> plane2 = Mesh::createPlaneMesh(        //front
 		glm::vec3(width / 2.0f + 0.5f, 10.0f, -height + 0.5f),
 		glm::vec3(-width / 2.0f - 0.5f, 10.0f, -height + 0.5f),
 		glm::vec3(-width / 2.0f - 0.5f, -10.0f, -height + 0.5f),
 		glm::vec3(width / 2.0f + 0.5f, -10.0f, -height + 0.5f),
 		glm::vec3(0, 0, 1.0f));
-	std::shared_ptr<Mesh> plane3 = Mesh::createPlaneMesh(
-		glm::vec3(width / 2.0f + 0.5f, 10.0f, 1.0f),
-		glm::vec3(-width / 2.0f - 0.5f, 10.0f, 1.0f),
-		glm::vec3(-width / 2.0f - 0.5f, 10.0f, -height),
-		glm::vec3(width / 2.0f + 0.5f, 10.0f, -height),
-		glm::vec3(0.0f, -1.0f, 0.0f));
-	std::shared_ptr<Mesh> plane4 = Mesh::createPlaneMesh(
+
+	std::shared_ptr<Mesh> plane4 = Mesh::createPlaneMesh( //right
 		glm::vec3(width / 2.0f - .5f, 10.0f, 1.0f),
 		glm::vec3(width / 2.0f - .5f, 10.0f, -height),
 		glm::vec3(width / 2.0f - .5f, -10.0f, -height),
 		glm::vec3(width / 2.0f - .5f, -10.0f, 1.0f),
 		glm::vec3(-1.0f, 0.0f, 0.0f));
 	std::shared_ptr<Mesh> plane5 = Mesh::createPlaneMesh(
-		glm::vec3(-width / 2.0f - .5f, -10.0f, 1.0f),
-		glm::vec3(-width / 2.0f - .5f, -10.0f, -height),
 		glm::vec3(-width / 2.0f - .5f, 10.0f, -height),
 		glm::vec3(-width / 2.0f - .5f, 10.0f, 1.0f),
+		glm::vec3(-width / 2.0f - .5f, -10.0f, 1.0f),
+		glm::vec3(-width / 2.0f - .5f, -10.0f, -height),
 		glm::vec3(1.0f, 0.0f, 0.0f));
 
 	std::shared_ptr<model::Geometry> scene = std::make_shared<model::Geometry>();
 	std::shared_ptr<Material> material = MaterialLoader::loadMaterial("assets/materials/block.material");
+	std::shared_ptr<Material> wallMaterial = MaterialLoader::loadMaterial("assets/materials/wall.material");
 	std::shared_ptr<Texture> texture = TextureLoader::loadTexture("assets/textures/block2.png");
-	std::shared_ptr<Texture> wallTexture = TextureLoader::loadTexture("assets/textures/wall.png");
+	std::shared_ptr<Texture> wallTexture = TextureLoader::loadTexture("assets/textures/regal_color.jpg");
+	std::shared_ptr<Texture> wallNormals = TextureLoader::loadTexture("assets/textures/regal_normals.jpg");
+	std::shared_ptr<Texture> wallDepth = TextureLoader::loadTexture("assets/textures/regal_depth_gen.jpg");
 
 	for (int i = 0; i < this->width; i++)
 	{
@@ -63,15 +61,15 @@ std::shared_ptr<model::Geometry> LevelReader::createWorldGeometry()
 		{
 			if (data[j][i] >= 1 && data[j][i] <= 9) {
 				int blockheight = data[j][i];
-				scene->addChild(std::make_unique<model::Geometry>(cube, material, texture, glm::translate(glm::vec3(i - width / 2.0f, blockheight, -j))));
+				scene->addChild(std::make_unique<model::Geometry>(cube, material, texture, nullptr, nullptr, glm::translate(glm::vec3(i - width / 2.0f, blockheight, -j))));
 			}
 		}
 	}
 
-	scene->addChild(std::make_unique<model::Geometry>(plane1, material, wallTexture, glm::mat4(1.0f)));
-	scene->addChild(std::make_unique<model::Geometry>(plane2, material, wallTexture, glm::mat4(1.0f)));
-	scene->addChild(std::make_unique<model::Geometry>(plane4, material, wallTexture, glm::mat4(1.0f)));
-	scene->addChild(std::make_unique<model::Geometry>(plane5, material, wallTexture, glm::mat4(1.0f)));
+	scene->addChild(std::make_unique<model::Geometry>(plane1, wallMaterial, wallTexture, wallNormals, wallDepth, glm::mat4(1.0f)));
+	scene->addChild(std::make_unique<model::Geometry>(plane2, wallMaterial, wallTexture, wallNormals, wallDepth, glm::mat4(1.0f)));
+	scene->addChild(std::make_unique<model::Geometry>(plane4, wallMaterial, wallTexture, wallNormals, wallDepth, glm::mat4(1.0f)));
+	scene->addChild(std::make_unique<model::Geometry>(plane5, wallMaterial, wallTexture, wallNormals, wallDepth, glm::mat4(1.0f)));
 	/**/
 	return scene;
 }

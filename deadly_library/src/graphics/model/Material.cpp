@@ -42,16 +42,25 @@ void Material::uploadLightData(Shader & shader)
 
 bool Material::appliesToShader(Shader & shader)
 {
+	bool doLightMap = useLightmapping && Globals::useLightMap;
+	bool doNormalMap = useNormalmapping;// && Globals::....
+
 	std::string shadername = shader.getName();
 	if (shadername == "assets/shader/lightMapPass" && !useLightmapping) {
 		return false;
 	}
-	if (shadername == "assets/shader/geometrypass" && useLightmapping && Globals::useLightMap) {
+	if (shadername == "assets/shader/normalMappingGeometryPass" && (!doNormalMap || doLightMap)) {
 		return false;
 	}
-	if (shadername == "assets/shader/lightMapGeometryPass" && !(useLightmapping && Globals::useLightMap)) {
+
+	if (shadername == "assets/shader/geometrypass" && (doLightMap || doNormalMap)) {
 		return false;
 	}
+	if (shadername == "assets/shader/lightMapGeometryPass" && !doLightMap) {
+		return false;
+	}
+
+
 	return true;
 }
 
@@ -108,6 +117,11 @@ void Material::readFile() {
 			float value;
 			if (!(iss >> value)) { break; }
 			this->useLightmapping = value > 0.2f;
+		}
+		else if (valueName == "useNormalmapping") {
+			float value;
+			if (!(iss >> value)) { break; }
+			this->useNormalmapping = value > 0.2f;
 		}
 	}
 

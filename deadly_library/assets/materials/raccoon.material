@@ -6,5 +6,6 @@ diffuseFactor 0.5
 specularPower 0.2
 
 useLightmapping 0
+useNormalmapping 0
 
 usesTexture 0

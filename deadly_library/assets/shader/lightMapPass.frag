@@ -5,7 +5,11 @@ in vec3 fragNormalWorldspace;
 in vec2 fragUV;
 
 uniform bool useTexture;
+uniform bool useNormals;
 uniform sampler2D textureBuffer;
+uniform sampler2D normalMapBuffer;
+uniform sampler2D depthMapBuffer;
+uniform mat4 modelMatrix;
 
 uniform vec3 materialColor;
 uniform float ambientFactor;
@@ -76,10 +80,15 @@ void main() {
 	}else{
 	   color=materialColor;
 	}
-
+	vec3 position = fragPositionWorldspace;
+	vec3 normal = fragNormalWorldspace;
+	if(useNormals) {
+		position = fragPositionWorldspace + fragNormalWorldspace * texture(depthMapBuffer, fragUV).x * 2.0;
+		normal = normalize((modelMatrix * vec4(texture(normalMapBuffer, fragUV).rgb * 2.0 - 1.0, 0.0)).xyz);
+	}
 
 	vec3 ambientLight = calculateAmbientLight(color);
-	vec3 light = calculcateDiffuseLight(color, fragPositionWorldspace, fragNormalWorldspace);
+	vec3 light = calculcateDiffuseLight(color, position, normal);
 	
 	outputColor = vec4(brightness * (ambientLight + light), 1.0);
 	/**/

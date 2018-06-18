@@ -1,12 +1,14 @@
 #include "Geometry.h"
 
 namespace model {
-	Geometry::Geometry(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material, std::shared_ptr<Texture> texture, glm::mat4 position)
+	Geometry::Geometry(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material, std::shared_ptr<Texture> texture, std::shared_ptr<Texture> normalMap, std::shared_ptr<Texture> depthMap, glm::mat4 position)
 		: attributes(position),
 		mesh(mesh),
 		material(material),
 		texture(texture),
 		isEmpty(false),
+		normalMap(normalMap),
+		depthMap(depthMap),
 		lightMap(NULL)
 	{
 	}
@@ -53,6 +55,13 @@ namespace model {
 					lightMap->bind(8);
 					shader.setUniform("lightMapBuffer", 8);
 				}
+
+				if (normalMap) {
+					normalMap->bind(9);
+					shader.setUniform("normalMapBuffer", 9);
+					depthMap->bind(11);
+					shader.setUniform("depthMapBuffer", 11);
+				}
 				mesh->render(shader);
 			}
 		}
@@ -81,6 +90,17 @@ namespace model {
 				else {
 					shader.setUniform("useTexture", false);
 				}
+				if (normalMap) {
+					shader.setUniform("useNormals", true);
+					normalMap->bind(9);
+					shader.setUniform("normalMapBuffer", 9);
+					depthMap->bind(11);
+					shader.setUniform("depthMapBuffer", 11);
+				}
+				else {
+					shader.setUniform("useNormals", false);
+				}
+
 				mesh->render(shader);
 
 				lightMap = framebuffer.createScreenShot("lightMap");

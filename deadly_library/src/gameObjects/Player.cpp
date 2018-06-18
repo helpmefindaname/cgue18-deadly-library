@@ -16,7 +16,7 @@ Player::~Player()
 void Player::init(PhysicsPipeline& physiX)
 {
 	this->playerGeometry = new model::Geometry(MeshLoader::loadMesh("assets/objects/raccoonBody.mesh"),
-		MaterialLoader::loadMaterial("assets/materials/raccoon.material"), TextureLoader::loadTexture("assets/textures/raccoon.png"), glm::translate(position));
+		MaterialLoader::loadMaterial("assets/materials/raccoon.material"), TextureLoader::loadTexture("assets/textures/raccoon.png"), nullptr, nullptr, glm::translate(position));
 	playerGeometry->subdivide();
 	leftFoot = playerGeometry->addChild(std::make_unique<model::Geometry>(MeshLoader::loadMesh("assets/objects/raccoonLeftFoot.mesh"),
 		MaterialLoader::loadMaterial("assets/materials/raccoon.material"), TextureLoader::loadTexture("assets/textures/raccoon.png")));
@@ -88,7 +88,7 @@ void Player::update(InputHandler& inputHandler, float dt)
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 side = glm::cross(forwardVec, up);
 
-	float footAngle = ((((movecounter / animationFrameCount) % 2) * 2 - 1) * (movecounter % animationFrameCount - (animationFrameCount / 2)) / (animationFrameCount / 2.0f)) * Glm::pi*0.25;
+	float footAngle = ((((movecounter / animationFrameCount) % 2) * 2 - 1) * (movecounter % animationFrameCount - (animationFrameCount / 2)) / (animationFrameCount / 2.0f)) * Glm::pi*0.25f;
 	glm::vec3 footOffset = glm::vec3(0.0f, .5f, 0.0f);
 
 
