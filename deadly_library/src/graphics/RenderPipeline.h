@@ -24,6 +24,7 @@ private:
 	Shader geometryPassShader;
 	Shader lightMapShader;
 	Shader lightMapGeometryShader;
+	Shader normalMappingGeometryShader;
 	HudWriter writer2D;
 
 	int width;

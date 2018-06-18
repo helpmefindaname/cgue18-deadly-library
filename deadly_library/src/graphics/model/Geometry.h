@@ -11,7 +11,7 @@ namespace model {
 	class Geometry
 	{
 	public:
-		Geometry(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material, std::shared_ptr<Texture> texture = NULL, glm::mat4 position=glm::mat4(1.0f));
+		Geometry(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material, std::shared_ptr<Texture> texture = NULL, std::shared_ptr<Texture> normalMap = nullptr, std::shared_ptr<Texture> depthMap = nullptr, glm::mat4 position = glm::mat4(1.0f));
 		Geometry(glm::mat4 position = glm::mat4(1.0f));
 		~Geometry();
 
@@ -21,6 +21,8 @@ namespace model {
 		Attributes attributes;
 		std::shared_ptr<Material> material;
 		std::shared_ptr<Texture> texture;
+		std::shared_ptr<Texture> normalMap;
+		std::shared_ptr<Texture> depthMap;
 		bool isEmpty;
 		std::shared_ptr<Texture> lightMap;
 

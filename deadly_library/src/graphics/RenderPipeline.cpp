@@ -10,6 +10,7 @@ RenderPipeline::RenderPipeline(GAMESTATE& state)
 	lightMapGeometryShader("assets/shader/lightMapGeometryPass"),
 	lightShader("assets/shader/lightpass"),
 	lightMapShader("assets/shader/lightMapPass"),
+	normalMappingGeometryShader("assets/shader/normalMappingGeometryPass"),
 	currentTargetFramebuffer(-1),
 	currentSourceFramebuffer(-1),
 	activeShader(nullptr),
@@ -140,6 +141,11 @@ void RenderPipeline::doGeometryPass()
 	this->state.getUsedCamera().uploadData(*this->activeShader);
 	this->state.render(*this->activeShader);
 
+
+	this->useShader(this->normalMappingGeometryShader);
+	this->state.getUsedCamera().uploadData(*this->activeShader);
+	this->state.render(*this->activeShader);
+
 	glDepthMask(GL_FALSE);
 	glDisable(GL_DEPTH_TEST);
 
@@ -181,6 +187,9 @@ void RenderPipeline::doLightPass()
 	this->gBuffer.renderQuad(*this->activeShader);
 
 	lastPass = "light";
+	if (Globals::isHelp) {
+		lastPass = "normal";
+	}
 }
 
 void RenderPipeline::doFinalPass()

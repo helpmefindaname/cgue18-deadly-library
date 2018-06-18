@@ -27,11 +27,7 @@ out vec4 outputColor;
 
 float calculcateLightPower(vec3 position, vec3 normal, vec4 material, vec3 lightPosition) {
 	float diffuseIntensity = material.y;
-	float specularIntensity = material.z;
 	float attenuation = 0;
-	specularIntensity = 0.0f;
-	float specularPower = 32.0f;
-	float specularFactor = 0.0f;
 	float diffuseFactor = 0.0f;
 
 	vec3 lightToVertex = position - lightPosition;
@@ -45,22 +41,12 @@ float calculcateLightPower(vec3 position, vec3 normal, vec4 material, vec3 light
 		if (diffuseFactor > 0) {
 
 			attenuation = 1.0 / (attenuationConstant + attenuationLinear * distance + attenuationSquared * distanceSqr);
-
-			vec3 vertexToCamera = normalize(camera_world - position);
-			vec3 vertexReflect = normalize(reflect(lightDirection, normal));
-
-			specularFactor = dot(vertexToCamera, vertexReflect);
-			if (specularFactor > 0) {
-				specularFactor = pow(specularFactor, specularPower);
-			}else{
-			    specularFactor = 0.0f;
-			}
 		}else {
 		   diffuseFactor = 0.0f;
 		}
 	}
 
-	return (diffuseIntensity * diffuseFactor + specularIntensity * specularFactor) * lightIntensity * attenuation;
+	return (diffuseIntensity * diffuseFactor) * lightIntensity * attenuation;
 }
 
 vec3 calculcateDiffuseLight(vec3 color, vec3 position, vec3 normal, vec4 material) {
@@ -92,6 +78,6 @@ void main() {
 
 		outputColor = vec4(brightness * (ambientLight + light), 1.0);
 	} else {
-		outputColor = vec4(brightness * color, 1.0f);
+		outputColor = vec4(color, 1.0f);
 	}
 }
