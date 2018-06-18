@@ -93,6 +93,7 @@
     <None Include="assets\materials\raccoon.material">
       <DeploymentContent>true</DeploymentContent>
     </None>
+    <None Include="assets\objects\raccoonRightFoot.mesh" />
     <None Include="assets\settings.ini">
       <DeploymentContent>true</DeploymentContent>
     </None>

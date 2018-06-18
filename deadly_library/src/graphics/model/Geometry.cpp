@@ -24,6 +24,7 @@ namespace model {
 
 	Geometry* Geometry::addChild(std::unique_ptr<Geometry> child)
 	{
+		child->attributes.setParentAttributes(&this->attributes);
 		children.push_back(std::move(child));
 		return (children.end() - 1)->get();
 	}
