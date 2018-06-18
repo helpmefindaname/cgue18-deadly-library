@@ -86,6 +86,10 @@ void Gameloop::update()
 		Globals::useLightMap = !Globals::useLightMap;
 	}
 
+	if (inputHandler.getEvent("toogleSubdivisionSurfaces")) {
+		Globals::subdivisionLevel = (Globals::subdivisionLevel + 1) % 3;
+	}
+
 	if (Globals::isDebug) {
 		debugCameraHandler.checkInput(inputHandler, this->sPerFrame);
 		state.setUsedCamera(debugCamera);

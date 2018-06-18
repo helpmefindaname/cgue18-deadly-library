@@ -91,9 +91,7 @@ void HudWriter::print(const char * text, int x, int y, int size) {
 	fontShader.setUniform("myTextureSampler", 5);
 	fontShader.setUniform("transform", false);
 
-	drawMesh.uploadData(fontShader);
-
-	drawMesh.render();
+	drawMesh.render(fontShader);
 
 	drawMesh.deleteData();
 }
@@ -111,7 +109,5 @@ void HudWriter::drawtexture(int x, int y, int width, int height, Texture & textu
 	fontShader.setUniform("transform", true);
 	fontShader.setUniform("myTextureSampler", 5);
 
-	textureMesh->uploadData(fontShader);
-
-	textureMesh->render();
+	textureMesh->render(fontShader);
 }

@@ -15,8 +15,13 @@ Player::~Player()
 
 void Player::init(PhysicsPipeline& physiX)
 {
-	this->playerGeometry = new model::Geometry(MeshLoader::loadMesh("assets/objects/raccoon.mesh"),
+	this->playerGeometry = new model::Geometry(MeshLoader::loadMesh("assets/objects/raccoonBody.mesh"),
 		MaterialLoader::loadMaterial("assets/materials/raccoon.material"), TextureLoader::loadTexture("assets/textures/raccoon.png"), glm::translate(position));
+	playerGeometry->subdivide();
+	leftFoot = playerGeometry->addChild(std::make_unique<model::Geometry>(MeshLoader::loadMesh("assets/objects/raccoonLeftFoot.mesh"),
+		MaterialLoader::loadMaterial("assets/materials/raccoon.material"), TextureLoader::loadTexture("assets/textures/raccoon.png")));
+	rightFoot = playerGeometry->addChild(std::make_unique<model::Geometry>(MeshLoader::loadMesh("assets/objects/raccoonRightFoot.mesh"),
+		MaterialLoader::loadMaterial("assets/materials/raccoon.material"), TextureLoader::loadTexture("assets/textures/raccoon.png")));
 	playerObject = physiX.createController(PxVec3(position.x, position.y, position.z), PxVec3(0.25f));
 
 }
@@ -40,6 +45,7 @@ void Player::update(InputHandler& inputHandler, float dt)
 	velocityY -= gravity * dt;
 
 	playerObject->move(playerObject->getUpDirection() * velocityY * dt, 0.0001f, dt, 0);
+	movecounter++;
 
 	if (inputHandler.getEvent("moveForward")) {
 		playerObject->move(forward() * dt * playerSpeed, 0.0001f, dt, 0);
@@ -63,18 +69,31 @@ void Player::update(InputHandler& inputHandler, float dt)
 	float lastY = position.y;
 	PxExtendedVec3 pos = playerObject->getPosition();
 	position = glm::vec3(pos.x, pos.y, pos.z);
+	const int animationFrameCount = 16;
 
 	isOnFloor = abs(lastY - position.y) < 0.00001f;
 
 	if (isOnFloor) {
 		velocityY = 0.0f;
 	}
+	else {
+		movecounter = animationFrameCount / 2;
+	}
 
 	if (isOnFloor && inputHandler.getEvent("jump")) {
 		velocityY = jumpPower;
 	}
 
+	glm::vec3 forwardVec = glm::vec3(1.0f, 0.0f, 0.0f);
+	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 side = glm::cross(forwardVec, up);
 
+	float footAngle = ((((movecounter / animationFrameCount) % 2) * 2 - 1) * (movecounter % animationFrameCount - (animationFrameCount / 2)) / (animationFrameCount / 2.0f)) * Glm::pi*0.25;
+	glm::vec3 footOffset = glm::vec3(0.0f, .5f, 0.0f);
+
+
+	leftFoot->setTransformMatrix(glm::translate(footOffset)* glm::rotate(footAngle, side)*glm::translate(-footOffset));
+	rightFoot->setTransformMatrix(glm::translate(footOffset)* glm::rotate(-footAngle, side)*glm::translate(-footOffset));
 	this->playerGeometry->setTransformMatrix(glm::translate(position)*glm::rotate(direction, glm::vec3(0.0f, 1.0f, 0.0f)));
 }
 

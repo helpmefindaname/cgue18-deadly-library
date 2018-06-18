@@ -17,10 +17,12 @@ Framebuffer::Framebuffer(bool useDepthStencilBuffer, int depthStencilBufferWidth
 		glm::vec2(1.0f,0.0f),
 		glm::vec2(0.0f,1.0f),
 		glm::vec2(1.0f,1.0f)
-		})
+		}),
+	screenWidth(Config::getInt("WindowWidth")),
+	screenHeight(Config::getInt("WindowHeight"))
 {
 	for (size_t i = 0; i < colorBufferNames.size(); i++) {
-		this->colorBuffers.emplace(colorBufferNames.at(i), Texture(colorBufferWidths.at(i), colorBufferHeights.at(i), GL_RGBA, internalFormats.at(i), GL_FLOAT, GL_COLOR_ATTACHMENT0 + (int)i, GL_LINEAR, GL_CLAMP_TO_EDGE));
+		this->colorBuffers.emplace(colorBufferNames.at(i), Texture(colorBufferWidths.at(i), colorBufferHeights.at(i), GL_RGBA, internalFormats.at(i), GL_FLOAT, GL_COLOR_ATTACHMENT0 + (int)i, GL_LINEAR, GL_MIRRORED_REPEAT));
 	}
 
 	glGenFramebuffers(1, &this->handle);
@@ -61,8 +63,7 @@ GLuint Framebuffer::getHandle() {
 }
 
 void Framebuffer::renderQuad(Shader& shader) {
-	this->fullscreenQuad.uploadData(shader);
-	this->fullscreenQuad.render();
+	this->fullscreenQuad.render(shader);
 }
 
 void Framebuffer::bindTargetColorBuffers(std::vector<std::string> colorBufferNames) {
@@ -130,7 +131,12 @@ std::shared_ptr<Texture> Framebuffer::createScreenShot(std::string colorBufferNa
 	glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorBuffers.size(), GL_TEXTURE_2D, source.getHandle(), 0);
 	glReadBuffer(GL_COLOR_ATTACHMENT0 + colorBuffers.size());
 	this->bindSourceColorBuffer({ colorBufferName });
-	//glBindTexture(GL_TEXTURE_2D, result->getHandle());
+	glBlitFramebuffer(
+		0, 0, screenWidth, screenHeight,
+		0, 0, width, height,
+		GL_COLOR_BUFFER_BIT, GL_NEAREST
+	);
+	glBindTexture(GL_TEXTURE_2D, result->getHandle());
 	result->bind(colorBuffers.size());
 
 	glCopyTexImage2D(GL_TEXTURE_2D, 0, source.getInternalFormat(), 0, 0, width, height, 0);

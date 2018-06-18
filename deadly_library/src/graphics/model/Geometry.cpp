@@ -22,8 +22,14 @@ namespace model {
 	{
 	}
 
+	void Geometry::subdivide()
+	{
+		this->mesh->prepareSubdivision();
+	}
+
 	Geometry* Geometry::addChild(std::unique_ptr<Geometry> child)
 	{
+		child->attributes.setParentAttributes(&this->attributes);
 		children.push_back(std::move(child));
 		return (children.end() - 1)->get();
 	}
@@ -33,7 +39,6 @@ namespace model {
 		if (!isEmpty) {
 			if (material->appliesToShader(shader)) {
 				shader.setUniform("modelMatrix", this->attributes.getParentMatrix());
-				mesh->uploadData(shader);
 				material->uploadData(shader);
 				if (texture) {
 					shader.setUniform("useTexture", true);
@@ -48,7 +53,7 @@ namespace model {
 					lightMap->bind(8);
 					shader.setUniform("lightMapBuffer", 8);
 				}
-				mesh->render();
+				mesh->render(shader);
 			}
 		}
 
@@ -67,7 +72,6 @@ namespace model {
 			if (material->appliesToShader(shader)) {
 
 				shader.setUniform("modelMatrix", this->attributes.getParentMatrix());
-				mesh->uploadData(shader);
 				material->uploadData(shader);
 				if (texture) {
 					shader.setUniform("useTexture", true);
@@ -77,7 +81,7 @@ namespace model {
 				else {
 					shader.setUniform("useTexture", false);
 				}
-				mesh->render();
+				mesh->render(shader);
 
 				lightMap = framebuffer.createScreenShot("lightMap");
 			}

@@ -9,5 +9,6 @@ public:
 	static bool showFps;
 	static bool useLightMap;
 	static int fps;
+	static int subdivisionLevel;
 };
 
