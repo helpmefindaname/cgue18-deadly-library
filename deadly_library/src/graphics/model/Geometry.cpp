@@ -1,4 +1,5 @@
 #include "Geometry.h"
+#include "../../Globals.h"
 
 namespace model {
 	Geometry::Geometry(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material, std::shared_ptr<Texture> texture, std::shared_ptr<Texture> normalMap, std::shared_ptr<Texture> depthMap, glm::mat4 position)
@@ -38,38 +39,52 @@ namespace model {
 
 	void Geometry::render(Shader& shader)
 	{
-		if (!isEmpty) {
-			if (material->appliesToShader(shader)) {
-				shader.setUniform("modelMatrix", this->attributes.getParentMatrix());
-				material->uploadData(shader);
-				if (texture) {
-					shader.setUniform("useTexture", true);
-					texture->bind(10);
-					shader.setUniform("textureBuffer", 10);
-				}
-				else {
-					shader.setUniform("useTexture", false);
-				}
-
-				if (lightMap) {
-					lightMap->bind(8);
-					shader.setUniform("lightMapBuffer", 8);
-				}
-
-				if (normalMap) {
-					normalMap->bind(9);
-					shader.setUniform("normalMapBuffer", 9);
-					depthMap->bind(11);
-					shader.setUniform("depthMapBuffer", 11);
-				}
-				mesh->render(shader);
-			}
-		}
-
 		for (int i = 0; i < (int)children.size(); i++)
 		{
 			children[i]->render(shader);
 		}
+		if (isEmpty) {
+			return;
+		}
+		if (!material->appliesToShader(shader)) {
+			return;
+		}
+		if (Globals::isFrustumculling) {
+			glm::vec3& position = this->attributes.getPosition();
+			float radius = this->mesh->getCollisionRadius();
+			std::vector<glm::vec4> frustumPlanes = Globals::frustumPlanes;
+
+			for (int i = 0; i < 6; i++) {
+				float distance = frustumPlanes[i].x * position.x + frustumPlanes[i].y * position.y + frustumPlanes[i].z * position.z + frustumPlanes[i].w;
+				if (distance < -radius) {
+					return;
+				}
+			}
+		}
+
+		shader.setUniform("modelMatrix", this->attributes.getParentMatrix());
+		material->uploadData(shader);
+		if (texture) {
+			shader.setUniform("useTexture", true);
+			texture->bind(10);
+			shader.setUniform("textureBuffer", 10);
+		}
+		else {
+			shader.setUniform("useTexture", false);
+		}
+
+		if (lightMap) {
+			lightMap->bind(8);
+			shader.setUniform("lightMapBuffer", 8);
+		}
+
+		if (normalMap) {
+			normalMap->bind(9);
+			shader.setUniform("normalMapBuffer", 9);
+			depthMap->bind(11);
+			shader.setUniform("depthMapBuffer", 11);
+		}
+		mesh->render(shader);
 	}
 
 	void Geometry::setTransformMatrix(glm::mat4 matrix) {

@@ -45,7 +45,7 @@
 		void translateUp(float value);
 		void translateDown(float value);
 
-		void setRotation(glm::vec3 rotation);
+		void setFrustumPlanes();
 		void roll(float value);
 		void pitch(float value);
 		void yaw(float value);

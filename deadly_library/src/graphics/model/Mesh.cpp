@@ -55,7 +55,9 @@ Mesh::Mesh(
 	filepath("gen"),
 	isSubdivision(false),
 	lastRenderSubdivision(false)
-{}
+{
+	this->calculateCollisionRadius();
+}
 
 Mesh::~Mesh() {
 	this->deleteData();
@@ -71,7 +73,7 @@ void Mesh::render(Shader& shader) {
 		renderNormals = std::vector<glm::vec3>(normals);
 		renderUvs = std::vector<glm::vec2>(uvs);
 		renderEdges = std::unordered_map<std::pair<glm::vec3, glm::vec3>, std::vector<int>, pairhash>(edges);
-		for (size_t i = 0; i < Globals::subdivisionLevel; i++)
+		for (int i = 0; i < Globals::subdivisionLevel; i++)
 		{
 			this->applySubdivision();
 		}
@@ -259,8 +261,13 @@ std::shared_ptr<Mesh> Mesh::createCubeMesh(float width, float height, float dept
 }
 
 
-std::shared_ptr<Mesh> Mesh::createPlaneMesh(glm::vec3 aa, glm::vec3 ab, glm::vec3 ba, glm::vec3 bb, glm::vec3 normal)
+std::shared_ptr<Mesh> Mesh::createPlaneMesh(glm::vec3 height, glm::vec3 width)
 {
+	glm::vec3 aa = (-width + height) * 0.5f;
+	glm::vec3 ab = (+width + height) * 0.5f;
+	glm::vec3 ba = (+width - height) * 0.5f;
+	glm::vec3 bb = (-width - height) * 0.5f;
+	glm::vec3 normal = glm::normalize(glm::cross(width, height));
 	std::vector<glm::vec3> positions = {
 		aa,
 		ab,
@@ -415,6 +422,7 @@ void Mesh::createVAO(GLint verticeLocation, GLint normalLocation, GLint uvLocati
 }
 
 void Mesh::calculateCollisionRadius() {
+	this->collisionRadius = 0.0f;
 	if (this->vertices.size() > 0) {
 		for (glm::vec3 vertex : this->vertices) {
 			float distance = glm::length(vertex);
@@ -550,7 +558,7 @@ void Mesh::applySubdivision() {
 				sum += newVertices[rVerteicesNeighbours[vertices.second[i]][j]];
 			}
 		}
-		float a = (3 / 8.0f + cos(2 * 3.14159265 / count) / 4.0f);
+		float a = (3 / 8.0f + cosf(2 * 3.14159265f / count) / 4.0f);
 		float alpha = (a * a + 3 / 8.f);
 		if (count == 3) {
 			alpha = 7.0f / 16.0f;
