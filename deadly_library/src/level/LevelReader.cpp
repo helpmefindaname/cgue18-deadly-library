@@ -39,16 +39,16 @@ std::shared_ptr<model::Geometry> LevelReader::createWorldGeometry()
 
 	std::shared_ptr<Mesh> plane4 = Mesh::createPlaneMesh( //right
 		glm::vec3(0.0f, 20.0f, 0.0f),
-		glm::vec3(0.0f, 0.0f, height + 1));
+		glm::vec3(height + 1.0f, 0.0f, 0.0f));
 
 	std::shared_ptr<Mesh> plane5 = Mesh::createPlaneMesh( //left
 		glm::vec3(0.0f, 20.0f, 0.0f),
-		glm::vec3(0.0f, 0.0f, height + 1));
+		glm::vec3(height + 1.0f, 0.0f, 0.0f));
 
-	scene->addChild(std::make_unique<model::Geometry>(plane1, wallMaterial, wallTexture, wallNormals, wallDepth, glm::translate(glm::vec3(0.0f, 0.0f, 0.5f))));
-	scene->addChild(std::make_unique<model::Geometry>(plane2, wallMaterial, wallTexture, wallNormals, wallDepth, glm::translate(glm::vec3(0.0f, 0.0f, 0.5f - height)) * glm::rotate(Glm::pi, glm::vec3(0.0f, 1.0f, 0.0f))));
-	scene->addChild(std::make_unique<model::Geometry>(plane4, wallMaterial, wallTexture, wallNormals, wallDepth, glm::translate(glm::vec3(width / 2.0f - .5f, 0, (1.0f - height)*0.5f)) * glm::rotate(Glm::pi, glm::vec3(0.0f, 1.0f, 0.0f))));
-	scene->addChild(std::make_unique<model::Geometry>(plane5, wallMaterial, wallTexture, wallNormals, wallDepth, glm::translate(glm::vec3(-width / 2.0f - .5f, 0, (1.0f - height)*0.5f))));
+	scene->addChild(std::make_unique<model::Geometry>(plane1, wallMaterial, wallTexture, wallNormals, wallDepth, glm::translate(glm::vec3(0.0f, 0.0f, 0.5f)) * glm::rotate(Glm::pi*0.5f * 2, glm::vec3(0.0f, 1.0f, 0.0f))));
+	scene->addChild(std::make_unique<model::Geometry>(plane4, wallMaterial, wallTexture, wallNormals, wallDepth, glm::translate(glm::vec3(width / 2.0f - .5f, 0, (1.0f - height)*0.5f)) * glm::rotate(Glm::pi*0.5f * 3, glm::vec3(0.0f, 1.0f, 0.0f))));
+	scene->addChild(std::make_unique<model::Geometry>(plane2, wallMaterial, wallTexture, wallNormals, wallDepth, glm::translate(glm::vec3(0.0f, 0.0f, 0.5f - height)) * glm::rotate(Glm::pi*0.5f * 0, glm::vec3(0.0f, 1.0f, 0.0f))));
+	scene->addChild(std::make_unique<model::Geometry>(plane5, wallMaterial, wallTexture, wallNormals, wallDepth, glm::translate(glm::vec3(-width / 2.0f - .5f, 0, (1.0f - height)*0.5f)) * glm::rotate(Glm::pi*0.5f * 1, glm::vec3(0.0f, 1.0f, 0.0f))));
 
 	for (int i = 0; i < this->width; i++)
 	{

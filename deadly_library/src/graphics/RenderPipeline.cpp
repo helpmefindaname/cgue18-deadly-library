@@ -268,7 +268,8 @@ void RenderPipeline::doHudPass()
 		std::string normalMap = "Show normalmap-F4: " + std::to_string(Globals::useNormalMap);
 		std::string lightMap = "Show lightmap-F5:  " + std::to_string(Globals::useLightMap);
 		std::string subdivision = "Show subdivision level-F6:  " + std::to_string(Globals::subdivisionLevel);
-		std::string celShading = "Show selshading-F7:  " + std::to_string(Globals::isCelShading);
+		std::string celShading = "Show celshading-F7:  " + std::to_string(Globals::isCelShading);
+		std::string frustumCulling = "Show frustumculling-F8:  " + std::to_string(Globals::isFrustumculling);
 
 		writer2D.print(help.c_str(), 32, 500, 26);
 		writer2D.print(debug.c_str(), 32, 470, 26);
@@ -277,6 +278,7 @@ void RenderPipeline::doHudPass()
 		writer2D.print(lightMap.c_str(), 32, 380, 26);
 		writer2D.print(subdivision.c_str(), 32, 350, 26);
 		writer2D.print(celShading.c_str(), 32, 330, 26);
+		writer2D.print(frustumCulling.c_str(), 32, 300, 26);
 	}
 
 	glDisable(GL_BLEND);
