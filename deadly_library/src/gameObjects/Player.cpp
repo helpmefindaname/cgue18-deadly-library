@@ -17,6 +17,7 @@ void Player::init(PhysicsPipeline& physiX)
 {
 	this->playerGeometry = new model::Geometry(MeshLoader::loadMesh("assets/objects/raccoon.mesh"),
 		MaterialLoader::loadMaterial("assets/materials/raccoon.material"), TextureLoader::loadTexture("assets/textures/raccoon.png"), glm::translate(position));
+	playerGeometry->subdivide();
 	playerObject = physiX.createController(PxVec3(position.x, position.y, position.z), PxVec3(0.25f));
 
 }

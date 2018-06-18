@@ -5,9 +5,12 @@
 
 #include "../../libimport/glew.h"
 #include "../vertex.h"
+#include "../../Globals.h"
 
 Mesh::Mesh() :
-	inMemory(false)
+	inMemory(false),
+	lastRenderSubdivision(false),
+	isSubdivision(false)
 {}
 
 Mesh::Mesh(Mesh&& mesh) :
@@ -22,14 +25,18 @@ Mesh::Mesh(Mesh&& mesh) :
 	vertices(std::move(mesh.vertices)),
 	normals(std::move(mesh.normals)),
 	uvs(std::move(mesh.uvs)),
-	collisionRadius(mesh.collisionRadius)
+	collisionRadius(mesh.collisionRadius),
+	isSubdivision(mesh.isSubdivision),
+	lastRenderSubdivision(mesh.lastRenderSubdivision)
 {
 	mesh.inMemory = false;
 }
 
 Mesh::Mesh(std::string filepath) :
 	filepath(filepath),
-	inMemory(false)
+	inMemory(false),
+	lastRenderSubdivision(false),
+	isSubdivision(false)
 {
 	this->readFile();
 }
@@ -45,21 +52,46 @@ Mesh::Mesh(
 	vertices(vertices),
 	normals(normals),
 	uvs(uvs),
-	filepath("gen")
+	filepath("gen"),
+	isSubdivision(false),
+	lastRenderSubdivision(false)
 {}
 
 Mesh::~Mesh() {
 	this->deleteData();
 }
 
-void Mesh::render() {
-	if (!this->inMemory) {
-		throw std::runtime_error("Mesh data is not in graphics memory");
+void Mesh::render(Shader& shader) {
+
+	if (this->isSubdivision && Globals::subdivisionLevel > 0) {
+		this->deleteData();
+		lastRenderSubdivision = true;
+		renderIndices = std::vector<unsigned int>(indices);
+		renderVertices = std::vector<glm::vec3>(vertices);
+		renderNormals = std::vector<glm::vec3>(normals);
+		renderUvs = std::vector<glm::vec2>(uvs);
+		renderEdges = std::unordered_map<std::pair<glm::vec3, glm::vec3>, std::vector<int>, pairhash>(edges);
+		for (size_t i = 0; i < Globals::subdivisionLevel; i++)
+		{
+			this->applySubdivision();
+		}
 	}
+	else {
+		if (lastRenderSubdivision) {
+			this->deleteData();
+		}
+		lastRenderSubdivision = false;
+		renderIndices = std::vector<unsigned int>(indices);
+		renderVertices = std::vector<glm::vec3>(vertices);
+		renderNormals = std::vector<glm::vec3>(normals);
+		renderUvs = std::vector<glm::vec2>(uvs);
+	}
+
+	this->uploadData(shader);
 
 	glBindVertexArray(this->vaoHandle);
 
-	glDrawElements(GL_TRIANGLES, (GLsizei)this->indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, (GLsizei)this->renderIndices.size(), GL_UNSIGNED_INT, 0);
 
 	glBindVertexArray(0);
 }
@@ -320,20 +352,20 @@ void Mesh::copyData() {
 	// INDICES
 	glGenBuffers(1, &this->indicesBufferHandle);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indicesBufferHandle);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(unsigned int), &this->indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->renderIndices.size() * sizeof(unsigned int), &this->renderIndices[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	// VERTICES
 	glGenBuffers(1, &this->verticesBufferHandle);
 	glBindBuffer(GL_ARRAY_BUFFER, this->verticesBufferHandle);
-	glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(glm::vec3), &this->vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, this->renderVertices.size() * sizeof(glm::vec3), &this->renderVertices[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// NORMALS
 	if (this->normals.size() > 0) {
 		glGenBuffers(1, &this->normalsBufferHandle);
 		glBindBuffer(GL_ARRAY_BUFFER, this->normalsBufferHandle);
-		glBufferData(GL_ARRAY_BUFFER, this->normals.size() * sizeof(glm::vec3), &this->normals[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, this->renderNormals.size() * sizeof(glm::vec3), &this->renderNormals[0], GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
@@ -341,7 +373,7 @@ void Mesh::copyData() {
 	if (this->uvs.size() > 0) {
 		glGenBuffers(1, &this->uvsBufferHandle);
 		glBindBuffer(GL_ARRAY_BUFFER, this->uvsBufferHandle);
-		glBufferData(GL_ARRAY_BUFFER, this->uvs.size() * sizeof(glm::vec2), &this->uvs[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, this->renderUvs.size() * sizeof(glm::vec2), &this->renderUvs[0], GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 }
@@ -361,14 +393,14 @@ void Mesh::createVAO(GLint verticeLocation, GLint normalLocation, GLint uvLocati
 	glVertexAttribPointer(verticeLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	// NORMALS
-	if (normalLocation != -1 && this->normals.size() > 0) {
+	if (normalLocation != -1 && this->renderNormals.size() > 0) {
 		glBindBuffer(GL_ARRAY_BUFFER, this->normalsBufferHandle);
 		glEnableVertexAttribArray(normalLocation);
 		glVertexAttribPointer(normalLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	}
 
 	// UVS
-	if (uvLocation != -1 && this->uvs.size() > 0) {
+	if (uvLocation != -1 && this->renderUvs.size() > 0) {
 		glBindBuffer(GL_ARRAY_BUFFER, this->uvsBufferHandle);
 		glEnableVertexAttribArray(uvLocation);
 		glVertexAttribPointer(uvLocation, 2, GL_FLOAT, GL_FALSE, 0, 0);
@@ -392,3 +424,155 @@ void Mesh::calculateCollisionRadius() {
 		}
 	}
 }
+
+void Mesh::prepareSubdivision() {
+	isSubdivision = true;
+	renderIndices = std::vector<unsigned int>(indices);
+	renderVertices = std::vector<glm::vec3>(vertices);
+	renderNormals = std::vector<glm::vec3>(normals);
+	renderUvs = std::vector<glm::vec2>(uvs);
+	for (size_t i = 0; i < indices.size(); i += 3)
+	{
+		addEdge(edges, indices[i], indices[i + 1], i + 2);
+		addEdge(edges, indices[i + 1], indices[i + 2], i);
+		addEdge(edges, indices[i + 2], indices[i], i + 1);
+	}
+}
+
+void Mesh::addEdge(std::unordered_map<std::pair<glm::vec3, glm::vec3>, std::vector<int>, pairhash>& edges, int i1, int i2, int i3) {
+	if (std::hash<glm::vec3>()(renderVertices[i1]) > std::hash<glm::vec3>()(renderVertices[i2])) {
+		i1 ^= i2;
+		i2 ^= i1;
+		i1 ^= i2;
+	}
+
+	std::pair<glm::vec3, glm::vec3> index(renderVertices[i1], renderVertices[i2]);
+
+	edges.try_emplace(index, std::vector<int>());
+	edges[index].push_back(i3);
+}
+
+void Mesh::applySubdivision() {
+	std::vector<glm::vec3> newVertices(renderVertices);
+	std::vector<glm::vec3> newNormals(renderNormals);
+	std::vector<glm::vec2> newUvs(renderUvs);
+	std::vector<unsigned int> newIndices;
+	if (renderEdges.size() == 0) {
+		for (size_t i = 0; i < renderIndices.size(); i += 3)
+		{
+			addEdge(renderEdges, renderIndices[i], renderIndices[i + 1], i + 2);
+			addEdge(renderEdges, renderIndices[i + 1], renderIndices[i + 2], i);
+			addEdge(renderEdges, renderIndices[i + 2], renderIndices[i], i + 1);
+		}
+	}
+
+	std::vector<int> edgeVertices(renderIndices.size(), -1);
+	int oldEnd = newVertices.size();
+	std::unordered_map<glm::vec3, std::vector<int>> realVertices;
+	std::unordered_map<int, std::vector<int>> rVerteicesNeighbours;
+
+	for (size_t i = 0; i < renderVertices.size(); i++)
+	{
+		realVertices.try_emplace(renderVertices[i], std::vector<int>());
+		realVertices[renderVertices[i]].push_back(i);
+	}
+
+	for each (auto edge in renderEdges)
+	{
+		glm::vec3 vertex =
+			edge.first.first * (3 / 8.0f) +
+			edge.first.second * (3 / 8.0f) +
+			renderVertices[renderIndices[edge.second[0]]] * (1 / 8.0f) +
+			renderVertices[renderIndices[edge.second[1]]] * (1 / 8.0f);
+
+		int start1 = (edge.second[0] / 3) * 3;
+		int a1 = renderIndices[(edge.second[0] + 1) % 3 + start1];
+		int b1 = renderIndices[(edge.second[0] + 2) % 3 + start1];
+
+		glm::vec3 normal1 = glm::normalize(renderNormals[a1] + renderNormals[b1]);
+		glm::vec2 uv1 = (renderUvs[a1] + renderUvs[b1]) * 0.5f;
+
+		edgeVertices[edge.second[0]] = newVertices.size();
+		newVertices.push_back(vertex);
+		newNormals.push_back(normal1);
+		newUvs.push_back(uv1);
+
+		int start2 = (edge.second[1] / 3) * 3;
+		int a2 = renderIndices[(edge.second[1] + 1) % 3 + start2];
+		int b2 = renderIndices[(edge.second[1] + 2) % 3 + start2];
+
+		glm::vec3 normal2 = glm::normalize(renderNormals[a2] + renderNormals[b2]);
+		glm::vec2 uv2 = (renderUvs[a2] + renderUvs[b2]) * 0.5f;
+
+		edgeVertices[edge.second[1]] = newVertices.size();
+		newVertices.push_back(vertex);
+		newNormals.push_back(normal2);
+		newUvs.push_back(uv2);
+	}
+
+	for (size_t i = 0; i < renderIndices.size(); i += 3)
+	{
+		newIndices.push_back(edgeVertices[i]);
+		newIndices.push_back(edgeVertices[i + 1]);
+		newIndices.push_back(edgeVertices[i + 2]);
+
+		newIndices.push_back(renderIndices[i]);
+		newIndices.push_back(edgeVertices[i + 2]);
+		newIndices.push_back(edgeVertices[i + 1]);
+		rVerteicesNeighbours.try_emplace(renderIndices[i], std::vector<int>());
+		rVerteicesNeighbours[renderIndices[i]].push_back(edgeVertices[i + 2]);
+		rVerteicesNeighbours[renderIndices[i]].push_back(edgeVertices[i + 1]);
+
+		newIndices.push_back(edgeVertices[i]);
+		newIndices.push_back(edgeVertices[i + 2]);
+		newIndices.push_back(renderIndices[i + 1]);
+		rVerteicesNeighbours.try_emplace(renderIndices[i + 1], std::vector<int>());
+		rVerteicesNeighbours[renderIndices[i + 1]].push_back(edgeVertices[i + 2]);
+		rVerteicesNeighbours[renderIndices[i + 1]].push_back(edgeVertices[i]);
+
+		newIndices.push_back(edgeVertices[i]);
+		newIndices.push_back(renderIndices[i + 2]);
+		newIndices.push_back(edgeVertices[i + 1]);
+		rVerteicesNeighbours.try_emplace(renderIndices[i + 2], std::vector<int>());
+		rVerteicesNeighbours[renderIndices[i + 2]].push_back(edgeVertices[i]);
+		rVerteicesNeighbours[renderIndices[i + 2]].push_back(edgeVertices[i + 1]);
+	}
+
+	for each (auto vertices in realVertices)
+	{
+		int count = 0;
+		glm::vec3 sum = glm::vec3(0.0f);
+		for (size_t i = 0; i < vertices.second.size(); i++)
+		{
+			count += rVerteicesNeighbours[vertices.second[i]].size();
+			for (size_t j = 0; j < rVerteicesNeighbours[vertices.second[i]].size(); j++)
+			{
+				sum += newVertices[rVerteicesNeighbours[vertices.second[i]][j]];
+			}
+		}
+		float a = (3 / 8.0f + cos(2 * 3.14159265 / count) / 4.0f);
+		float alpha = (a * a + 3 / 8.f);
+		if (count == 3) {
+			alpha = 7.0f / 16.0f;
+		}
+		else {
+			alpha = 5.0f / 8.0f;
+		}
+
+		float betta = (1.0f - alpha) / count;
+
+		glm::vec3 result = vertices.first * alpha + betta * sum;
+
+		for (size_t i = 0; i < vertices.second.size(); i++)
+		{
+			newVertices[vertices.second[i]] = result;
+		}
+	}
+
+	renderIndices = newIndices;
+	renderVertices = newVertices;
+	renderUvs = newUvs;
+	renderNormals = newNormals;
+	renderEdges = std::unordered_map<std::pair<glm::vec3, glm::vec3>, std::vector<int>, pairhash>();
+}
+

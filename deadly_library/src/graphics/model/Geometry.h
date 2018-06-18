@@ -25,6 +25,7 @@ namespace model {
 		std::shared_ptr<Texture> lightMap;
 
 	public:
+		void subdivide();
 		Geometry* addChild(std::unique_ptr<Geometry> child);
 		void render(Shader& shader);
 		void setTransformMatrix(glm::mat4 matrix);

@@ -20,7 +20,6 @@ private:
 	GLint currentTargetFramebuffer;
 	GLint currentSourceFramebuffer;
 	Shader emptyShader;
-	Shader stencilTestShader;
 	Shader lightShader;
 	Shader geometryPassShader;
 	Shader lightMapShader;
@@ -32,9 +31,6 @@ private:
 	int lightMapWidth;
 	int lightMapHeight;
 	Framebuffer gBuffer;
-	Framebuffer lightMapBuffer;
-
-
 
 	float lightAttenuationConstant;
 	float lightAttenuationLinear;

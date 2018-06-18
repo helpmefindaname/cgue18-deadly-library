@@ -29,6 +29,9 @@ private:
 
 	Mesh fullscreenQuad;
 
+	int screenWidth;
+	int screenHeight;
+
 public:
 	GLuint getHandle();
 
