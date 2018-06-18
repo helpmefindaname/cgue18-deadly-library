@@ -29,6 +29,7 @@ private:
 	bool usesTexture;
 	bool useNormalmapping;
 	bool useLightmapping;
+	bool useCelShading;
 
 public:
 	void uploadData(Shader& shader);

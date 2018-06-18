@@ -222,7 +222,7 @@ void RenderPipeline::doCelShadingPass()
 	this->activeShader->setUniform("celCount", 3);
 	this->activeShader->setUniform("resolution", glm::vec2(this->width, this->height));
 
-	this->gBuffer.bindTextures(*this->activeShader, 0, { lastPass }, { "inputBuffer" });
+	this->gBuffer.bindTextures(*this->activeShader, 0, { lastPass, "material" }, { "inputBuffer","materialBuffer" });
 	this->gBuffer.bindTargetColorBuffers({ "celShading" });
 
 	this->gBuffer.renderQuad(*activeShader);
@@ -267,6 +267,7 @@ void RenderPipeline::doHudPass()
 		std::string normalMap = "Show normalmap-F4: " + std::to_string(Globals::useNormalMap);
 		std::string lightMap = "Show lightmap-F5:  " + std::to_string(Globals::useLightMap);
 		std::string subdivision = "Show subdivision level-F6:  " + std::to_string(Globals::subdivisionLevel);
+		std::string celShading = "Show selshading-F7:  " + std::to_string(Globals::isCelShading);
 
 		writer2D.print(help.c_str(), 32, 500, 26);
 		writer2D.print(debug.c_str(), 32, 470, 26);
@@ -274,6 +275,7 @@ void RenderPipeline::doHudPass()
 		writer2D.print(normalMap.c_str(), 32, 410, 26);
 		writer2D.print(lightMap.c_str(), 32, 380, 26);
 		writer2D.print(subdivision.c_str(), 32, 350, 26);
+		writer2D.print(celShading.c_str(), 32, 330, 26);
 	}
 
 	glDisable(GL_BLEND);

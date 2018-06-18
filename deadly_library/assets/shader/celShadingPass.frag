@@ -1,6 +1,7 @@
 #version 330
 
 uniform sampler2D inputBuffer;
+uniform sampler2D materialBuffer;
 uniform int celCount;
 
 in vec2 uvs;
@@ -13,7 +14,9 @@ void main() {
 	vec2 bufferCoordinates = uvs;
 	vec3 color = texture(inputBuffer, bufferCoordinates).xyz;
 
-	vec3 col =  floor(color * celCount);
-
-	outputColor =vec4( col / (celCount - 1), 1.0);
+	if(texture(materialBuffer, bufferCoordinates).z > 0.5f) {
+		float l = length(color);
+		color = (color/l) * floor(l * celCount) / (celCount - 1);
+	}
+	outputColor =vec4(color, 1.0);
 }

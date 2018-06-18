@@ -3,9 +3,9 @@ color 0.8 0.8 0.8
 
 ambientFactor 0.5
 diffuseFactor 0.5
-specularPower 0.2
 
 useLightmapping 0
 useNormalmapping 0
+useCelShading 1
 
 usesTexture 0
