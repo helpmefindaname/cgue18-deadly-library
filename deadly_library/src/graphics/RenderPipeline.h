@@ -20,6 +20,7 @@ private:
 	GLint currentTargetFramebuffer;
 	GLint currentSourceFramebuffer;
 	Shader emptyShader;
+	Shader debugShader;
 	Shader lightShader;
 	Shader geometryPassShader;
 	Shader lightMapShader;
@@ -52,6 +53,7 @@ private:
 	void bindSourceFramebuffer(Framebuffer& framebuffer);
 	void bindDefaultFramebuffer();
 
+	void doWireFrameMode();
 	void doGeometryPass();
 	void doLightPass();
 	void doFinalPass();

@@ -448,8 +448,7 @@ void Mesh::addEdge(std::unordered_map<std::pair<glm::vec3, glm::vec3>, std::vect
 
 	std::pair<glm::vec3, glm::vec3> index(renderVertices[i1], renderVertices[i2]);
 
-	edges.try_emplace(index, std::vector<int>());
-	edges[index].push_back(i3);
+	edges.try_emplace(index, std::vector<int>()).first->second.push_back(i3);
 }
 
 void Mesh::applySubdivision() {
@@ -473,8 +472,9 @@ void Mesh::applySubdivision() {
 
 	for (size_t i = 0; i < renderVertices.size(); i++)
 	{
-		realVertices.try_emplace(renderVertices[i], std::vector<int>());
-		realVertices[renderVertices[i]].push_back(i);
+		realVertices.try_emplace(renderVertices[i], std::vector<int>())
+			.first->second
+			.push_back(i);
 	}
 
 	for each (auto edge in renderEdges)

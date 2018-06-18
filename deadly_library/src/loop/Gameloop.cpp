@@ -110,13 +110,7 @@ void Gameloop::update()
 	}
 
 	if (inputHandler.getEvent("toggleWireFrame")) {
-		isWireframe = !isWireframe;
-		glPolygonMode(GL_FRONT_AND_BACK, isWireframe ? GL_LINE : GL_FILL);
-	}
-	if (inputHandler.getEvent("toggleCulling")) {
-		isCulling = !isCulling;
-		if (isCulling) glEnable(GL_CULL_FACE);
-		else glDisable(GL_CULL_FACE);
+		Globals::isWireFrameMode = !Globals::isWireFrameMode;
 	}
 
 	inputHandler.process();

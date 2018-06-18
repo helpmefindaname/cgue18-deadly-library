@@ -1,6 +1,7 @@
 #include "Globals.h"
 
 bool Globals::isDebug = false;
+bool Globals::isWireFrameMode = false;
 bool Globals::showFps = false;
 bool Globals::isHelp = false;
 bool Globals::useLightMap = true;
