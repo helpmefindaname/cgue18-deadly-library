@@ -18,6 +18,7 @@ private:
 public:
 	std::shared_ptr<model::Geometry> createWorldGeometry();
 	void createWorldPhysics(PhysicsPipeline& physiX);
+	int getHeight();
 
 private:
 	void readFile();

@@ -18,6 +18,7 @@ private:
 	model::Geometry* playerGeometry;
 	PxController* playerObject;
 	float velocityY;
+	bool isOnFloor;
 	
 	float jumpPower = Config::getFloat("JumpPower");
 	float gravity = Config::getFloat("Gravity");
@@ -31,8 +32,8 @@ public:
 	float getDirection();
 	void update(InputHandler& inputHandler, float dt);
 	void draw(Shader& activeShader);
+	bool onFloor();
 
 private:
-
 	PxVec3 forward();
 };

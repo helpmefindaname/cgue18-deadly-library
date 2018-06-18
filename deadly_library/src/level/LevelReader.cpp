@@ -82,8 +82,8 @@ void LevelReader::createWorldPhysics(PhysicsPipeline& physiX)
 	for (int i = 0; i < this->width; i++)
 	{
 		for (int j = 0; j < this->height; j++)
-		{	
-			if (data[j][i] >= 1 && data [j][i] <=9) {
+		{
+			if (data[j][i] >= 1 && data[j][i] <= 9) {
 				int blockheight = data[j][i];
 				physiX.createStaticCube(PxVec3(i - width / 2.0f, blockheight, (float)-j));
 			}
@@ -122,4 +122,8 @@ void LevelReader::readFile() {
 			}
 		}
 	}
+}
+
+int LevelReader::getHeight() {
+	return height;
 }

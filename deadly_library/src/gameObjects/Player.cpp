@@ -64,11 +64,13 @@ void Player::update(InputHandler& inputHandler, float dt)
 	PxExtendedVec3 pos = playerObject->getPosition();
 	position = glm::vec3(pos.x, pos.y, pos.z);
 
-	if (abs(lastY - position.y) < 0.00001f) {
+	isOnFloor = abs(lastY - position.y) < 0.00001f;
+
+	if (isOnFloor) {
 		velocityY = 0.0f;
 	}
 
-	if (abs(lastY - position.y) < 0.00001f && inputHandler.getEvent("jump")) {
+	if (isOnFloor && inputHandler.getEvent("jump")) {
 		velocityY = jumpPower;
 	}
 
@@ -84,4 +86,8 @@ void Player::draw(Shader& activeShader)
 PxVec3 Player::forward()
 {
 	return PxVec3(-cos(direction), 0.0f, sin(direction));
+}
+
+bool Player::onFloor() {
+	return isOnFloor;
 }
