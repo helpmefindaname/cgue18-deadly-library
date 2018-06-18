@@ -262,23 +262,25 @@ void RenderPipeline::doHudPass()
 	}
 
 	if (Globals::isHelp) {
-		std::string help = "Show help-F1:      " + std::to_string(Globals::isHelp);
-		std::string debug = "Show debug-F2:     " + std::to_string(Globals::isDebug);
-		std::string wireframe = "Show wireframe-F3: " + std::to_string(false);
-		std::string normalMap = "Show normalmap-F4: " + std::to_string(Globals::useNormalMap);
-		std::string lightMap = "Show lightmap-F5:  " + std::to_string(Globals::useLightMap);
-		std::string subdivision = "Show subdivision level-F6:  " + std::to_string(Globals::subdivisionLevel);
-		std::string celShading = "Show celshading-F7:  " + std::to_string(Globals::isCelShading);
-		std::string frustumCulling = "Show frustumculling-F8:  " + std::to_string(Globals::isFrustumculling);
+		std::string debug =			"Show debug-Tab:            " + std::to_string(Globals::isDebug);
+		std::string help =			"Show help-F1:              " + std::to_string(Globals::isHelp);
+		std::string fps =			"Show fps-F2:               " + std::to_string(Globals::showFps);
+		std::string wireframe =		"Show wireframe-F3:         " + std::to_string(Globals::isWireFrameMode);
+		std::string normalMap =		"Show normalmap-F4:         " + std::to_string(Globals::useNormalMap);
+		std::string lightMap =		"Show lightmap-F5:          " + std::to_string(Globals::useLightMap);
+		std::string subdivision =	"Show subdivision level-F6: " + std::to_string(Globals::subdivisionLevel);
+		std::string celShading =	"Show celshading-F7:        " + std::to_string(Globals::isCelShading);
+		std::string frustumCulling= "Show frustumculling-F8:    " + std::to_string(Globals::isFrustumculling);
 
-		writer2D.print(help.c_str(), 32, 500, 26);
-		writer2D.print(debug.c_str(), 32, 470, 26);
-		writer2D.print(wireframe.c_str(), 32, 440, 26);
-		writer2D.print(normalMap.c_str(), 32, 410, 26);
-		writer2D.print(lightMap.c_str(), 32, 380, 26);
-		writer2D.print(subdivision.c_str(), 32, 350, 26);
-		writer2D.print(celShading.c_str(), 32, 330, 26);
-		writer2D.print(frustumCulling.c_str(), 32, 300, 26);
+		writer2D.print(debug.c_str(), 32, 500, 26);
+		writer2D.print(fps.c_str(), 32, 470, 26);
+		writer2D.print(help.c_str(), 32, 440, 26);
+		writer2D.print(wireframe.c_str(), 32, 410, 26);
+		writer2D.print(normalMap.c_str(), 32, 380, 26);
+		writer2D.print(lightMap.c_str(), 32, 350, 26);
+		writer2D.print(subdivision.c_str(), 32, 320, 26);
+		writer2D.print(celShading.c_str(), 32, 290, 26);
+		writer2D.print(frustumCulling.c_str(), 32, 260, 26);
 	}
 
 	glDisable(GL_BLEND);
