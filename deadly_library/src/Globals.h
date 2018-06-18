@@ -8,6 +8,7 @@ public:
 	static bool isDebug;
 	static bool showFps;
 	static bool useLightMap;
+	static bool useNormalMap;
 	static int fps;
 	static int subdivisionLevel;
 };

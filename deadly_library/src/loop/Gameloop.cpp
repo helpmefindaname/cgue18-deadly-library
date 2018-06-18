@@ -86,6 +86,10 @@ void Gameloop::update()
 		Globals::useLightMap = !Globals::useLightMap;
 	}
 
+	if (inputHandler.getEvent("toggleNormalMapping")) {
+		Globals::useNormalMap = !Globals::useNormalMap;
+	}
+
 	if (inputHandler.getEvent("toogleSubdivisionSurfaces")) {
 		Globals::subdivisionLevel = (Globals::subdivisionLevel + 1) % 3;
 	}

@@ -43,7 +43,7 @@ void Material::uploadLightData(Shader & shader)
 bool Material::appliesToShader(Shader & shader)
 {
 	bool doLightMap = useLightmapping && Globals::useLightMap;
-	bool doNormalMap = useNormalmapping;// && Globals::....
+	bool doNormalMap = useNormalmapping && Globals::useNormalMap;
 
 	std::string shadername = shader.getName();
 	if (shadername == "assets/shader/lightMapPass" && !useLightmapping) {

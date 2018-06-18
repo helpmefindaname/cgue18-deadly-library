@@ -187,9 +187,6 @@ void RenderPipeline::doLightPass()
 	this->gBuffer.renderQuad(*this->activeShader);
 
 	lastPass = "light";
-	if (Globals::isHelp) {
-		lastPass = "normal";
-	}
 }
 
 void RenderPipeline::doFinalPass()
@@ -222,13 +219,17 @@ void RenderPipeline::doHudPass()
 	if (Globals::isHelp) {
 		std::string help = "Show help-F1:      " + std::to_string(Globals::isHelp);
 		std::string debug = "Show debug-F2:     " + std::to_string(Globals::isDebug);
-		std::string normalMap = "Show normalmap-F4: 0";
+		std::string wireframe = "Show wireframe-F3: " + std::to_string(false);
+		std::string normalMap = "Show normalmap-F4: "+std::to_string(Globals::useNormalMap);
 		std::string lightMap = "Show lightmap-F5:  " + std::to_string(Globals::useLightMap);
+		std::string subdivision = "Show subdivision level-F6:  " + std::to_string(Globals::subdivisionLevel);
 
 		writer2D.print(help.c_str(), 32, 500, 26);
 		writer2D.print(debug.c_str(), 32, 470, 26);
-		writer2D.print(normalMap.c_str(), 32, 440, 26);
-		writer2D.print(lightMap.c_str(), 32, 410, 26);
+		writer2D.print(wireframe.c_str(), 32, 440, 26);
+		writer2D.print(normalMap.c_str(), 32, 410, 26);
+		writer2D.print(lightMap.c_str(), 32, 380, 26);
+		writer2D.print(subdivision.c_str(), 32, 350, 26);
 	}
 
 	state.renderHud(writer2D);
