@@ -122,3 +122,7 @@ void LevelReader::readFile() {
 		}
 	}
 }
+
+int LevelReader::getHeight() {
+	return height;
+}

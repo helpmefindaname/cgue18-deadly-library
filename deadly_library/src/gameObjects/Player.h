@@ -20,7 +20,7 @@ private:
 	model::Geometry* rightFoot;
 	PxController* playerObject;
 	float velocityY;
-
+	bool isOnFloor;
 	int movecounter = 0;
 	
 	float jumpPower = Config::getFloat("JumpPower");
@@ -35,8 +35,8 @@ public:
 	float getDirection();
 	void update(InputHandler& inputHandler, float dt);
 	void draw(Shader& activeShader);
+	bool onFloor();
 
 private:
-
 	PxVec3 forward();
 };

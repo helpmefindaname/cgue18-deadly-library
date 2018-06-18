@@ -18,16 +18,17 @@ class DeadlyLibrary
 {
 public:
 	DeadlyLibrary();
+	DeadlyLibrary(DeadlyLibrary&& copy);
 	~DeadlyLibrary();
 
 private:
 	Camera gameCamera;
 	Camera* usedCamera;
 
-	Player* player;
-	std::shared_ptr<model::Geometry> world;
-
+	Player player;
 	GameCameraHandler gameCameraHandler;
+
+	std::shared_ptr<model::Geometry> world;
 
 	std::vector<std::shared_ptr<Light>> lights;
 
@@ -38,6 +39,7 @@ private:
 	bool isEnd;
 
 	int lives;
+	int levelHeight;
 
 	std::shared_ptr<Texture> startScreen;
 	std::shared_ptr<Texture> winScreen;
@@ -47,7 +49,7 @@ private:
 public:
 	void init(PhysicsPipeline& physiX);
 	void generateLightMaps(Shader& shader, Framebuffer& lightMapBuffer);
-	void update(InputHandler& input, float dt);
+	bool update(InputHandler& input, float dt);
 	void render(Shader& activeShader);
 
 	Camera& getGameCamera();

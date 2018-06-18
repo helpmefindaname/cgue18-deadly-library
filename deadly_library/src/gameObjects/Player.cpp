@@ -71,14 +71,16 @@ void Player::update(InputHandler& inputHandler, float dt)
 	position = glm::vec3(pos.x, pos.y, pos.z);
 	const int animationFrameCount = 16;
 
-	if (abs(lastY - position.y) < 0.00001f) {
+	isOnFloor = abs(lastY - position.y) < 0.00001f;
+
+	if (isOnFloor) {
 		velocityY = 0.0f;
 	}
 	else {
 		movecounter = animationFrameCount / 2;
 	}
 
-	if (abs(lastY - position.y) < 0.00001f && inputHandler.getEvent("jump")) {
+	if (isOnFloor && inputHandler.getEvent("jump")) {
 		velocityY = jumpPower;
 	}
 
@@ -103,4 +105,8 @@ void Player::draw(Shader& activeShader)
 PxVec3 Player::forward()
 {
 	return PxVec3(-cos(direction), 0.0f, sin(direction));
+}
+
+bool Player::onFloor() {
+	return isOnFloor;
 }

@@ -11,8 +11,8 @@ public:
 	~GameCameraHandler();
 
 private:
-	Camera & usedCamera;
-	Player * usedPlayer;
+	Camera& usedCamera;
+	Player* usedPlayer;
 
 	float characterSpeed;
 	float cameraDirection;
@@ -28,6 +28,8 @@ private:
 public:
 	void update(float dt);
 	void addPosition(float v);
+
+	void setPlayer(Player* player);
 
 private:
 	glm::vec3 getForwardDirection(float direction);

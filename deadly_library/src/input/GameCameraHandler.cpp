@@ -22,6 +22,11 @@ void GameCameraHandler::addPosition(float height) {
 	cameraDirection = -Glm::pi / 2;
 }
 
+void GameCameraHandler::setPlayer(Player* player)
+{
+	this->usedPlayer = player;
+}
+
 void GameCameraHandler::update(float dt)
 {
 	float aimDirection = usedPlayer->getDirection();

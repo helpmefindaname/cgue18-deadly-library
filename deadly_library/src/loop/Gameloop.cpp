@@ -96,7 +96,9 @@ void Gameloop::update()
 	}
 	else {
 		state.setUsedCamera(state.getGameCamera());
-		state.update(inputHandler, this->sPerFrame);
+		if (state.update(inputHandler, this->sPerFrame)) {
+			init();
+		}
 	}
 
 	if (inputHandler.getEvent("close")) {
