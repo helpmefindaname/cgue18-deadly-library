@@ -33,7 +33,7 @@ void Material::uploadData(Shader& shader) {
 	shader.setUniform("materialColor", this->color);
 	shader.setUniform("ambientFactor", this->ambientFactor);
 	shader.setUniform("diffuseFactor", this->diffuseFactor);
-	shader.setUniform("specularFactor", this->specularPower);
+	shader.setUniform("useCelShading", this->useCelShading);
 }
 
 void Material::uploadLightData(Shader & shader)
@@ -122,6 +122,11 @@ void Material::readFile() {
 			float value;
 			if (!(iss >> value)) { break; }
 			this->useNormalmapping = value > 0.2f;
+		}
+		else if (valueName == "useCelShading") {
+			float value;
+			if (!(iss >> value)) { break; }
+			this->useCelShading = value > 0.2f;
 		}
 	}
 

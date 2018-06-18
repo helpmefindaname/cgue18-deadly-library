@@ -9,7 +9,7 @@ uniform sampler2D lightMapBuffer;
 uniform vec3 materialColor;
 uniform float ambientFactor;
 uniform float diffuseFactor;
-uniform float specularFactor;
+uniform bool useCelShading;
 
 layout(location = 0) out vec3 color;
 layout(location = 1) out vec3 position;
@@ -22,5 +22,5 @@ void main() {
 	
 	position = fragPositionWorldspace;
 	normal = normalize(fragNormalWorldspace);
-	material = vec4(ambientFactor, diffuseFactor, specularFactor, 1.0);
+	material = vec4(ambientFactor, diffuseFactor, useCelShading, 1.0);
 }

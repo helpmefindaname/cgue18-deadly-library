@@ -14,7 +14,6 @@ uniform mat4 modelMatrix;
 uniform vec3 materialColor;
 uniform float ambientFactor;
 uniform float diffuseFactor;
-uniform float specularFactor;
 
 uniform vec3[100] lightPositions;
 uniform int lightCount;
@@ -30,7 +29,6 @@ uniform float attenuationSquared;
 uniform float brightness;
 
 out vec4 outputColor;
-
 
 float calculcateLightPower(vec3 position, vec3 normal, vec3 lightPosition) {
 	
