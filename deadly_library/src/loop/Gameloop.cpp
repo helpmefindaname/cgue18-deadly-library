@@ -94,6 +94,10 @@ void Gameloop::update()
 		Globals::subdivisionLevel = (Globals::subdivisionLevel + 1) % 3;
 	}
 
+	if (inputHandler.getEvent("toogleFustrumculling")) {
+		Globals::isFrustumculling = !Globals::isFrustumculling;
+	}
+
 	if (Globals::isDebug) {
 		debugCameraHandler.checkInput(inputHandler, this->sPerFrame);
 		state.setUsedCamera(debugCamera);
