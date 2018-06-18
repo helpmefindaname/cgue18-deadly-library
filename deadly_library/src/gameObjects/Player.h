@@ -16,8 +16,12 @@ private:
 	glm::vec3 position;
 	float direction;
 	model::Geometry* playerGeometry;
+	model::Geometry* leftFoot;
+	model::Geometry* rightFoot;
 	PxController* playerObject;
 	float velocityY;
+
+	int movecounter = 0;
 	
 	float jumpPower = Config::getFloat("JumpPower");
 	float gravity = Config::getFloat("Gravity");
