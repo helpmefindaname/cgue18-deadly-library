@@ -87,6 +87,7 @@ bool DeadlyLibrary::update(InputHandler& input, float dt)
 		if (input.getEvent("next")) {
 			player = Player(glm::vec3(0, 3, 0), -Glm::pi / 2);
 			gameCameraHandler.setPlayer(&player);
+			gameCameraHandler.update(100000.0f);
 			isEnd = false;
 			isWin = false;
 			isStart = true;
