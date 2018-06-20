@@ -138,6 +138,9 @@ void RenderPipeline::bindDefaultFramebuffer() {
 void RenderPipeline::doWireFrameMode()
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	this->state.getUsedCamera().setFrustumPlanes();
+
 	this->useShader(this->debugShader);
 	this->state.getUsedCamera().uploadData(*this->activeShader);
 	this->state.render(*this->activeShader);
