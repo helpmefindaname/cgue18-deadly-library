@@ -127,7 +127,7 @@ std::vector<std::shared_ptr<Light>> DeadlyLibrary::getLights()
 void DeadlyLibrary::renderHud(HudWriter& writer2D)
 {
 	if (isStart) {
-		writer2D.drawtexture(0, 0, 800, 300, *startScreen);
+		writer2D.drawtexture(0, 100, 800, 250, *startScreen);
 	}
 	else if (isEnd) {
 		if (isWin) {
