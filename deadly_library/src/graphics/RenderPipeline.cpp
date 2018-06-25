@@ -4,7 +4,7 @@
 #include "../Globals.h"
 
 RenderPipeline::RenderPipeline(GAMESTATE& state)
-	:emptyShader("assets/shader/empty"),
+	: emptyShader("assets/shader/empty"),
 	state(state),
 	debugShader("assets/shader/debugpass"),
 	geometryPassShader("assets/shader/geometrypass"),
@@ -214,6 +214,7 @@ void RenderPipeline::doLightPass()
 	this->gBuffer.renderQuad(*this->activeShader);
 
 	lastPass = "light";
+	//lastPass = "normal";
 }
 
 void RenderPipeline::doCelShadingPass()
@@ -223,7 +224,7 @@ void RenderPipeline::doCelShadingPass()
 
 	this->useShader(this->celShader);
 
-	this->activeShader->setUniform("celCount", 3);
+	this->activeShader->setUniform("celCount", 8);
 	this->activeShader->setUniform("resolution", glm::vec2(this->width, this->height));
 
 	this->gBuffer.bindTextures(*this->activeShader, 0, { lastPass, "material" }, { "inputBuffer","materialBuffer" });

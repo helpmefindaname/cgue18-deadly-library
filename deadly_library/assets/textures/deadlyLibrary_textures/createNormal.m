@@ -1,7 +1,7 @@
 function createNormal(height, sigma)
     col = im2double(imread('regal_depth_gen.jpg'));
     gaussed = imgaussfilt(col, sigma);
-    dx = imfilter(gaussed, [-1 1]);
+    dx = -imfilter(gaussed, [-1 1]);
     sx = dx*0.5+0.5;
     dy = imfilter(gaussed, [-1; 1]);
     sy = dy*0.5+0.5;
@@ -12,7 +12,7 @@ function createNormal(height, sigma)
     res(:,:,2)=res(:,:,2)./l;
     res(:,:,3)=res(:,:,3)./l;
     
-    imshow(res);
     respacked = res*0.5+0.5;
+    imshow(respacked);
     imwrite(respacked, 'regal_normals.jpg');
 end

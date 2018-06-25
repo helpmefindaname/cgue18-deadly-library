@@ -56,7 +56,7 @@ namespace model {
 
 			for (int i = 0; i < 6; i++) {
 				float distance = frustumPlanes[i].x * position.x + frustumPlanes[i].y * position.y + frustumPlanes[i].z * position.z + frustumPlanes[i].w;
-				if (distance < -radius) {
+				if (distance < -radius - 2.0f) {
 					return;
 				}
 			}

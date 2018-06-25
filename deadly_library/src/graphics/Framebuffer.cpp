@@ -22,7 +22,7 @@ Framebuffer::Framebuffer(bool useDepthStencilBuffer, int depthStencilBufferWidth
 	screenHeight(Config::getInt("WindowHeight"))
 {
 	for (size_t i = 0; i < colorBufferNames.size(); i++) {
-		this->colorBuffers.emplace(colorBufferNames.at(i), Texture(colorBufferWidths.at(i), colorBufferHeights.at(i), GL_RGBA, internalFormats.at(i), GL_FLOAT, GL_COLOR_ATTACHMENT0 + (int)i, GL_LINEAR, GL_MIRRORED_REPEAT));
+		this->colorBuffers.emplace(colorBufferNames.at(i), Texture(colorBufferWidths.at(i), colorBufferHeights.at(i), GL_RGBA, internalFormats.at(i), GL_FLOAT, GL_COLOR_ATTACHMENT0 + (int)i, GL_NEAREST, GL_MIRRORED_REPEAT));
 	}
 
 	glGenFramebuffers(1, &this->handle);
@@ -127,15 +127,16 @@ std::shared_ptr<Texture> Framebuffer::createScreenShot(std::string colorBufferNa
 
 	int width = source.getWidth();
 	int height = source.getHeight();
-	std::shared_ptr<Texture> result = std::make_shared<Texture>(source.getWidth(), source.getHeight(), GL_RGBA, source.getInternalFormat(), GL_FLOAT, source.getAttachment(), GL_LINEAR, GL_CLAMP_TO_EDGE);
+	std::shared_ptr<Texture> result = std::make_shared<Texture>(source.getWidth(), source.getHeight(), GL_RGBA, source.getInternalFormat(), GL_FLOAT, source.getAttachment(), GL_NEAREST, GL_MIRRORED_REPEAT);
 	glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorBuffers.size(), GL_TEXTURE_2D, source.getHandle(), 0);
 	glReadBuffer(GL_COLOR_ATTACHMENT0 + colorBuffers.size());
 	this->bindSourceColorBuffer({ colorBufferName });
+	/*
 	glBlitFramebuffer(
 		0, 0, screenWidth, screenHeight,
 		0, 0, width, height,
 		GL_COLOR_BUFFER_BIT, GL_NEAREST
-	);
+	);/**/
 	glBindTexture(GL_TEXTURE_2D, result->getHandle());
 	result->bind(colorBuffers.size());
 

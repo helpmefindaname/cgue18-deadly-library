@@ -14,7 +14,7 @@ public:
 	~RenderPipeline();
 
 private:
-	GAMESTATE & state;
+	GAMESTATE& state;
 	Shader* activeShader;
 	std::string lastPass;
 	GLint currentTargetFramebuffer;
