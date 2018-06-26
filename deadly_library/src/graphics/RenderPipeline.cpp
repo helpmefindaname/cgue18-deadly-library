@@ -28,8 +28,8 @@ RenderPipeline::RenderPipeline(GAMESTATE& state)
 	gBuffer(
 		true, width, height,
 		{ "color", "position", "normal", "material", "light", "final", "lightMap", "celShading" },
-		{ width, width, width, width, width, width, lightMapWidth, width },
-		{ height, height, height, height, height, height, lightMapHeight, height },
+		{ width, width, width, width, width, width, width, width },
+		{ height, height, height, height, height, height, height, height },
 		{ GL_RGB8, GL_RGB16F, GL_RGB16F, GL_RGBA8, GL_RGB8, GL_RGB8,GL_RGB8, GL_RGB8 }
 	),
 	writer2D()

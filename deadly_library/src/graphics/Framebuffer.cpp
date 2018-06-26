@@ -18,8 +18,8 @@ Framebuffer::Framebuffer(bool useDepthStencilBuffer, int depthStencilBufferWidth
 		glm::vec2(0.0f,1.0f),
 		glm::vec2(1.0f,1.0f)
 		}),
-	screenWidth(Config::getInt("WindowWidth")),
-	screenHeight(Config::getInt("WindowHeight"))
+	screenWidth(Config::getInt("LightMapWidth")),
+	screenHeight(Config::getInt("LightMapHeight"))
 {
 	for (size_t i = 0; i < colorBufferNames.size(); i++) {
 		this->colorBuffers.emplace(colorBufferNames.at(i), Texture(colorBufferWidths.at(i), colorBufferHeights.at(i), GL_RGBA, internalFormats.at(i), GL_FLOAT, GL_COLOR_ATTACHMENT0 + (int)i, GL_NEAREST, GL_MIRRORED_REPEAT));
@@ -124,21 +124,20 @@ void Framebuffer::bindTextures(Shader& shader, int startPosition, std::vector<st
 std::shared_ptr<Texture> Framebuffer::createScreenShot(std::string colorBufferName)
 {
 	Texture& source = this->colorBuffers.at(colorBufferName);
-
-	int width = source.getWidth();
-	int height = source.getHeight();
-	std::shared_ptr<Texture> result = std::make_shared<Texture>(source.getWidth(), source.getHeight(), GL_RGBA, source.getInternalFormat(), GL_FLOAT, source.getAttachment(), GL_NEAREST, GL_MIRRORED_REPEAT);
-	glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorBuffers.size(), GL_TEXTURE_2D, source.getHandle(), 0);
-	glReadBuffer(GL_COLOR_ATTACHMENT0 + colorBuffers.size());
+	int width = this->screenWidth;
+	int height = this->screenHeight;
+	std::shared_ptr<Texture> result = std::make_shared<Texture>(width, height, GL_RGBA, source.getInternalFormat(), GL_FLOAT, source.getAttachment(), GL_NEAREST, GL_MIRRORED_REPEAT);
+	//glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorBuffers.size(), GL_TEXTURE_2D, source.getHandle(), 0);
+	//glReadBuffer(GL_COLOR_ATTACHMENT0 + colorBuffers.size());
 	this->bindSourceColorBuffer({ colorBufferName });
-	/*
-	glBlitFramebuffer(
-		0, 0, screenWidth, screenHeight,
-		0, 0, width, height,
-		GL_COLOR_BUFFER_BIT, GL_NEAREST
-	);/**/
 	glBindTexture(GL_TEXTURE_2D, result->getHandle());
 	result->bind(colorBuffers.size());
+	//*
+	glBlitFramebuffer(
+	0, 0, source.getWidth(), source.getHeight(),
+	0, 0, width, height,
+	GL_COLOR_BUFFER_BIT, GL_NEAREST
+	);/**/
 
 	glCopyTexImage2D(GL_TEXTURE_2D, 0, source.getInternalFormat(), 0, 0, width, height, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
