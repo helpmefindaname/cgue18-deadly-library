@@ -24,7 +24,7 @@ std::shared_ptr<model::Geometry> LevelReader::createWorldGeometry()
 	std::shared_ptr<model::Geometry> scene = std::make_shared<model::Geometry>();
 	std::shared_ptr<Material> material = MaterialLoader::loadMaterial("assets/materials/block.material");
 	std::shared_ptr<Material> wallMaterial = MaterialLoader::loadMaterial("assets/materials/wall.material");
-	std::shared_ptr<Texture> texture = TextureLoader::loadTexture("assets/textures/block2.png");
+	std::shared_ptr<Texture> texture = TextureLoader::loadTexture("assets/textures/block2.jpg");
 	std::shared_ptr<Texture> wallTexture = TextureLoader::loadTexture("assets/textures/regal_color.jpg");
 	std::shared_ptr<Texture> wallNormals = TextureLoader::loadTexture("assets/textures/regal_normals.jpg");
 	std::shared_ptr<Texture> wallDepth = TextureLoader::loadTexture("assets/textures/regal_depth_gen.jpg");
