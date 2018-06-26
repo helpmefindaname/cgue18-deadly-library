@@ -224,7 +224,7 @@ void RenderPipeline::doCelShadingPass()
 
 	this->useShader(this->celShader);
 
-	this->activeShader->setUniform("celCount", 8);
+	this->activeShader->setUniform("celCount", 4);
 	this->activeShader->setUniform("resolution", glm::vec2(this->width, this->height));
 
 	this->gBuffer.bindTextures(*this->activeShader, 0, { lastPass, "material" }, { "inputBuffer","materialBuffer" });

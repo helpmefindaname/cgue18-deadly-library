@@ -34,6 +34,7 @@ void Material::uploadData(Shader& shader) {
 	shader.setUniform("ambientFactor", this->ambientFactor);
 	shader.setUniform("diffuseFactor", this->diffuseFactor);
 	shader.setUniform("useCelShading", this->useCelShading);
+	shader.setUniform("useLightmapping", this->useLightmapping);
 }
 
 void Material::uploadLightData(Shader & shader)

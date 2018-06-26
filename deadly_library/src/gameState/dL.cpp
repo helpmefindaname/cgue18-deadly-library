@@ -53,6 +53,7 @@ void DeadlyLibrary::init(PhysicsPipeline& physiX)
 	lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 8.0f, -5.5f)));
 	lights.push_back(std::make_shared<Light>(glm::vec3(10.0f, 10.0f, -25.5f)));
 	lights.push_back(std::make_shared<Light>(glm::vec3(-10.0f, 10.0f, -25.5f)));
+	lights.push_back(std::make_shared<Light>(glm::vec3(3.0f, 6.0f, -25.5f)));
 }
 
 void DeadlyLibrary::generateLightMaps(Shader & shader, Framebuffer & lightMapBuffer)
@@ -75,7 +76,7 @@ bool DeadlyLibrary::update(InputHandler& input, float dt)
 				isEnd = true;
 			}
 		}
-		if (this->player.onFloor() && this->player.getPosition().z < -this->levelHeight + 1) {
+		if (this->player.onFloor() && this->player.getPosition().z < -this->levelHeight + 1 && abs(this->player.getPosition().x) < 0.7) {
 			isWin = true;
 			isEnd = true;
 		}
