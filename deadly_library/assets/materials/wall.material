@@ -4,7 +4,7 @@ color 0.8 0.8 0.8
 ambientFactor 0.4
 diffuseFactor 0.6
 
-useLightmapping 1
+useLightmapping 0
 useNormalmapping 1
 useCelShading 0
 
