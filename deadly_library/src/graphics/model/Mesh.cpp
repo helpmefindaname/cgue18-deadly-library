@@ -6,6 +6,7 @@
 #include "../../libimport/glew.h"
 #include "../vertex.h"
 #include "../../Globals.h"
+#include <exception>
 
 Mesh::Mesh() :
 	inMemory(false),
@@ -445,6 +446,19 @@ void Mesh::prepareSubdivision() {
 		addEdge(edges, indices[i + 1], indices[i + 2], i);
 		addEdge(edges, indices[i + 2], indices[i], i + 1);
 	}
+
+	std::vector<std::pair<glm::vec3, glm::vec3>> nonDoubles;
+
+	for each (auto edge in edges)
+	{
+		if (edge.second.size() != 2) {
+			nonDoubles.push_back(edge.first);
+		}
+	}
+
+	if (nonDoubles.size() != 0) {
+		throw std::exception("invalid mesh for subdivision surfaces. Is it closed and double triangles removed?");
+	}
 }
 
 void Mesh::addEdge(std::unordered_map<std::pair<glm::vec3, glm::vec3>, std::vector<int>, pairhash>& edges, int i1, int i2, int i3) {
@@ -552,10 +566,10 @@ void Mesh::applySubdivision() {
 		glm::vec3 sum = glm::vec3(0.0f);
 		for (size_t i = 0; i < vertices.second.size(); i++)
 		{
-			count += rVerteicesNeighbours[vertices.second[i]].size();
 			for (size_t j = 0; j < rVerteicesNeighbours[vertices.second[i]].size(); j++)
 			{
 				sum += newVertices[rVerteicesNeighbours[vertices.second[i]][j]];
+				count++;
 			}
 		}
 		float a = (3 / 8.0f + cosf(2 * 3.14159265f / count) / 4.0f);
