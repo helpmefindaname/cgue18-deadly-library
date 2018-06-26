@@ -449,6 +449,8 @@ void Mesh::prepareSubdivision() {
 
 	std::vector<std::pair<glm::vec3, glm::vec3>> nonDoubles;
 
+	edges.clear();
+
 	for each (auto edge in edges)
 	{
 		if (edge.second.size() != 2) {
