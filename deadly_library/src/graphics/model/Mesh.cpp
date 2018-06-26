@@ -440,6 +440,9 @@ void Mesh::prepareSubdivision() {
 	renderVertices = std::vector<glm::vec3>(vertices);
 	renderNormals = std::vector<glm::vec3>(normals);
 	renderUvs = std::vector<glm::vec2>(uvs);
+	
+	edges.clear();
+
 	for (size_t i = 0; i < indices.size(); i += 3)
 	{
 		addEdge(edges, indices[i], indices[i + 1], i + 2);
@@ -449,8 +452,7 @@ void Mesh::prepareSubdivision() {
 
 	std::vector<std::pair<glm::vec3, glm::vec3>> nonDoubles;
 
-	edges.clear();
-
+	
 	for each (auto edge in edges)
 	{
 		if (edge.second.size() != 2) {
