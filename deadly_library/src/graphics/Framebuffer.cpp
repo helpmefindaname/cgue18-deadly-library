@@ -138,8 +138,9 @@ std::shared_ptr<Texture> Framebuffer::createScreenShot(std::string colorBufferNa
 	0, 0, width, height,
 	GL_COLOR_BUFFER_BIT, GL_NEAREST
 	);/**/
-
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glCopyTexImage2D(GL_TEXTURE_2D, 0, source.getInternalFormat(), 0, 0, width, height, 0);
+	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	return result;
 }
